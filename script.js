@@ -64,7 +64,7 @@ const fetchId = (id) => {
     .then((data) => {
       const setId = data;
       document.querySelector(cartItem).appendChild(createCartItemElement(setId));
-      saveCartListen();
+      saveCardListen();
   }); 
 };
 
