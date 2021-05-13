@@ -87,7 +87,18 @@ const productsList = () => { // req.1 - requisição usando fetch
     });
 };
 
+function clearAllItems() { // requisito 6, função auxiliar
+  const itemsOl = document.querySelector('ol');
+  itemsOl.innerHTML = ''; 
+}
+
+function cleanProducts() { // item 6
+  const clearButton = document.querySelector('.empty-cart');
+  clearButton.addEventListener('click', () => clearAllItems()); // requisito 6
+}
+
 window.onload = async () => {
   await productsList();
   localStorageGet();
+  cleanProducts();
 };
