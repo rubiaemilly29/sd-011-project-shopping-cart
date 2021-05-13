@@ -72,19 +72,9 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function handleAddItemToCart(e) {
-  const id = getSkuFromProductItem(e.target.parentElement);
-  getProductDetails(id)
-  .then(({id, title, price}) => {
-    addCartItemToLocalStorage({sku: id, name: title, salePrice: price});
-    return createCartItemElement({sku: id, name: title, salePrice: price});
-  })
-  .then((cartItemElement) => cartItemsContainer.appendChild(cartItemElement))
-  .catch((e) => console.error(e));
-}
-
 function cartItemClickListener(e) {
   removeCartItemFromLocalStorage(e.target.id);
+  updateTotal(e.target.dataset.price * -1);
   e.target.remove();
 }
 
@@ -104,17 +94,40 @@ function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.id = sku;
+  li.dataset.price = salePrice;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
-  console.log(li);
   return li;
+}
+
+function updateTotal(value) {
+  let sum = parseFloat(totalPriceElement.innerText);
+
+  sum += parseFloat(value);
+
+  totalPriceElement.innerText = Math.round(sum * 100) / 100;
+}
+
+function addItemToCart(cartElement) {
+  cartItemsContainer.appendChild(cartElement);
+  updateTotal(cartElement.dataset.price);
+}
+
+function handleAddItemToCart(e) {
+  const id = getSkuFromProductItem(e.target.parentElement);
+  getProductDetails(id)
+  .then(({id, title, price}) => {
+    addCartItemToLocalStorage({sku: id, name: title, salePrice: price});
+    return createCartItemElement({sku: id, name: title, salePrice: price});
+  })
+  .then((cartItemElement) => addItemToCart(cartItemElement))
+  .catch((e) => console.error(e));
 }
 
 function loadStorage() {
   const cartArray = getStorage();
-  console.log(cartArray);
 
-  cartArray.forEach(({sku, name, salePrice}) => cartItemsContainer.appendChild(createCartItemElement({sku, name, salePrice})));
+  cartArray.forEach(({sku, name, salePrice}) => addItemToCart(createCartItemElement({sku, name, salePrice})));
 }
 
 window.onload = async function onload() {
@@ -126,5 +139,6 @@ window.onload = async function onload() {
   });
 
   this.cartItemsContainer = document.querySelector('.cart__items');
+  this.totalPriceElement = document.querySelector('.total-price');
   loadStorage();
 };
