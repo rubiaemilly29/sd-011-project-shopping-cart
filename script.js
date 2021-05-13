@@ -1,6 +1,3 @@
-// const fetch = require('node-fetch');
-// window.onload = function onload() {};
-
 const sectionItems = document.getElementById('sectionItems');
 const cartItems = document.querySelector('.cart__items');
 const totalPrice = document.querySelector('.total-price');
