@@ -1,4 +1,7 @@
-window.onload = function onload() { };
+/* eslint-disable no-use-before-define */
+window.onload = () => {
+listOfProducts();
+};
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -22,22 +25,43 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
+  
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+const listOfProducts = () => {
+const api = `https://api.mercadolibre.com/sites/MLB/search?q=${'computador'}`;
+const myObject = {
+  method: 'GET',
+  headers: { Accept: 'application/json' },
+};
+  fetch(api, myObject)
+  .then((response) => {
+    response.json()
+    .then((data) => data.results
+    .forEach(({ id, title, thumbnail }) => {
+      const sectionItem = document.querySelector('.items');
+      const objList = createProductItemElement({ sku: id, name: title, image: thumbnail });
+      sectionItem.appendChild(objList);
+    }));
+  });
+};
+listOfProducts();
 
-function cartItemClickListener(event) {
-  //coloque seu código aqui
-}
+// function getSkuFromProductItem(item) {
+//   // return item.querySelector('span.item__sku').innerText;
+// }
+// getSkuFromProductItem();
 
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-}
+// function cartItemClickListener(_event) {
+//   // coloque seu código aqui
+// }
+
+// function createCartItemElement({ sku, name, salePrice }) {
+//   const li = document.createElement('li');
+//   li.className = 'cart__item';
+//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+//   li.addEventListener('click', cartItemClickListener);
+//   return li;
+// }
+// createCartItemElement();
