@@ -41,8 +41,8 @@ const totalPrice = async () => {
 function removerAllCart() {
   const li = document.querySelector(cartItem);
   li.innerHTML = '';
-  
   }
+
   function removeAllCart2() {
     const button = document.querySelector('.empty-cart');
     button.addEventListener('click', removerAllCart);
