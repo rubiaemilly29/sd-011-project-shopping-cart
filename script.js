@@ -31,13 +31,13 @@ function getSkuFromProductItem(item) {
 }
 
 const calculatePrice = (price) => {
-  const priceElement = document.querySelector('.totalPrice');   
+  const priceElement = document.querySelector('.total-price');   
   const number = parseFloat(priceElement.innerText) + price;
   priceElement.innerText = number;
 };
 
 const sumValues = () => {
-  const priceElement = document.querySelector('.totalPrice');
+  const priceElement = document.querySelector('.total-price');
   const itemList = document.querySelectorAll('.cart__item');
   let sum = 0;
   itemList.forEach((item) => {
