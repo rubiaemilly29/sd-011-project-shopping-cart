@@ -1,5 +1,3 @@
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -33,13 +31,37 @@ const removeElementFromStorage = (string) => {
   let shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
   const deleteItem = shoppingCart.find(({ id }) => id === deleteId);
   shoppingCart = shoppingCart.filter((item) => item !== deleteItem);
-
+  
   localStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
+};
+
+const getCartPriceSum = () => {
+  let sum = 0;
+  const cartItems = JSON.parse(localStorage.getItem('shoppingCart'));
+
+  sum = cartItems ? cartItems.reduce((acc, { price }) => acc + price, 0) : 0;
+
+  return sum;
+};
+
+const updateTotalPrice = () => {
+  const cartSection = document.querySelector('section.cart');
+
+  const totalPriceSpan = document.querySelector('.total-price');
+
+  if (totalPriceSpan) totalPriceSpan.parentElement.removeChild(totalPriceSpan);
+
+  const newSpan = document.createElement('span');
+  newSpan.classList.add('total-price');
+  newSpan.innerText = getCartPriceSum();
+
+  cartSection.appendChild(newSpan);
 };
 
 function cartItemClickListener({ target }) {
   removeElementFromStorage(target.innerText);
   target.parentElement.removeChild(target);
+  updateTotalPrice();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -72,6 +94,8 @@ async function addItemToCart({ target }) {
 
   const cartItemsOl = document.querySelector('ol.cart__items');
   cartItemsOl.appendChild(createCartItemElement(item));
+
+  updateTotalPrice();
 }
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
@@ -119,6 +143,7 @@ const loadCartFromStorage = () => {
 const onLoad = () => {
   addItems();
   loadCartFromStorage();
+  updateTotalPrice();
 };
 
 window.onload = onLoad;
