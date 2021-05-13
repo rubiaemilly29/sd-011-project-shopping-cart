@@ -70,11 +70,19 @@ const fetchTheAPI = () => (
 );
 
 window.onload = function onload() { 
+  const loading = document.createElement('p');
+  loading.className = 'loading';
+  loading.innerText = 'Loading...';
+  const container = document.querySelector('.container');
+  container.appendChild(loading);
+  // Requisito 1 - Carregar items
   fetchTheAPI()
   // Requisito 7 - Dentro do onload para garantir que a função será executada após o DOM ser carregado
   .then(() => {
-    const a = document.querySelector('.empty-cart');
-    a.addEventListener('click', () => {
+    // Deletar item
+    container.removeChild(loading);
+    const cleanTheShoppingCart = document.querySelector('.empty-cart');
+    cleanTheShoppingCart.addEventListener('click', () => {
     const ShoppingCart = document.querySelector('.cart__items');
     ShoppingCart.innerHTML = '';
     });
