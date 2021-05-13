@@ -16,24 +16,18 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ sku, name, image }) {
+function createProductItemElement({ id: sku, title: name, thumbnail: image, price }) {
   const section = document.createElement('section');
   section.className = 'item';
-
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
-  return section;
-}
-
-const getProduct = () => {
-  return new Promise ((resolve, reject) => {
-    fetch("https://api.mercadolibre.com/sites/MLB/search?q=computador")
-  .then(res => res.json())
-  .then(res => res.results.forEach((computador) => createProductItemElement(computador)))
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!')).addEventListener('click', () => {
+    createCartItemElement({ sku, name, price })
   })
+  const itemSection = document.querySelector('.items')
+  itemSection.appendChild(section)
+  return section;
 }
 
 function getSkuFromProductItem(item) {
@@ -44,10 +38,20 @@ function cartItemClickListener(event) {
   // coloque seu código aqui
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ sku, name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  // li.addEventListener('click', cartItemClickListener);
+  const cartItems = document.querySelector('.cart__items')
+  cartItems.appendChild(li).addEventListener('click', (event) => cartItems.removeChild(event.target))
   return li;
+}
+
+const getProduct = () => {
+  return new Promise ((resolve, reject) => {
+    fetch("https://api.mercadolibre.com/sites/MLB/search?q=computador")
+  .then(res => res.json())
+  .then(res => res.results.forEach((computador) => createProductItemElement(computador)))
+  })
 }
