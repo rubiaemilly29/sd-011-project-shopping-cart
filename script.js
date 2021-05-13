@@ -1,16 +1,16 @@
-function createProductImageElement(imageSource) {
+const createProductImageElement = (imageSource) => {
   const img = document.createElement('img');
   img.className = 'item__image';
   img.src = imageSource;
   return img;
-}
+};
 
-function createCustomElement(element, className, innerText) {
+const createCustomElement = (element, className, innerText) => {
   const e = document.createElement(element);
   e.className = className;
   e.innerText = innerText;
   return e;
-}
+};
 
 const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) => {
   const items = document.querySelector('.items');
@@ -23,13 +23,19 @@ const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) =>
   return items.appendChild(section);
 };
 
-function getSkuFromProductItem(item) {
+const getSkuFromProductItem = (item) => {
   return item.querySelector('span.item__sku').innerText;
-}
+};
 
-function cartItemClickListener(event) {
+const saveLocalStorage = () => {
+  const searchOl = document.querySelector('.cart__items').outerHTML;
+  localStorage.setItem('cart', searchOl);
+};
+
+const cartItemClickListener = (event) => {
   event.target.remove();
-}
+  saveLocalStorage();
+};
 
 const createCartItemElement = ({ id: sku, title: name, price: salePrice }) => {
   const li = document.createElement('li');
@@ -51,6 +57,7 @@ const fetchToChart = (id) => {
     .then((response) => response.json())
     .then((data) => {
       cathOl(createCartItemElement(data));
+      saveLocalStorage();
     });
 };
 
@@ -78,6 +85,16 @@ const getEndPoint = (query) => {
     });
 };
 
+const loadLocalStorage = () => {
+  if (localStorage.getItem('cart') !== null) {
+    const searchOl = document.querySelector('.cart__items');
+    searchOl.outerHTML = localStorage.getItem('cart');
+    const searchItems = document.querySelectorAll('.cart__item');
+    searchItems.forEach((item) => item.addEventListener('click', cartItemClickListener));
+  }
+};
+
 window.onload = function onload() {
   getEndPoint('computador');
+  loadLocalStorage();
 };
