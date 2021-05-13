@@ -23,6 +23,33 @@ function getProductDetails(productId) {
   })
 }
 
+function getStorage() {
+  const savedStorage = localStorage.getItem('shoppingCart');
+  const cartArray = savedStorage ? JSON.parse(savedStorage) : [];
+
+  return cartArray;
+}
+
+function saveStorage(cartArray) {
+  localStorage.setItem('shoppingCart', JSON.stringify(cartArray));
+}
+
+function addCartItemToLocalStorage(item) {
+  const cartArray = getStorage();
+
+  cartArray.push(item);
+
+  saveStorage(cartArray);
+}
+
+function removeCartItemFromLocalStorage(id) {
+  const cartArray = getStorage();
+
+  const newArray = cartArray.filter((item) => item.sku !== id);
+
+  saveStorage(newArray);
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -47,14 +74,17 @@ function getSkuFromProductItem(item) {
 
 function handleAddItemToCart(e) {
   const id = getSkuFromProductItem(e.target.parentElement);
-  const cartItemsContainer = document.querySelector('.cart__items');
   getProductDetails(id)
-  .then(({id, title, price}) => createCartItemElement({sku: id, name: title, salePrice: price}))
+  .then(({id, title, price}) => {
+    addCartItemToLocalStorage({sku: id, name: title, salePrice: price});
+    return createCartItemElement({sku: id, name: title, salePrice: price});
+  })
   .then((cartItemElement) => cartItemsContainer.appendChild(cartItemElement))
   .catch((e) => console.error(e));
 }
 
 function cartItemClickListener(e) {
+  removeCartItemFromLocalStorage(e.target.id);
   e.target.remove();
 }
 
@@ -73,9 +103,18 @@ function createProductItemElement({ sku, name, image }) {
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
+  li.id = sku;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  console.log(li);
   return li;
+}
+
+function loadStorage() {
+  const cartArray = getStorage();
+  console.log(cartArray);
+
+  cartArray.forEach(({sku, name, salePrice}) => cartItemsContainer.appendChild(createCartItemElement({sku, name, salePrice})));
 }
 
 window.onload = async function onload() {
@@ -85,4 +124,7 @@ window.onload = async function onload() {
     const itemElement = createProductItemElement({sku: id, name: title, image: thumbnail});
     itemsContainer.appendChild(itemElement);
   });
+
+  this.cartItemsContainer = document.querySelector('.cart__items');
+  loadStorage();
 };
