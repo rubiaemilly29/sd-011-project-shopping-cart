@@ -45,7 +45,8 @@ function removeItemCart() {
   cartItems.addEventListener('click', (event) => {
     if (event.target.className === 'cart__item') {
       const selectedItem = event.target;
-      selectedItem.innerHTML = '';
+      const parentItem = event.target.parentElement;
+      parentItem.removeChild(selectedItem);
     }
   });
 }
@@ -62,6 +63,7 @@ function addItemToCart() {
           const cartItem = createCartItemElement(data);
           const cartItems = document.querySelector('.cart__items');
           cartItems.appendChild(cartItem);
+          localStorage.setItem('cartItems', cartItems.innerHTML);
         });
       });
     }
@@ -84,4 +86,8 @@ function fetchAPI() {
 
 window.onload = function onload() { 
   fetchAPI();
+  if (localStorage.cartItems) {
+    const cartItems = document.querySelector('.cart__items');
+    cartItems.innerHTML = localStorage.getItem('cartItems');
+  }
 };
