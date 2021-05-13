@@ -28,14 +28,19 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+function localStorageGet() { // requisito 4
+  const cart = localStorage.getItem('carrinho');
+  document.querySelector('ol').innerHTML = cart;
+}
+
 function localStorageSave() {
   localStorage.setItem('carrinho', document.querySelector('.cart__items').innerHTML);
-} // carrinho é a key do localStorageSave, função usada para armazenar os itens no carrinho de compras
+} // requisito 2, o carrinho é a key do localStorageSave, função usada para armazenar os itens no carrinho de compras
 
 function addProduct(event) { // requisito 2
   const product = event.target.parentNode;
-  const idItem = getSkuFromProductItem(product);
-  fetch(`https://api.mercadolibre.com/items/${idItem}`)
+  const itemID = getSkuFromProductItem(product);
+  fetch(`https://api.mercadolibre.com/items/${itemID}`)
     .then((resolve) => resolve.json())
     .then((data) => {
       const item = {
@@ -84,4 +89,5 @@ const productsList = () => { // req.1 - requisição usando fetch
 
 window.onload = async () => {
   await productsList();
+  localStorageGet();
 };
