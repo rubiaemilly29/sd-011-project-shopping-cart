@@ -113,4 +113,11 @@ window.onload = function onload() {
   getProductsList();
   loadContent();
   document.querySelector('.items').addEventListener('click', addCartItem);
+  document.querySelector('.empty-cart').addEventListener('click', (event) => {
+    document.querySelectorAll('.cart__item').forEach((element) => {
+      element.parentElement.removeChild(element);
+    });
+    updateTotalPrice();
+    saveContent(event.target.nextElementSibling);
+  });
 };
