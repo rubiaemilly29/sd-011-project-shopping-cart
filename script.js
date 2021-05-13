@@ -5,7 +5,6 @@ function createProductImageElement(imageSource) {
   img.className = 'item__image';
   img.src = imageSource;
   return img;
-  
 }
 
 function createCustomElement(element, className, innerText) {
@@ -14,15 +13,29 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
+function cartItemClickListener(event) {
+  // coloque seu código aqui
+}
 
-function createProductItemElement({ sku, name, image }) {
+function createCartItemElement({ sku, name, price: salePrice }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.addEventListener('click', cartItemClickListener);
+  return li;
+}
+
+function createProductItemElement({ sku, name, image, price }) {
   const section = document.createElement('section');
   section.className = 'item';
-
+  const myProduct = { sku, name, price };
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
+  .addEventListener('click', () => {
+    document.querySelector('ol').appendChild(createCartItemElement(myProduct));
+  });
 
   return section;
 }
@@ -32,35 +45,22 @@ const productList = () => {
     .then((response) => response.json())
     .then((data) => {
       data.results.forEach((product) => {
-        const obj = {
+        const myProduct = {
           sku: product.id,
           name: product.title,
           image: product.thumbnail,
+          price: product.price,
         };
-        document.querySelector('.items').appendChild(createProductItemElement(obj));
-      })
-    })
-}
+        document.querySelector('.items').appendChild(createProductItemElement(myProduct));
+      });
+    });
+};
 productList();
-
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
-
-function createCartItemElement({ sku, name, salePrice }) {
-  console.log(sku);
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-}
-
 window.onload = async () => {
   await productList();
-}
+};
