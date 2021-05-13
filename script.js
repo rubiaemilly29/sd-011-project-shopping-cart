@@ -53,7 +53,7 @@ function addProductOnShoppingCart(query) {
     const creatElementOl = createCartItemElement({
       sku: data.id,
       name: data.title,
-      salePrice: data.base_price
+      salePrice: data.price
     });
     document.querySelector('.cart__items').appendChild(creatElementOl)
   })
