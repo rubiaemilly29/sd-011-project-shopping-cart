@@ -29,7 +29,7 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+  event.target.remove();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -83,6 +83,10 @@ function buttonAddOnCart() {
     });
   });
 }
+
+document.querySelectorAll('.cart__item').forEach((element) => {
+  element.addEventListener('click', cartItemClickListener);
+});
 
 window.onload = async () => {
   await createCards();
