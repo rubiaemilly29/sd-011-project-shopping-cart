@@ -1,4 +1,19 @@
-window.onload = function onload() { };
+window.onload = function onload() { 
+  fetch("https://api.mercadolibre.com/sites/MLB/search?q=iphone").then(response => {
+    return response.json()
+  }).then(body => {
+    console.log(body);
+    const items = document.querySelector('.items');
+    body.results.forEach(value => {
+      const obj = {
+        sku : value.id,
+        name: value.title,
+        image: value.thumbnail
+      }
+      items.appendChild(createProductItemElement(obj))
+    });
+  })
+};
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
