@@ -1,4 +1,6 @@
-window.onload = function onload() { };
+window.onload = function onload() {
+  fetchApi();
+};
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -51,10 +53,10 @@ const fetchApi = () => {
     .then((json) => {
       // console.log(json.results);
       const jsonResultsArray = json.results;
+      const mainSection = document.querySelector('.items');
       jsonResultsArray.forEach((computer) => {
-        const mainSection = document.querySelector('.items');
         mainSection.appendChild(createProductItemElement(computer));
       });
     });
 };
-fetchApi();
+
