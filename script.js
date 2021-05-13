@@ -30,12 +30,6 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-const calculatePrice = (price) => {
-  const priceElement = document.querySelector('.total-price');   
-  const number = parseFloat(priceElement.innerText) + price;
-  priceElement.innerText = number;
-};
-
 const sumValues = () => {
   const priceElement = document.querySelector('.total-price');
   const itemList = document.querySelectorAll('.cart__item');
