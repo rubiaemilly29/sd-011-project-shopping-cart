@@ -63,13 +63,19 @@ const promiseProducts = () => new Promise((accept) => {
         objLocalStorage = { sku, name, price };
         createCartItemElement(objLocalStorage);
       }
+      accept();
     });
-    accept();
 });
 
 const myPromise = async () => {
   try {
+    const teste = document.createElement('div');
+    teste.className = 'loading';
+    teste.innerText = 'Loading...';
+    const items = document.querySelector('.items');
+    items.appendChild(teste);
     await promiseProducts();
+    await items.removeChild(teste);
   } catch (error) {
     console.log('ERROR!!');
   }
