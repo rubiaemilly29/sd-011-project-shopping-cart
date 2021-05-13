@@ -8,8 +8,20 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
-  event.target.parentNode.removeChild(event.target);
+  const cartList = event.target.parentNode;
+  cartList.removeChild(event.target);
+  localStorage.setItem('cart', cartList.innerHTML);
 }
+
+const loadCart = () => {
+  const cartList = document.querySelector('ol.cart__items');
+  const cart = localStorage.getItem('cart');
+  if (cart) {
+    cartList.innerHTML = cart;
+    const cartItems = document.querySelectorAll('.cart__items .cart__item');
+    cartItems.forEach((item) => item.addEventListener('click', cartItemClickListener));
+  }
+};
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
@@ -23,8 +35,9 @@ const btnAddCartEvent = async (event) => {
   const id = getSkuFromProductItem(event.target.parentElement);
   const item = await fetchById(id);
   const li = createCartItemElement({ sku: item.id, name: item.title, salePrice: item.price });
-  const cart = document.querySelector('ol.cart__items');
-  cart.appendChild(li);
+  const cartList = document.querySelector('ol.cart__items');
+  cartList.appendChild(li);
+  localStorage.setItem('cart', cartList.innerHTML);
 };
 
 function createProductImageElement(imageSource) {
@@ -70,4 +83,5 @@ const createList = async () => {
 
 window.onload = function onload() {
   createList();
+  loadCart();
 };
