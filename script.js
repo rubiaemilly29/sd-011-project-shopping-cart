@@ -1,19 +1,4 @@
-window.onload = function onload() { 
-  fetch("https://api.mercadolibre.com/sites/MLB/search?q=iphone").then(response => {
-    return response.json()
-  }).then(body => {
-    console.log(body);
-    const items = document.querySelector('.items');
-    body.results.forEach(value => {
-      const obj = {
-        sku : value.id,
-        name: value.title,
-        image: value.thumbnail
-      }
-      items.appendChild(createProductItemElement(obj))
-    });
-  })
-};
+window.onload = function onload() {};
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -56,3 +41,18 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+.then((response) => response.json())
+.then((body) => {
+console.log(body);
+const items = document.querySelector('.items');
+body.results.forEach((value) => {
+  const obj = {
+    sku: value.id,
+    name: value.title,
+    image: value.thumbnail,
+  };
+  items.appendChild(createProductItemElement(obj));
+});
+});
