@@ -23,9 +23,7 @@ const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) =>
   return items.appendChild(section);
 };
 
-const getSkuFromProductItem = (item) => {
-  return item.querySelector('span.item__sku').innerText;
-};
+const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
 const saveLocalStorage = () => {
   const searchOl = document.querySelector('.cart__items').outerHTML;
@@ -61,16 +59,16 @@ const cathOl = (element) => {
   chart.appendChild(element);
 };
 
-const fetchToChart = (id) => {
+async function fetchToChart(id) {
   const endpoint = `https://api.mercadolibre.com/items/${id}`;
-  fetch(endpoint)
+  await fetch(endpoint)
     .then((response) => response.json())
     .then((data) => {
       cathOl(createCartItemElement(data));
       sumTotalPrice();
       saveLocalStorage();
     });
-};
+}
 
 const buttonAddItemCart = (item) => {
   const createDisplay = document.querySelector('.items');
@@ -81,20 +79,23 @@ const buttonAddItemCart = (item) => {
   });
 };
 
-const getItensApi = (query) => {
+async function getItensApi(query) {
+  const loadingPage = document.querySelector('.loading');
+  loadingPage.innerHTML = 'Loading...';
   const endpoint = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
-  fetch(endpoint)
+  await fetch(endpoint)
     .then((response) => response.json())
     .then((object) => {
       const result = object.results;
       result.forEach((value) => {
         buttonAddItemCart(createProductItemElement(value));
       });
+      document.querySelector('.loading').remove();
     })
     .catch((error) => {
       window.alert(error);
     });
-};
+}
 
 const emptyCartButton = () => {
   const emptyButton = document.querySelector('.empty-cart');
@@ -116,6 +117,8 @@ const loadLocalStorage = () => {
 
 window.onload = function onload() {
   getItensApi('computador');
+  // .then(() => document.querySelector('.loading').remove())
+  // .catch((error) => console.error(error));
   loadLocalStorage();
   emptyCartButton();
   sumTotalPrice();
