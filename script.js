@@ -67,9 +67,9 @@ const fetchProduct = () => {
   getProduct('computador');
 };
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 window.onload = function onload() { 
   fetchProduct();
