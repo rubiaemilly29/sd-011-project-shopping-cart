@@ -1,3 +1,4 @@
+//iniciando projeto
 window.onload = function onload() { };
 
 function createProductImageElement(imageSource) {
