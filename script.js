@@ -1,29 +1,22 @@
 const fetchApi = () => {
-  const endPoint = "https://api.mercadolibre.com/sites/MLB/search?q=computador";
+  const endPoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
   const param = { headers: { Accept: 'application/json' } };
   return new Promise((resolve, reject) => {
   fetch(endPoint, param)
-  .then(response => resolve(response.json()))
-  .catch(error => reject(error));
-  })
-}
-
-const reduceResponse = (acc, curr) => {
-  acc.id = curr.id;
-  acc.title = curr.title;
-  acc.thumbnail = curr.thumbnail;
-  return acc
-}
+  .then((response) => resolve(response.json()))
+  .catch((error) => reject(error));
+  });
+};
 
 const formatApiResults = (resp) => {
   const values = Object.values(resp);
-  const control = values.map(el => ({
+  const control = values.map((el) => ({
     sku: el.id, 
     name: el.title,
-    image: el.thumbnail 
+    image: el.thumbnail,
   }));
   return control;
-}
+};
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -70,10 +63,10 @@ function createCartItemElement({ sku, name, salePrice }) {
 const getAndCreateElements = () => {
   const items = document.querySelector('.items');
   fetchApi()
-  .then(response => formatApiResults(response.results))
-  .then(formated => formated.forEach((el) => items.appendChild(createProductItemElement(el))));
-}
+  .then((response) => formatApiResults(response.results))
+  .then((formated) => formated.forEach((el) => items.appendChild(createProductItemElement(el))));
+};
 
 window.onload = function onload() {
-  getAndCreateElements()
+  getAndCreateElements();
 };
