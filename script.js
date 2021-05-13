@@ -46,7 +46,7 @@ async function calculateTotalPrice() {
   const prices = [];
   products.forEach((product) => prices.push(getPrice(product)));
   const sum = prices.reduce((total, value) => total + value, 0);
-  totalPrices.innerText = sum;
+  totalPrices.innerText = parseFloat(sum.toFixed(2));
 }
 
 async function cartItemClickListener(event) {
@@ -115,10 +115,21 @@ function loadCart() {
   const totalPrice = document.querySelector(totalPriceClass);
   cartItems.innerHTML = localStorage.getItem('lista');
   totalPrice.innerText = localStorage.getItem('price');
+  calculateTotalPrice();
 }
 
 window.onload = function onload() {
   showProducts();
   loadCart();
   calculateTotalPrice();
+  const clearButton = document.querySelector('.empty-cart');
+  clearButton.addEventListener('click', () => {
+    localStorage.removeItem('lista');
+    localStorage.removeItem('price');
+    const cartItems = document.querySelector(cartItemsClass);
+    while (cartItems.firstChild) {
+      cartItems.firstChild.remove();
+    }
+    calculateTotalPrice();
+  });
  };
