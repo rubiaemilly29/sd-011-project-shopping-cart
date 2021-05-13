@@ -47,7 +47,7 @@ function createCartItemElement({ sku, name, salePrice }) {
 const promiseProducts = () => new Promise((accept) => {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((myFetch) => myFetch.json())
-    .then((elements) => elements.results.map((element) => createProductItemElement(element)))
+    .then((elements) => elements.results.map((element) => createProductItemElement(element)));
     accept();
 });
 
@@ -61,5 +61,4 @@ const myPromise = async () => {
 
 window.onload = function onload() {
   myPromise();
-  console.log()
 };
