@@ -27,10 +27,10 @@ function createCartItemElement({ sku, name, price }) {
   const cartItems = document.querySelector('.cart__items');
   localStorage.setItem(`product${cartItems.childElementCount}`, `${sku}|${name}|${price}`);
   const count = cartItems.childElementCount;
+  const total = document.querySelector('.total-price');
   cartItems.appendChild(li);
   li.addEventListener('click', (event) => 
   cartItemClickListener(event, cartItems, count, price));
-  const total = document.querySelector('.total-price');
   total.innerText = Number((Number(total.innerText) + Number(price)));
   return li;
 }
@@ -73,4 +73,13 @@ function getSkuFromProductItem(item) {
 
 window.onload = function onload() { 
   fetchProduct();
+
+  const button = document.getElementsByClassName('empty-cart')[0];
+  button.addEventListener('click', () => {
+    const cartItems = document.querySelector('.cart__items');
+    cartItems.innerHTML = '';
+    const total = document.querySelector('.total-price');
+    total.innerText = 0;
+    localStorage.clear();
+  });
 };
