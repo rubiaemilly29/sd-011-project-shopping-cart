@@ -12,6 +12,17 @@ function getProductListing(queryTerm) {
   })  
 }
 
+function getProductDetails(productId) {
+  const url = `https://api.mercadolibre.com/items/${productId}`;
+
+  return new Promise((resolve, reject) => {
+    fetch(url)
+    .then((response) => response.json())
+    .then((json) => resolve(json))
+    .catch((e) => reject(e));
+  })
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -19,11 +30,28 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
-function createCustomElement(element, className, innerText) {
+function createCustomElement(element, className, innerText, eventListener) {
   const e = document.createElement(element);
   e.className = className;
   e.innerText = innerText;
+
+  if (eventListener) {
+    e.addEventListener('click', eventListener);
+  }
   return e;
+}
+
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
+
+function cartItemClickListener(e) {
+  const id = getSkuFromProductItem(e.target.parentElement);
+  const cartItemsContainer = document.querySelector('.cart__items');
+  getProductDetails(id)
+  .then(({id, title, price}) => createCartItemElement({sku: id, name: title, salePrice: price}))
+  .then((cartItemElement) => cartItemsContainer.appendChild(cartItemElement))
+  .catch((e) => console.error(e));
 }
 
 function createProductItemElement({ sku, name, image }) {
@@ -33,17 +61,9 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!', cartItemClickListener));
 
   return section;
-}
-
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
-function cartItemClickListener(event) {
-  // coloque seu código aqui
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
