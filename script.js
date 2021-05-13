@@ -1,6 +1,6 @@
 window.onload = function onload() {
   getProducts('computador')
-  addProductOnShoppingCart('id')
+  addProductOnShoppingCart('computador')
 };
 
 function createProductImageElement(imageSource) {
