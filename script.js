@@ -23,32 +23,8 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-const addItemCart = async (event) => {
-  const cartItems = document.querySelector('.cart__items');
-  const id = await getSkuFromProductItem(event.target.parentElement);
-  console.log(id)
-  const item = await getItemByID(id);
-  console.log(item)
-  cartItems.appendChild(createCartItemElement(item))
-}
-
-function createProductItemElement({ id, title, thumbnail }) {
-  const section = document.createElement('section');
-  section.className = 'item';
-
-  section.appendChild(createCustomElement('span', 'item__sku', id));
-  section.appendChild(createCustomElement('span', 'item__title', title));
-  section.appendChild(createProductImageElement(thumbnail));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!')).addEventListener('click', addItemCart);
-
-  const sectionItems = document.querySelector('.items');
-  sectionItems.appendChild(section);
-
-  return section;
-}
-
 function cartItemClickListener(event) {
-  event.target.remove()
+  event.target.remove();
 }
 
 function createCartItemElement({ id, title, price }) {
@@ -57,6 +33,29 @@ function createCartItemElement({ id, title, price }) {
   li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
+}
+
+const addItemCart = async (event) => {
+  const cartItems = document.querySelector('.cart__items');
+  const id = await getSkuFromProductItem(event.target.parentElement);
+  const item = await getItemByID(id);
+  cartItems.appendChild(createCartItemElement(item));
+};
+
+function createProductItemElement({ id, title, thumbnail }) {
+  const section = document.createElement('section');
+  section.className = 'item';
+
+  section.appendChild(createCustomElement('span', 'item__sku', id));
+  section.appendChild(createCustomElement('span', 'item__title', title));
+  section.appendChild(createProductImageElement(thumbnail));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
+    .addEventListener('click', addItemCart);
+
+  const sectionItems = document.querySelector('.items');
+  sectionItems.appendChild(section);
+
+  return section;
 }
 
 // adicionar cada produto da API em cada section item, filha da section items
