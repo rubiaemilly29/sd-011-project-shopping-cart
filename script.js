@@ -1,7 +1,3 @@
-window.onload = function onload() {
-  fetchApi();
-};
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -60,3 +56,6 @@ const fetchApi = () => {
     });
 };
 
+window.onload = function onload() {
+  fetchApi();
+};
