@@ -1,3 +1,6 @@
+body {
+  background-color: purple;
+}
 .top-bar {
   align-items: center;
   display: flex;
