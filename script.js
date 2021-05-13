@@ -12,6 +12,12 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// Requisito 3 - Depois de receber o click, o item do carrinho é retirado
+function cartItemClickListener(event) {
+  const clicarItem = event.target;
+  clicarItem.remove();
+}
+
 // Requisito 2 - Cria o item no carrinho com o sku, nome e preço
 function createCartItemElement({ sku, name, price }) {
   const li = document.createElement('li');
@@ -20,6 +26,8 @@ function createCartItemElement({ sku, name, price }) {
   // Requisito 2 - Criação do item no Carrinho
   const shoppingCartItens = document.querySelector('.cart__items');
   shoppingCartItens.appendChild(li);
+  // Requisito 3 - Espera receber o click para tirar da lista do carrinho
+  li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
@@ -38,10 +46,6 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image, pric
 
 // function getSkuFromProductItem(item) {
 //  return item.querySelector('span.item__sku').innerText;
-// }
-
-// function cartItemClickListener(event) {
-  // coloque seu código aqui
 // }
 
 // Requisito 1 - Puxar a lista por API e criar item dentro da section
