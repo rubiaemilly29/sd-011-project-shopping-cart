@@ -61,6 +61,7 @@ function cartItemClickListener(event) {
 
 function saveCardListenContinue() {
   const cartItemStorage = localStorage.getItem('key');
+  console.log(cartItemStorage);
   const olWay = document.querySelector(cartItem);
   olWay.innerHTML = cartItemStorage;
   const listOl = document.querySelectorAll(cartItem);
@@ -98,36 +99,46 @@ const pickCar = () => {
   });
 };
 
-const fetchCurrency = () => {
-  const endPoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
-  return new Promise((resolve, reject) => {
-    fetch(endPoint)
-      .then((response) => response.json())
-      .then((object) => {
-        resolve(object.results);
-        if (object.results.error) {
-          throw new Error(object.results.error);
-        }
-      }).catch((error) => reject(window.alert(error)));
-  });
-};
+const loading = () => {
+  const div = document.createElement('div');
+   const waiting = document.querySelector('body');
+   waiting.appendChild(div);
+   div.className = 'loading';
+  div.innerText = 'loading...';
+  };
+  
+  const removeLoading = () => {
+    const loadingRem = document.querySelector('.loading');
+    loadingRem.remove();
+  };
 
-const fetchCurrencyAsyncAwait = async () => {
-  const data = await fetchCurrency();
-  data.forEach((object) => {
-    const productElement = createProductItemElement(
-      object.id, object.title, object.thumbnail,
-    );
-    document.querySelector('.items').appendChild(productElement);
-  });
-  totalPrice();
-};
+  const fetchCurrency = () => {
+    loading();
+    const endPoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+    return fetch(endPoint)
+      .then((response) => response.json())
+      .then((object) => (object.results));
+  };
+  
+  const fetchCurrencyAsyncAwait = async () => {
+    await fetchCurrency().then((data) => {
+      data.forEach((object) => {
+        const productElement = createProductItemElement(
+          object.id, object.title, object.thumbnail,
+        );
+        document.querySelector('.items').appendChild(productElement);
+      });
+      removeLoading();
+    });
+    totalPrice(); 
+  };
 
 window.onload = async function onload() {
+  loading();
+  saveCardListenContinue();
   await fetchCurrencyAsyncAwait();
   pickCar();
   saveCardListen();
-  saveCardListenContinue();
   totalPrice();
   removeAllCart2();
 };
