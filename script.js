@@ -37,7 +37,7 @@ function getTotal() {
     total += parseFloat(item.innerText.split('$')[1]);
   });
   const totalPrice = document.querySelector('.total-price');
-  totalPrice.innerText = `Preço total: ${total}`;
+  totalPrice.innerText = total;
 }
 
 function cartItemClickListener(event) {
@@ -76,6 +76,11 @@ function addItemToCart() {
     }
   });
 }
+
+// const emptyButton = document.querySelector('empty-cart');
+// emptyButton.addEventListener('click', () => {
+
+// });
 
 function fetchAPI() {
   return new Promise((resolve, reject) => {
