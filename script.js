@@ -20,7 +20,7 @@ function cartItemClickListener(event, cartItems, count, salePrice) {
   localStorage.removeItem(`Items${count}`);
 }
 
-function createCartItemElement({ sku, name, price: salePrice }) {
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
@@ -34,6 +34,26 @@ function createCartItemElement({ sku, name, price: salePrice }) {
   return li;
 }
 
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
+
+const teste = (sku) => new Promise((accept) => {
+  fetch(`https://api.mercadolibre.com/items/${sku}`)
+    .then((myFetch) => myFetch.json())
+    .then((element) => accept(element));
+});
+
+const newTest = async (sku) => {
+  try {
+    const tt = await teste(sku);
+    createCartItemElement(tt);
+    return tt;
+  } catch (error) {
+    console.log('Error!!!');
+  }
+};
+
 function createProductItemElement({ id: sku, title: name, thumbnail: image, price }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -41,15 +61,14 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image, pric
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
-    .addEventListener('click', () => createCartItemElement({ sku, name, price }));
+    .addEventListener('click', (event) => {
+      const skuElement = getSkuFromProductItem(event.path[1]);
+      newTest(skuElement);
+    });
   const items = document.querySelector('.items');
   items.appendChild(section);
 
   return section;
-}
-
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
 }
 
 const promiseProducts = () => new Promise((accept) => {
@@ -61,7 +80,7 @@ const promiseProducts = () => new Promise((accept) => {
         let objLocalStorage = {};
         const [sku, name, price] = localStorage.getItem(`Items${index}`).split(',');
         objLocalStorage = { sku, name, price };
-        createCartItemElement(objLocalStorage);
+        newTest(sku);
       }
       accept();
     });
