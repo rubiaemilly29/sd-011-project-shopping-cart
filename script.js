@@ -91,7 +91,11 @@ function getProductsList() {
       .then((result) => result.results.forEach((element) => {
         const items = document.querySelector('.items');
         items.appendChild(createProductItemElement(element));
-      }));
+      }))
+      .then(() => {
+        const loading = document.querySelector('.loading');
+      loading.parentElement.removeChild(loading);
+      });
   });
 }
 
