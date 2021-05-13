@@ -1,5 +1,15 @@
 window.onload = function onload() { };
 
+// requisito 1 - Você deve criar uma listagem de produtos que devem ser consultados através da API do Mercado Livre.
+function getProductList(query) {
+  // const param = { method: 'GET' , headers: { Accept: 'application/json' } };
+  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${query}`)
+    .then((response) => response.json())
+    .then((itemsFound) => console.log(itemsFound.results));
+}
+// A busca deve ser obrigatóriamente o termo "computador".
+getProductList('computador');
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
