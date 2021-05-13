@@ -34,6 +34,14 @@ function cartItemClickListener(event) {
    
 }
 
+function createCartItemElement({ id, title, price }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
+  li.addEventListener('click', cartItemClickListener);
+  return li;
+}
+
 
 const productsList = () => {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=pc_gamer')
