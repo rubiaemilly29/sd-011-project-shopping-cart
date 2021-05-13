@@ -30,14 +30,21 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
+  const totalPrice = document.getElementsByClassName('total-price')[0];
+  totalPrice.value = (Number(totalPrice.value) - Number(event.target.id)).toFixed(2);
+  totalPrice.innerText = Number(totalPrice.value).toString(10);
   document.getElementsByTagName('ol')[0].removeChild(event.target);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
+  const totalPrice = document.getElementsByClassName('total-price')[0];
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  li.id = salePrice;
+  totalPrice.value = (Number(totalPrice.value) + Number(salePrice)).toFixed(2);
+  totalPrice.innerText = Number(totalPrice.value).toString(10);
   return li;
 }
 
