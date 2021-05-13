@@ -81,7 +81,7 @@ const buttonAddItemCart = (item) => {
   });
 };
 
-const getEndPoint = (query) => {
+const getItensApi = (query) => {
   const endpoint = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
   fetch(endpoint)
     .then((response) => response.json())
@@ -96,6 +96,15 @@ const getEndPoint = (query) => {
     });
 };
 
+const emptyCartButton = () => {
+  const emptyButton = document.querySelector('.empty-cart');
+  emptyButton.addEventListener('click', () => {
+    document.querySelector('.cart__items').innerHTML = '';
+    sumTotalPrice();
+    saveLocalStorage();
+  });
+};
+
 const loadLocalStorage = () => {
   if (localStorage.getItem('cart') !== null) {
     const searchOl = document.querySelector('.cart__items');
@@ -106,7 +115,8 @@ const loadLocalStorage = () => {
 };
 
 window.onload = function onload() {
-  getEndPoint('computador');
+  getItensApi('computador');
   loadLocalStorage();
+  emptyCartButton();
   sumTotalPrice();
 };
