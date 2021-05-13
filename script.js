@@ -43,14 +43,14 @@ function createCartItemElement({ id, title, price }) {
 const fetchID = (id) => {
   fetch(`https://api.mercadolibre.com/items/${id}`)
     .then((response) => response.json())
-    .then((data) => {;
+    .then((data) => {
       const setId = data;
       const cartItem = '.cart__items';
       document.querySelector(cartItem).appendChild(createCartItemElement(setId));
   }); 
 };
 
-const pickCart =() => {
+const pickCart = () => {
   const buttonAddPickCar = document.querySelectorAll('.item__add');
   buttonAddPickCar.forEach((button) => {
     button.addEventListener('click', (event) => {
@@ -76,9 +76,9 @@ const fetchCurrency = () => {
 
 const fetchCurrencyAsyncAwait = async () => {
   const data = await fetchCurrency();
-  data.forEach(object => {
+  data.forEach((object) => {
     const productElement = createProductItemElement(
-      object.id, object.title, object.thumbnail
+      object.id, object.title, object.thumbnail,
     );
     document.querySelector('.items').appendChild(productElement);
   });
