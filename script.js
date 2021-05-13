@@ -59,4 +59,7 @@ const addToCart = async (event) => {
   });
 };
 
-window.onload = async function onload() { };
+window.onload = async function onload() {
+  addToCart();
+  createCartItemElement();
+};
