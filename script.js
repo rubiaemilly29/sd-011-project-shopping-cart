@@ -26,13 +26,14 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
 
-// function cartItemClickListener(event) {
+function cartItemClickListener(event) {
   // coloque seu código aqui
-// }
+}
+
 
 const productsList = () => {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=pc_gamer')
@@ -50,5 +51,5 @@ const productsList = () => {
 };
 
 window.onload = async () => {
-  await productsList();
+  productsList();
 };
