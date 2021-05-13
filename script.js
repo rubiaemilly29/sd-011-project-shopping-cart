@@ -94,6 +94,10 @@ const getIdButtom = () => {
 return textId;
 };
 
+// const eraseContent = () => {
+
+// };
+
 window.onload = function onload() {  
   getProductsFetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   getIdButtom();  
@@ -103,5 +107,10 @@ window.onload = function onload() {
       item.addEventListener('click', cartItemClickListener);
     });
   }
+  const btnErase = document.querySelector('.empty-cart');
+  btnErase.addEventListener('click', () => {
+  const olList = document.querySelector(olDeDeus);
+  olList.innerHTML = '';
   sumValues();
+});
 };
