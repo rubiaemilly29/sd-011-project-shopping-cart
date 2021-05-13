@@ -30,11 +30,28 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function cartItemClickListener(event) {
-  const olContainer2 = document.querySelector(olDeDeus);
+const calculatePrice = (price) => {
+  const priceElement = document.querySelector('.totalPrice');   
+  const number = parseFloat(priceElement.innerText) + price;
+  priceElement.innerText = number;
+};
+
+const sumValues = () => {
+  const priceElement = document.querySelector('.totalPrice');
+  const itemList = document.querySelectorAll('.cart__item');
+  let sum = 0;
+  itemList.forEach((item) => {
+    sum += parseFloat(item.innerText.split('$')[1]);
+  });
+  priceElement.innerText = sum;
+};
+
+function cartItemClickListener(event) { 
+  const olContainer2 = document.querySelector(olDeDeus);  
   const getElementParent = event.target.parentElement;
   getElementParent.removeChild(event.target);
-  localStorage.setItem('productList', olContainer2.innerHTML);
+  localStorage.setItem('productList', olContainer2.innerHTML);  
+  sumValues();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -59,12 +76,6 @@ const getProductsFetch = (url) => new Promise((resolve, reject) => {
   reject();
 });
  
-const calculatePrice = (price) => {
-  const priceElement = document.querySelector('.totalPrice');   
-  const number = parseFloat(priceElement.innerText) + price;
-  priceElement.innerText = number;
-};
-
 const clickFetch = (id) => {  
   const olContainer = document.querySelector(olDeDeus);
     fetch(`https://api.mercadolibre.com/items/${id}`)
@@ -73,7 +84,7 @@ const clickFetch = (id) => {
       const createdLi = createCartItemElement(data);
       olContainer.appendChild(createdLi);
       localStorage.setItem('productList', olContainer.innerHTML);
-      calculatePrice(data.price);
+      sumValues();
     });
 };
 
@@ -89,7 +100,7 @@ const getIdButtom = () => {
 return textId;
 };
 
-window.onload = function onload() {
+window.onload = function onload() {  
   getProductsFetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   getIdButtom();  
   if (localStorage.productList) {    
@@ -98,4 +109,5 @@ window.onload = function onload() {
       item.addEventListener('click', cartItemClickListener);
     });
   }
+  sumValues();
 };
