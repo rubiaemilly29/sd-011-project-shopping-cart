@@ -1,8 +1,3 @@
-/* eslint-disable no-use-before-define */
-window.onload = () => {
-listOfProducts();
-};
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -65,3 +60,7 @@ listOfProducts();
 //   return li;
 // }
 // createCartItemElement();
+
+window.onload = () => {
+listOfProducts();
+};
