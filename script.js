@@ -140,10 +140,19 @@ const loadCartFromStorage = () => {
   }
 };
 
+const clearCart = () => {
+  const cartItemsOl = document.querySelector('.cart__items');
+  cartItemsOl.innerHTML = '';
+  localStorage.removeItem('shoppingCart');
+  updateTotalPrice();
+};
+
 const onLoad = () => {
   addItems();
   loadCartFromStorage();
   updateTotalPrice();
+  const clearCartButton = document.querySelector('.empty-cart');
+  clearCartButton.addEventListener('click', clearCart);
 };
 
 window.onload = onLoad;
