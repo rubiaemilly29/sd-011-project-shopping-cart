@@ -1,3 +1,5 @@
+const cartItemsOl = '.cart__items';
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -35,11 +37,17 @@ function createCartItemElement({ id, title, price }) {
   return li;
 }
 
+const saveCartStorage = () => {
+  const cartItems = document.querySelector(cartItemsOl).innerHTML;
+  localStorage.setItem('savedCart', cartItems);
+};
+
 const addItemCart = async (event) => {
-  const cartItems = document.querySelector('.cart__items');
+  const cartItems = document.querySelector(cartItemsOl);
   const id = await getSkuFromProductItem(event.target.parentElement);
   const item = await getItemByID(id);
   cartItems.appendChild(createCartItemElement(item));
+  saveCartStorage();
 };
 
 function createProductItemElement({ id, title, thumbnail }) {
@@ -65,6 +73,14 @@ const searchQuery = async (query) => {
   data.results.forEach((d) => createProductItemElement(d));
 };
 
+// pega os itens do localStorage setado como savedCart e coloca no innerHTML da ol cart__items
+const recordItens = () => {
+  const savedCart = localStorage.getItem('savedCart');
+  const ol = document.querySelector(cartItemsOl);
+  ol.innerHTML = savedCart;
+};
+
 window.onload = function onload() { 
   searchQuery('computador');
+  recordItens();
 };
