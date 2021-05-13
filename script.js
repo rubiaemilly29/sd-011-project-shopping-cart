@@ -94,7 +94,23 @@ const getItemFunction = () => {
   }
 };
 
+// const generateTotalPrice = () => {
+//   const promise = new Promise((resolve, reject) => {
+
+//   });
+// };
+
+const removeOnClick = () => {
+  const emptyBttn = document.querySelector('.empty-cart');
+  emptyBttn.addEventListener('click', () => {
+    const cartOl = document.querySelector('.cart__items');
+    cartOl.innerHTML = '';
+  });
+};
+
 window.onload = function onload() {
   fetchApi();
   getItemFunction();
+  // generateTotalPrice();
+  removeOnClick();
 };
