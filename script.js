@@ -12,10 +12,10 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function cartItemClickListener(event) {
+function cartItemClickListener(event, cartItems, count) {
   // coloque seu código aqui
-  const cartItems = document.querySelector('.cart__items');
   cartItems.removeChild(event.target);
+  localStorage.removeItem(`Items${count}`);
 }
 
 function createCartItemElement({ sku, name, price: salePrice }) {
@@ -24,8 +24,9 @@ function createCartItemElement({ sku, name, price: salePrice }) {
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   const cartItems = document.querySelector('.cart__items');
   cartItems.appendChild(li);
-  li.addEventListener('click', cartItemClickListener);
-  
+  localStorage.setItem(`Items${cartItems.childElementCount}`, `${sku},${name},${salePrice}`);
+  const count = cartItems.childElementCount;
+  li.addEventListener('click', (e) => cartItemClickListener(e, cartItems, count));
   return li;
 }
 
@@ -50,7 +51,15 @@ function getSkuFromProductItem(item) {
 const promiseProducts = () => new Promise((accept) => {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((myFetch) => myFetch.json())
-    .then((elements) => elements.results.map((element) => createProductItemElement(element)));
+    .then((elements) => elements.results.map((element) => createProductItemElement(element)))
+    .then(() => {
+      for (let index = 1; index <= localStorage.length; index += 1) {
+        let objLocalStorage = {};
+        const [sku, name, price] = localStorage.getItem(`Items${index}`).split(',');
+        objLocalStorage = { sku, name, price };
+        createCartItemElement(objLocalStorage);
+      }
+    });
     accept();
 });
 
