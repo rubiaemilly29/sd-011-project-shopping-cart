@@ -14,7 +14,8 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+  const elem = event.target;
+  elem.remove();
 }
 
 function createCartItemElement({ sku, name, price: salePrice }) {
