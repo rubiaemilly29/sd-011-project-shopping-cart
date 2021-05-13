@@ -30,7 +30,6 @@ const generateTotalPrice = () => {
       myCart.appendChild(createSpan);
     });
   }
-
 };
 
 function cartItemClickListener(event) {
