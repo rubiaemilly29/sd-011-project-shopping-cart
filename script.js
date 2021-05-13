@@ -84,12 +84,14 @@ const fetchApi = () => {
 const getItemFunction = () => {
   const cartOl = document.querySelector('.cart__items');
   const storageArray = JSON.parse(localStorage.getItem('item'));
-  storageArray.forEach((computer) => {
-    const li = document.createElement('li');
-    li.className = 'cart__item';
-    li.innerText = computer;
-    cartOl.appendChild(li);
-  });
+  if (storageArray) {
+    storageArray.forEach((computer) => {
+      const li = document.createElement('li');
+      li.className = 'cart__item';
+      li.innerText = computer;
+      cartOl.appendChild(li);
+    });
+  }
 };
 
 window.onload = function onload() {
