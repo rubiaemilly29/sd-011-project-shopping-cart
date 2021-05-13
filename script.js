@@ -28,7 +28,7 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   cartItems.appendChild(li);
   const totalPrice = document.querySelector('.total-price');
   totalPrice.innerText = parseFloat(Number(totalPrice.innerText) + Number(salePrice));
-  localStorage.setItem(`Items${cartItems.childElementCount}`, `${sku},${name},${salePrice}`);
+  localStorage.setItem(`Items${cartItems.childElementCount}`, `${sku}`);
   const count = cartItems.childElementCount;
   li.addEventListener('click', (e) => cartItemClickListener(e, cartItems, count, salePrice));
   return li;
@@ -77,9 +77,7 @@ const promiseProducts = () => new Promise((accept) => {
     .then((elements) => elements.results.map((element) => createProductItemElement(element)))
     .then(() => {
       for (let index = 1; index <= localStorage.length; index += 1) {
-        let objLocalStorage = {};
-        const [sku, name, price] = localStorage.getItem(`Items${index}`).split(',');
-        objLocalStorage = { sku, name, price };
+        const sku = localStorage.getItem(`Items${index}`).split(',');
         newTest(sku);
       }
       accept();
@@ -88,13 +86,13 @@ const promiseProducts = () => new Promise((accept) => {
 
 const myPromise = async () => {
   try {
-    const teste = document.createElement('div');
-    teste.className = 'loading';
-    teste.innerText = 'Loading...';
+    const loading = document.createElement('div');
+    loading.className = 'loading';
+    loading.innerText = 'Loading...';
     const items = document.querySelector('.items');
-    items.appendChild(teste);
+    items.appendChild(loading);
     await promiseProducts();
-    await items.removeChild(teste);
+    await items.removeChild(loading);
   } catch (error) {
     console.log('ERROR!!');
   }
