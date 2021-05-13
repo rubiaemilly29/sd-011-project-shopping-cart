@@ -12,27 +12,15 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
-  const section = document.createElement('section');
-  section.className = 'item';
-
-  section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-  
-  return section;
+function cartItemClickListener(event) {
+  // coloque seu código aqui
 }
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
-
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
@@ -40,8 +28,35 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+const fetchApiCartItem = (id) => {
+  const API_URL = `https://api.mercadolibre.com/items/${id}`;
+  const headers = { headers: { Accept: 'application/json' } };
+
+  fetch(API_URL, headers)
+    .then((response) => response.json())
+    .then((json) => {
+      const cartList = document.querySelector('.cart__items');
+      cartList.appendChild(createCartItemElement(json));
+    });
+};
+
+function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
+  const section = document.createElement('section');
+  section.className = 'item';
+  const button = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
+  button.addEventListener('click', ({ target }) => {
+    fetchApiCartItem(getSkuFromProductItem(target.parentElement));
+  });
+  section.appendChild(createCustomElement('span', 'item__sku', sku));
+  section.appendChild(createCustomElement('span', 'item__title', name));
+  section.appendChild(createProductImageElement(image));
+  section.appendChild(button);
+  
+  return section;
+}
+
 const fetchApi = () => {
-  const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
+  const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
   const headers = { headers: { Accept: 'application/json' } };
   
   fetch(API_URL, headers)
