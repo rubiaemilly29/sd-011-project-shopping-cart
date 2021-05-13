@@ -1,10 +1,24 @@
+function toggleLoadingText(visible) {
+  if (visible) {
+    const loadingElement = document.createElement('h3');
+    loadingElement.className = 'loading';
+    loadingElement.innerText = 'loading...';
+    cartContainer.appendChild(loadingElement);
+    this.loadingElement = loadingElement;
+  } else {
+    loadingElement.remove();
+  }
+}
+
 function getProductListing(queryTerm) {
   const url = `https://api.mercadolibre.com/sites/MLB/search?q=${queryTerm}`;
+  toggleLoadingText(true);
 
   return new Promise(async (resolve, reject) => {
     try {
       const response = await fetch(url);
       const json = await response.json();
+      toggleLoadingText(false);
       resolve(json.results);
     } catch (e) {
       reject(e);
@@ -14,11 +28,15 @@ function getProductListing(queryTerm) {
 
 function getProductDetails(productId) {
   const url = `https://api.mercadolibre.com/items/${productId}`;
+  toggleLoadingText(true);
 
   return new Promise((resolve, reject) => {
     fetch(url)
     .then((response) => response.json())
-    .then((json) => resolve(json))
+    .then((json) => {
+      toggleLoadingText(false);
+      resolve(json);
+    })
     .catch((e) => reject(e));
   })
 }
@@ -140,6 +158,8 @@ function emptyCart() {
 }
 
 window.onload = async function onload() {
+  this.cartContainer = document.querySelector('.cart');
+
   const itemsContainer = document.querySelector('.items');
   const itemList = await getProductListing('computador');
   itemList.forEach(({id, title, thumbnail}) => {
