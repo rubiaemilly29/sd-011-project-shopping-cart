@@ -66,21 +66,31 @@ function createProductItemElement({ id, title, thumbnail }) {
   return section;
 }
 
-// adicionar cada produto da API em cada section item, filha da section items
+// adicionar cada produto da API em cada section item, filha da section items e remove o loading depois de carregar a API.
 const searchQuery = async (query) => {
   const fetchApi = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${query}`);
   const data = await fetchApi.json();
+  document.querySelector('.loading').remove();
   data.results.forEach((d) => createProductItemElement(d));
 };
 
 // pega os itens do localStorage setado como savedCart e coloca no innerHTML da ol cart__items
-const recordItens = () => {
+const getItemsFromLocalStorage = () => {
   const savedCart = localStorage.getItem('savedCart');
   const ol = document.querySelector(cartItemsOl);
   ol.innerHTML = savedCart;
 };
 
+const emptyButton = () => {
+  const button = document.querySelector('.empty-cart');
+  button.addEventListener('click', () => {
+    document.querySelector(cartItemsOl).innerHTML = '';
+    localStorage.clear();
+  });
+};
+
 window.onload = function onload() { 
   searchQuery('computador');
-  recordItens();
+  getItemsFromLocalStorage();
+  emptyButton();
 };
