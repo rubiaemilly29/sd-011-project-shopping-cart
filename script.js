@@ -12,9 +12,11 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function cartItemClickListener(event, cartItems, count) {
+function cartItemClickListener(event, cartItems, count, salePrice) {
   // coloque seu código aqui
   cartItems.removeChild(event.target);
+  const totalPrice = document.querySelector('.total-price');
+  totalPrice.innerText = parseFloat(Number(totalPrice.innerText) - Number(salePrice));
   localStorage.removeItem(`Items${count}`);
 }
 
@@ -24,9 +26,11 @@ function createCartItemElement({ sku, name, price: salePrice }) {
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   const cartItems = document.querySelector('.cart__items');
   cartItems.appendChild(li);
+  const totalPrice = document.querySelector('.total-price');
+  totalPrice.innerText = parseFloat(Number(totalPrice.innerText) + Number(salePrice));
   localStorage.setItem(`Items${cartItems.childElementCount}`, `${sku},${name},${salePrice}`);
   const count = cartItems.childElementCount;
-  li.addEventListener('click', (e) => cartItemClickListener(e, cartItems, count));
+  li.addEventListener('click', (e) => cartItemClickListener(e, cartItems, count, salePrice));
   return li;
 }
 
