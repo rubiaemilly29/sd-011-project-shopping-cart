@@ -1,3 +1,5 @@
+const totalPrice = document.querySelector('.total-price');
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -11,9 +13,11 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
-function cartItemClickListener(event, createLi, count) {
+
+function cartItemClickListener(event, createLi, count, price) {
   localStorage.removeItem(`produce${count}`);
   createLi.removeChild(event.target);
+  totalPrice.innerText = parseFloat(Number(totalPrice.innerText) - Number(price));
 }
 
 function createCartItemElement({ sku, name, price }) {
@@ -24,20 +28,21 @@ function createCartItemElement({ sku, name, price }) {
   localStorage.setItem(`produce${createLi.childElementCount}`, `${sku},${name},${price}`);
   const count = createLi.childElementCount;
   createLi.appendChild(li)
-  .addEventListener('click', (event) => cartItemClickListener(event, createLi, count));
+  .addEventListener('click', (event) => cartItemClickListener(event, createLi, count, price));
+  totalPrice.innerText = parseFloat(Number(totalPrice.innerText) + Number(price));
   return li;
 }
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image, price }) {
   const section = document.createElement('section');
   section.className = 'item';
-
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 
   'Adicionar ao carrinho!')).addEventListener('click',
-   () => createCartItemElement({ sku, name, price }));
+  () => createCartItemElement({ sku, name, price }));
+  
   const sectionItens = document.querySelector('.items');
   sectionItens.appendChild(section);
   return section;
@@ -63,4 +68,12 @@ const setProduce = () => getProduce('computador');
 
 window.onload = function onload() {
   setProduce();
+    
+  const button = document.getElementsByClassName('empty-cart')[0];
+  button.addEventListener('click', () => {
+    const cartItems = document.querySelector('.cart__items');
+    cartItems.innerHTML = '';
+    totalPrice.innerText = '0';
+    localStorage.clear();
+  });
 };
