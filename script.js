@@ -1,3 +1,5 @@
+const cartItemsList = '.cart__items';
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -45,7 +47,7 @@ const fetchApiCartItem = (id) => {
   fetch(API_URL, headers)
     .then((response) => response.json())
     .then((json) => {
-      const cartList = document.querySelector('.cart__items');
+      const cartList = document.querySelector(cartItemsList);
       cartList.appendChild(createCartItemElement(json));
     });
 };
@@ -82,7 +84,7 @@ const fetchApi = () => {
 };
 
 const getItemFunction = () => {
-  const cartOl = document.querySelector('.cart__items');
+  const cartOl = document.querySelector(cartItemsList);
   const storageArray = JSON.parse(localStorage.getItem('item'));
   if (storageArray) {
     storageArray.forEach((computer) => {
@@ -103,7 +105,7 @@ const getItemFunction = () => {
 const removeOnClick = () => {
   const emptyBttn = document.querySelector('.empty-cart');
   emptyBttn.addEventListener('click', () => {
-    const cartOl = document.querySelector('.cart__items');
+    const cartOl = document.querySelector(cartItemsList);
     cartOl.innerHTML = '';
   });
 };
