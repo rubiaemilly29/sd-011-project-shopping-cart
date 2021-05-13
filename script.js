@@ -12,6 +12,26 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// realizar a requisição para o endpoint:
+const getItemByID = async (id) => {
+  const response = await fetch(`https://api.mercadolibre.com/items/${id}`);
+  const data = await response.json();
+  return data;
+};
+
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
+
+const addItemCart = async (event) => {
+  const cartItems = document.querySelector('.cart__items');
+  const id = await getSkuFromProductItem(event.target.parentElement);
+  console.log(id)
+  const item = await getItemByID(id);
+  console.log(item)
+  cartItems.appendChild(createCartItemElement(item))
+}
+
 function createProductItemElement({ id, title, thumbnail }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -19,7 +39,7 @@ function createProductItemElement({ id, title, thumbnail }) {
   section.appendChild(createCustomElement('span', 'item__sku', id));
   section.appendChild(createCustomElement('span', 'item__title', title));
   section.appendChild(createProductImageElement(thumbnail));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!')).addEventListener('click', addItemCart);
 
   const sectionItems = document.querySelector('.items');
   sectionItems.appendChild(section);
@@ -27,26 +47,22 @@ function createProductItemElement({ id, title, thumbnail }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
 function cartItemClickListener(event) {
   // coloque seu código aqui
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ id, title, price }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
+// adicionar cada produto da API em cada section item, filha da section items
 const searchQuery = async (query) => {
   const fetchApi = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${query}`);
   const data = await fetchApi.json();
-  console.log(data.results);
   data.results.forEach((d) => createProductItemElement(d));
 };
 
