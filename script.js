@@ -12,18 +12,16 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ sku, name, image }) {
+const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) => {
   const items = document.querySelector('.items');
   const section = document.createElement('section');
   section.className = 'item';
-  items.appendChild(section);
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
-  return section;
-}
+  return items.appendChild(section);
+};
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
@@ -33,13 +31,37 @@ function cartItemClickListener(event) {
 
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
+const createCartItemElement = ({ id: sku, title: name, price: salePrice }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.id = sku;
   li.addEventListener('click', cartItemClickListener);
   return li;
-}
+};
+
+const cathOl = (element) => {
+  const chart = document.querySelector('.cart__items');
+  chart.appendChild(element);
+};
+
+const fetchToChart = (id) => {
+  const endpoint = `https://api.mercadolibre.com/items/${id}`;
+  fetch(endpoint)
+    .then((response) => response.json())
+    .then((data) => {
+      cathOl(createCartItemElement(data));
+    });
+};
+
+const appendToChart = (item) => {
+  const createDisplay = document.querySelector('.items');
+  createDisplay.appendChild(item);
+  item.addEventListener('click', (event) => {
+    const getSku = event.currentTarget.firstChild.innerText;
+    fetchToChart(getSku);
+  });
+};
 
 const getEndPoint = (query) => {
   const endpoint = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
@@ -47,12 +69,8 @@ const getEndPoint = (query) => {
     .then((response) => response.json())
     .then((object) => {
       const result = object.results;
-      result.forEach((item) => {
-        createProductItemElement({
-          sku: item.id,
-          name: item.title,
-          image: item.thumbnail,
-        });
+      result.forEach((value) => {
+        appendToChart(createProductItemElement(value));
       });
     })
     .catch((error) => {
@@ -61,8 +79,5 @@ const getEndPoint = (query) => {
 };
 
 window.onload = function onload() {
-  // cartItemClickListener();
-  // createProductItemElement();
-  // createCartItemElement();
   getEndPoint('computador');
 };
