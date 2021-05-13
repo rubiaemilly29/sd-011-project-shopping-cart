@@ -1,3 +1,7 @@
+function getTotalPrice() {
+  const totalPrice = document.getElementsByClassName('total-price')[0];
+  return totalPrice;
+}
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -30,21 +34,19 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
-  const totalPrice = document.getElementsByClassName('total-price')[0];
-  totalPrice.value = (Number(totalPrice.value) - Number(event.target.id)).toFixed(2);
-  totalPrice.innerText = Number(totalPrice.value).toString(10);
+  getTotalPrice().value = (Number(getTotalPrice().value) - Number(event.target.id)).toFixed(2);
+  getTotalPrice().innerText = Number(getTotalPrice().value).toString(10);
   document.getElementsByTagName('ol')[0].removeChild(event.target);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
-  const totalPrice = document.getElementsByClassName('total-price')[0];
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   li.id = salePrice;
-  totalPrice.value = (Number(totalPrice.value) + Number(salePrice)).toFixed(2);
-  totalPrice.innerText = Number(totalPrice.value).toString(10);
+  getTotalPrice().value = (Number(getTotalPrice().value) + Number(salePrice)).toFixed(2);
+  getTotalPrice().innerText = Number(getTotalPrice().value).toString(10);
   return li;
 }
 
@@ -61,6 +63,15 @@ function appendProductToCart(event) {
   });
 }
 
+function deleteCartItems() {
+  while (document.getElementsByTagName('ol')[0].firstChild) {
+    document.getElementsByTagName('ol')[0].removeChild(document
+      .getElementsByTagName('ol')[0].firstChild);
+  }
+  getTotalPrice().value = '0.00';
+  getTotalPrice().innerText = '0';
+}
+
 window.onload = function onload() {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((response) => response.json())
@@ -74,4 +85,5 @@ window.onload = function onload() {
       }
     });
   document.getElementsByClassName('items')[0].addEventListener('click', appendProductToCart);
+  document.getElementsByClassName('empty-cart')[0].addEventListener('click', deleteCartItems);
 };
