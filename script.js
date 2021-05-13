@@ -125,7 +125,7 @@ const carregandoItens = () => {
 const createProductItemElement = ({ id: sku, title: name, thumbnail: image, price: sellPrice }) => {
   const section = document.createElement('section');
   section.className = 'item';
-
+  
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('span', 'item__title', name));
