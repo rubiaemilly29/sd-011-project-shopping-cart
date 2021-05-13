@@ -61,3 +61,4 @@ const productsList = () => {
 window.onload = async () => {
   productsList();
 };
+ console.log
