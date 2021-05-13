@@ -42,7 +42,6 @@ function createCartItemElement({ id, title, price }) {
   return li;
 }
 
-
 const productsList = () => {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=pc_gamer')
     .then((r) => r.json())
@@ -61,4 +60,3 @@ const productsList = () => {
 window.onload = async () => {
   productsList();
 };
- console.log
