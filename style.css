@@ -135,13 +135,7 @@ li {
 .cart {
   background-color: rgb(255, 255, 255);
   border: 1px grey solid;
-  display: none;
-  transition: ease-in-out 0.4s;
-}
-
-.show {
-  display: flex;
-  transition: ease-in-out 0.4s;
+  display: block;
 }
 
 #total {

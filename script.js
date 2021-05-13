@@ -1,5 +1,3 @@
-window.onload = function onload() { };
-
 const pegarI = async () => {
   const resposta = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
   const respostaObjeto = await resposta.json();
@@ -12,13 +10,6 @@ const pegarItemPorId = async (id) => {
   const respostaObjeto = await resposta.json();
   return respostaObjeto;
 };
-
-const cartBtn = document.getElementById('cart-button');
-
-cartBtn.addEventListener('click', () => {
-  const cartContainer = document.querySelector('.cart');
-  cartContainer.classList.toggle('show');
-});
 
 let salvoCartItems = [];
 let itemsPreco = [];
@@ -76,7 +67,7 @@ function createCartItemElement({ id: sku, title: name, price: precoVenda, thumbn
   img.className = 'item__image__cart';
   img.src = image;
   li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: R$${precoVenda}`;
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${precoVenda}`;
   li.appendChild(img);
   li.addEventListener('click', (event) => { cartItemClickListener(event); });
   return li;
