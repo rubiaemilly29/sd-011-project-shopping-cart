@@ -94,13 +94,17 @@ function fetchAPI() {
       const productItem = createProductItemElement(result);
       const items = document.querySelector('.items');
       items.appendChild(productItem);
-    }));
+    })).then(() => {
+      const container = document.querySelector('.container');
+      const loading = document.querySelector('.loading');
+      container.removeChild(loading);
+    });
     addItemToCart();
     emptyCart();
   });
 }
 
-window.onload = function onload() { 
+window.onload = function onload() {
   fetchAPI();
   if (localStorage.cartItems) {
     document.querySelector('.cart__items').innerHTML = localStorage.getItem('cartItems');
