@@ -1,5 +1,7 @@
 window.onload = function onload() { };
 
+// inicio
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
