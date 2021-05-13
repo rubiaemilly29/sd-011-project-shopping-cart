@@ -77,9 +77,16 @@ const myPromise = async () => {
 
 window.onload = function onload() {
   myPromise();
+  const emptyCart = document.querySelector('.empty-cart');
   const totalPrice = document.createElement('span');
   const cart = document.querySelector('.cart');
   totalPrice.className = 'total-price';
   cart.appendChild(totalPrice);
+  emptyCart.addEventListener('click', () => {
+    const cartItems = document.querySelector('.cart__items');
+    cartItems.innerHTML = '';
+    totalPrice.innerText = '0';
+    localStorage.clear();
+  });
   totalPrice.innerText = '0';
 };
