@@ -50,11 +50,14 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image, pric
   return section;
 }
 
-const getProduct = (term) => {
-  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${term}`)
+const getProduct = async (term) => {
+  const loading = document.querySelector('.loading');
+  const cart = document.querySelector('.cart'); 
+  await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${term}`)
     .then((response) => response.json())
     .then((response) => response.results.forEach((computer) => createProductItemElement(computer)))
     .then(() => {
+      cart.removeChild(loading);
       for (let index = 0; index < localStorage.length; index += 1) {
         const [sku, name, price] = (localStorage.getItem(`product${index}`).split('|'));
         const objProduct = { sku, name, price };
