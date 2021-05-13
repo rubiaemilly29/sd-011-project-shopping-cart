@@ -20,11 +20,12 @@ const getProductKeys = async (product) => {
 };
 // getProductKeys(newProduct);
 
-const productMLArray = async (itemId) => {
+const productMLItem = async (itemId) => {
   const ML_ITEM = `https://api.mercadolibre.com/items/${itemId}`;
   const parseJson = (el) => el.json();
   const product = await fetch(ML_ITEM, myObj);
   const jsonProduct = await parseJson(product);
-  return console.log(jsonProduct);
+  return jsonProduct;
 };
-productMLArray('MLB1341706310');
+console.log(productMLItem('MLB1341706310'));
+console.log(newProduct());
