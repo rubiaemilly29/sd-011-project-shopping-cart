@@ -35,6 +35,7 @@ function createCartItemElement({ sku, name, price }) {
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image, price }) {
   const section = document.createElement('section');
+  const sectionItens = document.querySelector('.items');
   section.className = 'item';
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
@@ -42,21 +43,18 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image, pric
   section.appendChild(createCustomElement('button', 'item__add', 
   'Adicionar ao carrinho!')).addEventListener('click',
   () => createCartItemElement({ sku, name, price }));
-  
-  const sectionItens = document.querySelector('.items');
   sectionItens.appendChild(section);
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
-const getProduce = (QUERY) => {
-  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${QUERY}`)
+const getProduce = async (QUERY) => {
+  const loading = document.querySelector('.loading');
+  const cart = document.querySelector('.cart');
+  await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${QUERY}`)
     .then((response) => response.json())
     .then((response) => response.results.forEach((computer) => createProductItemElement(computer)))
     .then(() => {
+      cart.removeChild(loading);
       for (let index = 0; index < localStorage.length; index += 1) {
        const [sku, name, price] = localStorage.getItem(`produce${index}`).split(',');
        const valueLocal = { sku, name, price };
