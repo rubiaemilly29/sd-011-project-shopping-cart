@@ -14,19 +14,17 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+function fetchItem() {
+  const itens = fetch('https://api.mercadolibre.com/sites/MLB/search?q=computer')
+  .then((response) => response.json())
+  .then((response) => response.results);
+  return alert(itens);
+}
+
+fetchItem();
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
-  new Promise((resolve, reject) => {
-    if (querry === 'computador') {
-      fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${querry}`)
-      .then((url) => url.json)
-      .then((url) => resolve(url.results));
-    } else {
-      reject('Erro');
-    }
-    })
-  }
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
