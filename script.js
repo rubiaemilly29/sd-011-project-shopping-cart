@@ -26,9 +26,9 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
@@ -41,3 +41,22 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+const productsList = () => {
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=pc_gamer')
+    .then((r) => r.json())
+    .then((data) => {
+      data.results.map((product) => {
+        const object = {
+          sku: product.id,
+          name: product.title,
+          image: product.thumbnail,
+        };
+        document.querySelector('.items').appendChild(createProductItemElement(object));
+      });
+    });
+};
+
+window.onload = async () => {
+  await productsList();
+};
