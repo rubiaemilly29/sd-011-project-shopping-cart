@@ -14,8 +14,8 @@ function createCustomElement(element, className, innerText) {
 
 // Requisito 3 - Depois de receber o click, o item do carrinho é retirado
 function cartItemClickListener(event) {
-  const clicarItem = event.target;
-  clicarItem.remove();
+  const clickedItem = event.target;
+  clickedItem.remove();
 }
 
 // Requisito 2 - Cria o item no carrinho com o sku, nome e preço
@@ -62,7 +62,7 @@ const fetchTheAPI = () => (
             sectionItens.appendChild(createProductItemElement(product));
             resolve();
           });
-          })
+        })
         .catch(() => reject());
       })
       .catch(() => reject());
@@ -70,5 +70,13 @@ const fetchTheAPI = () => (
 );
 
 window.onload = function onload() { 
-  fetchTheAPI();
+  fetchTheAPI()
+  // Requisito 7 - Dentro do onload para garantir que a função será executada após o DOM ser carregado
+  .then(() => {
+    const a = document.querySelector('.empty-cart');
+    a.addEventListener('click', () => {
+    const ShoppingCart = document.querySelector('.cart__items');
+    ShoppingCart.innerHTML = '';
+    });
+  });
 };
