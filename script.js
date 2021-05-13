@@ -25,7 +25,7 @@ function createProductItemElement({ sku, name, image }) {
 }
 
 function cartItemClickListener(event) {
-  addEventListener('click', () => event.target.remove('.cart__item'));
+  event.target.remove('.cart__item');
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
