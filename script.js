@@ -1,4 +1,6 @@
-window.onload = function onload() { };
+window.onload = function onload() {
+  queryProduct();
+};
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -52,6 +54,3 @@ const fetchProduct = (query) => {
 };
 
 const queryProduct = () => fetchProduct('computador');
-
-
-queryProduct();
