@@ -1,3 +1,5 @@
+const cartElementClass = 'cart__items';
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -28,8 +30,14 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+function saveCart() {
+  const cartElement = document.querySelector(`.${cartElementClass}`);
+  localStorage.setItem('cart-items', cartElement.innerHTML);
+}
+
 function cartItemClickListener(event) {
   event.target.remove();
+  saveCart();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -46,18 +54,18 @@ async function addItemToCart(event) {
   const response = await fetch(`https://api.mercadolibre.com/items/${sku}`);
   const { title, price } = await response.json();
 
+  const cartElement = document.querySelector('.cart__items');
   const cartItemElement = createCartItemElement({ sku, name: title, salePrice: price });
-  document.querySelector('.cart__items').appendChild(cartItemElement);
+  cartElement.appendChild(cartItemElement);
+  saveCart();
 }
 
-window.onload = async function onload() {
+async function loadProducts(queryName) {
   const itemsSection = document.querySelector('section .items');
-
-  const queryName = 'computador';  
-
+  
   const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${queryName}`);
   const { results } = await response.json();
-
+  
   results.forEach((product) => {
     const component = createProductItemElement({
       sku: product.id,
@@ -66,6 +74,15 @@ window.onload = async function onload() {
     });
     itemsSection.appendChild(component);
   });
+}
+
+window.onload = async function onload() {
+  await loadProducts('computador');
+
+  const cartElement = document.querySelector('.cart__items');
+  cartElement.innerHTML = localStorage.getItem('cart-items');
+  document.querySelectorAll('.cart__item')
+    .forEach((element) => element.addEventListener('click', cartItemClickListener));
 
   const addButtons = document.querySelectorAll('.item__add');
   addButtons.forEach((element) => element.addEventListener('click', addItemToCart));
