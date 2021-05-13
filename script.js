@@ -41,7 +41,7 @@ function updateCartPrice() {
     const itemPrice = curr.salePrice || 0;
     return acc + itemPrice;
   }, 0);
-  document.querySelector('.total-price').textContent = totalPrice;
+  document.querySelector('.total-price').textContent = Math.round(totalPrice * 100) / 100;
 }
 
 function cartItemClickListener(event) {
@@ -109,7 +109,15 @@ async function loadProducts(queryName) {
   });
 }
 
+function clearCart() {
+  cartData = [];
+  saveCartToLocalStorage();
+  renderCart();
+}
+
 window.onload = async function onload() {
   loadCartFromLocalStorage();
   await loadProducts('computador');
+
+  document.querySelector('.empty-cart').addEventListener('click', clearCart);
 };
