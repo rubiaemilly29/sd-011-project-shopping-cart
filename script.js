@@ -71,3 +71,9 @@ const fetchItems = async (url) => {
 window.onload = function onload() {
   fetchItems('https://api.mercadolibre.com/sites/MLB/search?q=computador');
  };
+
+window.onclick = function onclick() {
+  cartItens = document.querySelector('.cart__items')
+  localStorage = '';
+  localStorage = cartItens.innerHTML;
+};
