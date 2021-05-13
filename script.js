@@ -42,4 +42,18 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-// Comentário para primeiro commit
+const fetchProducts = (product) => {
+  const API_URL = `https://api.mercadolibre.com/sites/MLB/search?q=$${product}`;
+  const myObject = {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+  };
+  
+  fetch(API_URL, myObject)
+    .then((response) => response.json())
+      .then((products) => products.results.forEach(({ id, title, thumbnail }) => {
+        document.querySelector('.items')
+        .appendChild(createProductItemElement({ sku: id, name: title, image: thumbnail }));
+      }));
+};
+fetchProducts('computador');
