@@ -32,9 +32,19 @@ const saveLocalStorage = () => {
   localStorage.setItem('cart', searchOl);
 };
 
+const sumTotalPrice = () => {
+  let total = 0;
+  const itemCart = document.querySelectorAll('.cart__item');
+  itemCart.forEach((item) => {
+    total += parseFloat(item.innerText.split('$')[1]);
+  });
+  document.querySelector('.total-price').innerText = `Total R$: ${total}`;
+};
+
 const cartItemClickListener = (event) => {
   event.target.remove();
   saveLocalStorage();
+  sumTotalPrice();
 };
 
 const createCartItemElement = ({ id: sku, title: name, price: salePrice }) => {
@@ -57,6 +67,7 @@ const fetchToChart = (id) => {
     .then((response) => response.json())
     .then((data) => {
       cathOl(createCartItemElement(data));
+      sumTotalPrice();
       saveLocalStorage();
     });
 };
@@ -97,4 +108,5 @@ const loadLocalStorage = () => {
 window.onload = function onload() {
   getEndPoint('computador');
   loadLocalStorage();
+  sumTotalPrice();
 };
