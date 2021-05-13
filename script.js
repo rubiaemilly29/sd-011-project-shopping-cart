@@ -1,7 +1,3 @@
-window.onload = function onload() {
-  addItems();
-};
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -44,7 +40,7 @@ const addItemToCart = async ({ target }) => {
   const item = await fetchItem(getSkuFromProductItem(target.parentElement));
 
   document.querySelector('ol.cart__items').appendChild(createCartItemElement(item));
-}
+};
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
@@ -72,5 +68,10 @@ const fetchComputerItems = () => {
 const addItems = async () => {
   const items = await fetchComputerItems();
 
-  items.forEach((item) => document.querySelector('section.items').appendChild(createProductItemElement(item)));
+  const container = document.querySelector('section.items');
+  items.forEach((item) => container.appendChild(createProductItemElement(item)));
+};
+
+window.onload = function onload() {
+  addItems();
 };
