@@ -73,4 +73,9 @@ const myPromise = async () => {
 
 window.onload = function onload() {
   myPromise();
+  const totalPrice = document.createElement('span');
+  const cart = document.querySelector('.cart');
+  totalPrice.className = 'total-price';
+  cart.appendChild(totalPrice);
+  totalPrice.innerText = '0';
 };
