@@ -1,5 +1,5 @@
 window.onload = function onload() { };
-
+// mudanças
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
