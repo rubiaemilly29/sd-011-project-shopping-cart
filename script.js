@@ -1,3 +1,5 @@
+window.onload = function onload() { };
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -12,18 +14,15 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ id: sku, title: name, thumbnail: image, price }) {
+function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
+
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
-  .addEventListener('click', () => {
-    createCartItemElement({ sku, name, price })
-  });
-  const itemSection = document.querySelector('.items');
-  itemSection.appendChild(section);
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  
   return section;
 }
 
@@ -32,25 +31,32 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
+   
 }
 
-function createCartItemElement({ sku, name, price: salePrice }) {
+function createCartItemElement({ id, title, price }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-
-  const Items = document.querySelector('.cart__items')
-  Items.appendChild(li).addEventListener('click', (event) => Items.removeChild(event.target));
+  li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
+  li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
-const fetchProduct = () => {
-  return new Promise (() => {
-    fetch("https://api.mercadolibre.com/sites/MLB/search?q=computador")
-  .then(r => r.json())
-  .then(r => r.results.forEach((computador) => createProductItemElement(computador)));
-  })
-}
-window.onload = function onload() {
-  fetchProduct();
+const productsList = () => {
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=pc_gamer')
+    .then((r) => r.json())
+    .then((data) => {
+     data.results.forEach((product) => {
+        const object = {
+          sku: product.id,
+          name: product.title,
+          image: product.thumbnail,
+        };
+        document.querySelector('.items').appendChild(createProductItemElement(object));
+      });
+    });
+};
+
+window.onload = async () => {
+  productsList();
 };
