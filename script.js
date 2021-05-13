@@ -52,6 +52,7 @@ function createCartItemElement({ sku, name, salePrice }) {
       name:result.title,
       image: result.thumbnail,
     };
+    
     fetch(API_URL, object)
     .then (response => response.json())
     .then(data => document.querySelector('.item').appendChild(createProductItemElement(object)).innerText = data)
