@@ -1,3 +1,5 @@
+const total = document.querySelector('.total-price');
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -15,8 +17,7 @@ function createCustomElement(element, className, innerText) {
 function cartItemClickListener(event, cartItems, count, price) {
   // coloque seu código aqui
   localStorage.removeItem(`product${count}`);
-  cartItems.removeChild(event.target);
-  const total = document.querySelector('.total-price');
+  cartItems.removeChild(event.target);  
   total.innerText = Number((Number(total.innerText) - Number(price)));
 }
 
@@ -27,7 +28,6 @@ function createCartItemElement({ sku, name, price }) {
   const cartItems = document.querySelector('.cart__items');
   localStorage.setItem(`product${cartItems.childElementCount}`, `${sku}|${name}|${price}`);
   const count = cartItems.childElementCount;
-  const total = document.querySelector('.total-price');
   cartItems.appendChild(li);
   li.addEventListener('click', (event) => 
   cartItemClickListener(event, cartItems, count, price));
@@ -78,7 +78,6 @@ window.onload = function onload() {
   button.addEventListener('click', () => {
     const cartItems = document.querySelector('.cart__items');
     cartItems.innerHTML = '';
-    const total = document.querySelector('.total-price');
     total.innerText = 0;
     localStorage.clear();
   });
