@@ -1,5 +1,4 @@
 window.onload = function onload() {
-  getProducts('computador');
 };
 
 function createProductImageElement(imageSource) {
