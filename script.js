@@ -13,11 +13,9 @@ function createCustomElement(element, className, innerText) {
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
-
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
+  // console.log(event.target);
+  const liSaver = event.target;
+  liSaver.remove();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -26,6 +24,10 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
+}
+
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
 }
 
 const fetchApiCartItem = (id) => {
