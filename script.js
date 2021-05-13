@@ -1,5 +1,3 @@
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -26,18 +24,36 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//  return item.querySelector('span.item__sku').innerText;
+// }
 
-function cartItemClickListener(event) {
-  //// coloque seu código aqui
-}
+// function cartItemClickListener(event) {
+//  //// coloque seu código aqui
+// }
 
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-}
+// function createCartItemElement({ sku, name, salePrice }) {
+//  const li = document.createElement('li');
+//  li.className = 'cart__item';
+//  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+//  li.addEventListener('click', cartItemClickListener);
+//  return li;
+// }
+
+// Requisito 1 - Puxar a lista por API e criar item dentro da section
+const fetchTheAPI = () => {
+  fetch('"https://api.mercadolibre.com/sites/MLB/search?q=$computador')
+  .then((response) => {
+    response.json().then((data) => {
+      const productList = data.results;
+      productList.forEach((product) => { 
+        const section = document.querySelector('.items');
+        section.appendChild(createProductItemElement(product));
+      });
+    });
+  });
+ };
+
+ window.onload = function onload() { 
+  fetchTheAPI();
+};
