@@ -5,12 +5,12 @@ window.onload = () => {
 const getProduct = (computador) => {
      fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${computador}`)
     .then((response) => response.json())
-    .then((data => data.results) // retorna os dados
+    .then((data => data.results // retorna os dados
       .forEach(({ id, title, thumbnail }) => { // acha os termos e associa ao create product
       const getSection = document.querySelector('.items');
       const toCreate =  createProductItemElement({ sku: id, name: title, image: thumbnail }); // associo os dois
       getSection.appendChild(toCreate);
-}));
+})));
 }
 getProduct();
 
