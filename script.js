@@ -27,8 +27,8 @@ const fetchItem = (itemId) => {
   .catch((error) => console.error(error));
 };
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
+function cartItemClickListener({ target }) {
+  target.parentElement.removeChild(target);
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
