@@ -1,5 +1,3 @@
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -14,11 +12,12 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ sku, name, image }) {
+function createProductItemElement({ id, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
-  section.appendChild(createCustomElement('span', 'item__sku', sku));
+  const createItems = document.querySelector('.items');
+  createItems.appendChild(section);
+  section.appendChild(createCustomElement('span', 'item__sku', id));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
@@ -26,7 +25,7 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
+/* function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
@@ -41,3 +40,29 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+*/
+const createPromisse = () => {
+  let products;
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+    .then((response) => {
+      response.json().then((produtos) => {
+        products = produtos.results;
+        products.forEach((product) => {
+          createProductItemElement(product);
+        });
+      });
+    });
+};
+
+// A idéia da função callProduct é da Ana Ventura turma 10-A
+const callProduct = async () => {
+  try {
+    await createPromisse();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+window.onload = function onload() { 
+  callProduct();
+};
