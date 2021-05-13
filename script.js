@@ -15,7 +15,6 @@ function createCustomElement(element, className, innerText) {
 }
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
-  const mainSection = document.querySelector('.items');
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -23,7 +22,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-  mainSection.appendChild(section);
+  
   return section;
 }
 
@@ -53,7 +52,8 @@ const fetchApi = () => {
       console.log(json.results);
       const jsonResultsArray = json.results;
       jsonResultsArray.forEach((computer) => {
-        createProductItemElement(computer)
+        const mainSection = document.querySelector('.items');
+        mainSection.appendChild(createProductItemElement(computer));
       })
     })
 }
