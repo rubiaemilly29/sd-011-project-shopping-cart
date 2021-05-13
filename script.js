@@ -41,4 +41,4 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
-// altera para PR
+// altera para PR2
