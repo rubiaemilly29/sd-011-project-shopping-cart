@@ -1,4 +1,24 @@
-window.onload = function onload() { };
+window.onload = function onload(url) {
+  return new Promise((resolve, reject) => {
+    if (url === "https://api.mercadolibre.com/sites/MLB/search?q=$QUERY") {
+      fetch(url)
+        .then(response => response.json())
+        .then(data => resolve(data.results))
+    } else {
+      reject( new Error ('url incorreta'));
+    }
+  });
+};
+
+const  exibitProductList = async () => {
+    const jsonProductList = await onload("https://api.mercadolibre.com/sites/MLB/search?q=computador");
+    const arrayOfProducts = jsonProductList.map({ id, name, thumbnail });
+    for (let index = 0; index < arrayOfProducts.length; index += 1) {
+      const newProduct = createProductItemElement({ id, name, thumbnail });
+      getElementsByClass('items').appendChild(newProduct);
+      getElementsByClass('item__add').addEventListener('click', insertToCart(id));
+    }
+  };
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -23,6 +43,7 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
+
   return section;
 }
 
@@ -31,7 +52,8 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+  getElementsByClass('cart__items').removeChild(event.target);
+  localStorage.removeItem(event.target);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -39,5 +61,20 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  
+  getElementsByClass('cart__items').appendChild(li);
+  localStorage.setItem(sku, li.innerText);
+
   return li;
+}
+
+const insertToCart = async (id) => {
+  const getItemData = await fetch(`https://api.mercadolibre.com/items/${id}`)
+    .then(response => response.json())
+    .then(data => datacreateCartItemElement({ data.id, data.name, data.price })
+
+}
+
+const sumOfCartItems = () => {
+
 }
