@@ -29,8 +29,6 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
-
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -41,20 +39,38 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-const downloadJSON = () => new Promise((resolve, reject) => {
-    const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
-    const params = { method: 'GET', headers: { Accept: 'application/json' } };
-    const itemsList = document.querySelector('.items');
-    fetch(API_URL, params)
-      .then((response) => response.json())
-      .then((json) => json.results
+const createItems = () => {
+  const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
+  const params = { method: 'GET', headers: { Accept: 'application/json' } };
+  const itemsList = document.querySelector('.items');
+  return fetch(API_URL, params)
+    .then((response) => response.json())
+    .then((json) => json.results
       .forEach((element) => itemsList
-      .appendChild(createProductItemElement(
-        { sku: element.id, name: element.title, image: element.thumbnail },
+        .appendChild(createProductItemElement(
+          { sku: element.id, name: element.title, image: element.thumbnail },
 ))));
-      resolve();
-  });
+};
 
-  window.onload = function onload() { 
-    downloadJSON();
-   };  
+const teste = async () => {
+  const addItemToCart = document.querySelectorAll('.item__add');
+  const params = { method: 'GET', headers: { Accept: 'application/json' } };
+  const cartItems = document.querySelector('.cart__items');
+  addItemToCart.forEach((element) => 
+    element.addEventListener('click', () => 
+      fetch(
+        `https://api.mercadolibre.com/items/${element.parentNode.children[0].innerText}`, params,
+)
+        .then((response) => response.json())
+          .then((json) => cartItems
+            .appendChild(createCartItemElement(
+              { sku: json.id, name: json.title, salePrice: json.price },
+)))));
+};
+
+const createStore = async () => {
+  await createItems();
+  await teste();
+};
+
+window.onload = function onload() { createStore(); }; 
