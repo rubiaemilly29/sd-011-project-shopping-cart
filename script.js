@@ -27,7 +27,18 @@ const fetchItem = (itemId) => {
   .catch((error) => console.error(error));
 };
 
+const removeElementFromStorage = (string) => {
+  const deleteId = string.split(' | ')[0].split(' ')[1];
+  
+  let shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
+  const deleteItem = shoppingCart.find(({ id }) => id === deleteId);
+  shoppingCart = shoppingCart.filter((item) => item !== deleteItem);
+
+  localStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
+};
+
 function cartItemClickListener({ target }) {
+  removeElementFromStorage(target.innerText);
   target.parentElement.removeChild(target);
 }
 
@@ -39,13 +50,27 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   return li;
 }
 
+const addItemToLocalStorage = ({ id, title, price }) => {
+  const newItem = { id, title, price };
+
+  const shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
+
+  if (shoppingCart) shoppingCart.push(newItem);
+
+  localStorage.setItem(
+    'shoppingCart',
+    shoppingCart ? JSON.stringify(shoppingCart) : JSON.stringify([newItem]),
+  );
+};
+
 async function addItemToCart({ target }) {
   const itemId = getSkuFromProductItem(target.parentElement);
 
   const item = await fetchItem(itemId);
 
-  const cartItemsOl = document.querySelector('ol.cart__items');
+  addItemToLocalStorage(item);
 
+  const cartItemsOl = document.querySelector('ol.cart__items');
   cartItemsOl.appendChild(createCartItemElement(item));
 }
 
@@ -81,8 +106,19 @@ const addItems = async () => {
   items.forEach((item) => itemsContainer.appendChild(createProductItemElement(item)));
 };
 
+const loadCartFromStorage = () => {
+  const storageItems = JSON.parse(localStorage.getItem('shoppingCart'));
+
+  const cartItemsOl = document.querySelector('ol.cart__items');
+
+  if (storageItems) {
+    storageItems.forEach((item) => cartItemsOl.appendChild(createCartItemElement(item)));
+  }
+};
+
 const onLoad = () => {
   addItems();
+  loadCartFromStorage();
 };
 
 window.onload = onLoad;
