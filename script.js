@@ -14,10 +14,32 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+const generateTotalPrice = () => {
+  const priceClass = document.querySelector('.total-price');
+  if (priceClass) priceClass.remove();
+  const myCart = document.querySelector('.cart');
+  const createSpan = document.createElement('span');
+  createSpan.className = 'total-price';
+  const storageArray = JSON.parse(localStorage.getItem('item'));
+  let totalPrice = 0;
+  if (storageArray || storageArray === []) {
+    storageArray.forEach((eachComp) => {
+      const splited = eachComp.split('$');
+      totalPrice += parseFloat(splited[1]);
+      createSpan.innerText = `${totalPrice}`;
+      myCart.appendChild(createSpan);
+    });
+  }
+
+};
+
 function cartItemClickListener(event) {
   // console.log(event.target);
   const liSaver = event.target;
   const text = liSaver.innerText;
+  const price = parseFloat(text.split('$')[1]);
+  const priceClass = document.querySelector('.total-price');
+  priceClass.innerText = parseFloat(priceClass.innerText) - price;
   liSaver.remove();
   const storageArray = JSON.parse(localStorage.getItem('item'));
   const storageIndex = storageArray.indexOf(text);
@@ -49,6 +71,7 @@ const fetchApiCartItem = (id) => {
     .then((json) => {
       const cartList = document.querySelector(cartItemsList);
       cartList.appendChild(createCartItemElement(json));
+      generateTotalPrice();
     });
 };
 
@@ -114,12 +137,6 @@ const getItemFunction = () => {
   }
 };
 
-// const generateTotalPrice = () => {
-//   const promise = new Promise((resolve, reject) => {
-
-//   });
-// };
-
 const removeOnClick = () => {
   const emptyBttn = document.querySelector('.empty-cart');
   emptyBttn.addEventListener('click', () => {
@@ -131,6 +148,5 @@ const removeOnClick = () => {
 window.onload = function onload() {
   fetchApi();
   getItemFunction();
-  // generateTotalPrice();
   removeOnClick();
 };
