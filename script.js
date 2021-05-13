@@ -49,15 +49,18 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image, pric
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
-const getProduct = () => new Promise((resolve, reject) => {
-    fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+const getProduct = async () => {
+  const getLoading = document.querySelector('.loading');
+  const getCart = document.querySelector('.cart');  
+  await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
   .then((res) => res.json())
   .then((res) => res.results.forEach((computador) => createProductItemElement(computador)))
   .then(() => {
+    getCart.removeChild(getLoading);
     for (let index = 0; index < localStorage.length; index += 1) {
       let localObjStore = {};
       const [sku, name, price] = localStorage.getItem(`product${index}`).split(',');
@@ -65,7 +68,7 @@ const getProduct = () => new Promise((resolve, reject) => {
       createCartItemElement(localObjStore);
     }
   });
-  });
+  };
 
   window.onload = function onload() {
     getProduct();
