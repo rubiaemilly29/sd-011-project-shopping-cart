@@ -38,7 +38,7 @@ const sumTotalPrice = () => {
   itemCart.forEach((item) => {
     total += parseFloat(item.innerText.split('$')[1]);
   });
-  document.querySelector('.total-price').innerText = `Total R$: ${total}`;
+  document.querySelector('.total-price').innerText = `${total}`;
 };
 
 const cartItemClickListener = (event) => {
