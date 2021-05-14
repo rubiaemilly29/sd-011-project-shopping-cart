@@ -1,3 +1,5 @@
+
+
 window.onload = async function onload() {
   ALL_PRODUCTS();
 
@@ -35,13 +37,16 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   let cart = document.querySelector('.cart__items');
+  localStorage.removeItem(`${event.target.classList[1]}`);
   cart.removeChild(event.target)
+  // console.log(event.target.classList[1])
 }
 
 function createCartItemElement(sku, name, salePrice) {
   const li = document.createElement('li');
-  li.className = 'cart__item';
+  li.className = `cart__item ${sku}`;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  localStorage.setItem(`${sku}`, `${name}`)
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
