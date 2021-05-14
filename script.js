@@ -101,7 +101,7 @@ function handleLoadingIn() {
 function handleLoadingOut(baseDelay) {
   setTimeout(toggleLoading, baseDelay);
   setTimeout(toggleLoadingZindex, baseDelay + 200);
-  setTimeout(removeLoading, baseDelay + 400);
+  setTimeout(removeLoading, baseDelay + 250);
 }
 
 function fetchItem(itemId) {
