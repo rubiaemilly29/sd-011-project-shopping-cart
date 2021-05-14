@@ -47,16 +47,16 @@ function createCartItemElement({ sku, name, salePrice }) {
 // The Coding Train - fetch(): https://youtu.be/tc8DU14qX6I
 
 const mercadoLivreAPI = () => {
-    const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
-    const method = { method: 'GET', headers: { Accept: 'application/json' } };
-    const list = document.querySelector('.items');
-
-    return fetch(url, method)
-      .then((response) => response.json())
-      .then((json) => json.results
-      .forEach((items) => list.appendChild(createProductItemElement(
-        { sku: items.id, name: items.title, image: items.thumbnail },
-      ))));
+  const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
+  const method = { method: 'GET', headers: { Accept: 'application/json' } };
+  const list = document.querySelector('.items');
+  
+  return fetch(url, method)
+  .then((response) => response.json())
+  .then((json) => json.results
+  .forEach((items) => list.appendChild(createProductItemElement(
+    { sku: items.id, name: items.title, image: items.thumbnail },
+  ))));
 };
 
 const sendToCart = () => {
@@ -66,14 +66,18 @@ const sendToCart = () => {
 
   addToCart.forEach((items) => 
     items.addEventListener('click', () => 
-      fetch(`https://api.mercadolibre.com/items/${items.innerText}`, method)
+      fetch(`https://api.mercadolibre.com/items/${items.parentNode.children[0].innerText}`, method)
         .then((response) => response.json())
         .then((product) => itemsInCart.appendChild(createCartItemElement(
           { sku: product.id, name: product.title, salePrice: product.price },
       )))));
 };
 
+const asyncStart = async () => {
+  await mercadoLivreAPI();
+  await sendToCart();
+};
+
 window.onload = function onload() {
-  mercadoLivreAPI();
-  sendToCart();
+  asyncStart();
 };
