@@ -39,14 +39,23 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   const insertItem = document.querySelector('.cart__items');
+  const pricePanel = document.querySelector('.total-price');
+  const panelCalc = Number(pricePanel.innerText - event.target.ariaValueText);
+  pricePanel.innerText = parseFloat(panelCalc.toFixed(2));
   insertItem.removeChild(event.target);
 }
+
+let priceSome = 0;
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
+  li.ariaValueText = salePrice;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  const pricePanel = document.querySelector('.total-price');
+  priceSome += salePrice;
+  pricePanel.innerText = parseFloat(priceSome.toFixed(2));
   return li;
 }
 
@@ -61,12 +70,14 @@ const addCartApi = (ItemID) => fetch(`https://api.mercadolibre.com/items/${ItemI
   });
 
 const loadEvents = () => {
+  // Botão adicionar o carrionho
   const intemSection = document.querySelector('.items');
   intemSection.addEventListener('click', (event) => {
     if (event.target.className === 'item__add') {
       addCartApi(event.path[1].children[0].innerText);
     }
   });
+  // Botão limpar o carrionho
   const btnClear = document.querySelector('.empty-cart');
   const insertItem = document.querySelector('.cart__items');
   btnClear.addEventListener('click', () => {
