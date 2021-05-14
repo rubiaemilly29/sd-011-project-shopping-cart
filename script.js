@@ -74,8 +74,8 @@ function buttonCleanItens() {
   const olfind = document.querySelector('.cart__items');
   button.addEventListener('click', () => {
     olfind.innerHTML = '';
+    localStorage.clear();
   });
-  localStorage.clear();
 }
 
 function getSkuFromProductItem(item) {
