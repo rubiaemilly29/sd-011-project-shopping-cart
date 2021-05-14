@@ -1,9 +1,34 @@
+const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+
+const fetchPCList = () => {
+  const myObject = {
+    method: 'GET',
+    headers: { Accept: 'application/json' }
+  };
+
+  fetch(API_URL, myObject)
+    .then(response => response.json())
+    .then(data => {
+      for (const itemsInfo of data.results) {
+        const objectTest = {
+          sku: itemsInfo.id,
+          name: itemsInfo.title,
+          image: createProductImageElement('https://cdn.britannica.com/84/206384-131-207CC735/Javan-gliding-tree-frog.jpg'),
+        };
+        console.log(itemsInfo.id);
+        console.log(itemsInfo.title);
+        console.log(itemsInfo);
+        console.log(createProductItemElement(objectTest));
+      }
+    })
+}
+
 window.onload = function onload() { 
-  console.log('oi');
+  fetchPCList();
 };
 
 function createProductImageElement(imageSource) {
-  const img = document.createElement('img');
+  let img = document.createElement('img');
   img.className = 'item__image';
   img.src = imageSource;
   return img;
@@ -33,9 +58,7 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  const section = document.querySelector('.items')
-  section.appendChild(event);
-
+  // coloque seu código aqui
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
