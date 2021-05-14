@@ -4,16 +4,16 @@
  const totalPrice = document.getElementsByClassName('total-price')[0];
  //
  let fullListStringified = JSON.stringify(cartArea.innerHTML);
- 
+ let totalPriceStringified = JSON.stringify(totalPrice.innerHTML);
 
 /// / LOCALSTORAGE
 function saveCartData() {
   fullListStringified = JSON.stringify(cartArea.innerHTML);
   localStorage.setItem('Saved Cart List', fullListStringified);
+  totalPriceStringified = JSON.stringify(totalPrice.innerHTML);
+  localStorage.setItem('Total Price', totalPriceStringified);
 }
 //
-
-
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -48,12 +48,14 @@ function getSkuFromProductItem(item) {
 /// / REMOVE FROM CART
 
 function cartItemClickListener(event) {
-  let crazyObj = Object.fromEntries(event.target.innerHTML.split(' | ').map((entry) => {
-   return entry.split(": ")
-  }));
-  let crazyObjPrice = crazyObj.PRICE.match(/\d+/g).map(Number).join('.');
-  totalPrice.innerHTML -= parseInt(crazyObjPrice);
-  console.log('buguei')
+  const crazyObj = Object
+    .fromEntries(event.target.innerHTML
+      .split(' | ')
+        .map((entry) => entry.split(': ')));
+  const crazyObjPrice = crazyObj.PRICE.match(/\d+/g).map(Number).join('.');
+  const priceSubtraction = parseFloat(totalPrice.innerHTML) - parseFloat(crazyObjPrice);
+  totalPrice.innerHTML = Number(priceSubtraction.toFixed(2)).toString();
+  console.log('buguei');
   event.target.remove();
   saveCartData();
 }
@@ -77,8 +79,9 @@ const fetchProductItem = async (apiKey) => {
     .then((response) => response.json())
     .then((product) => {
       cartArea.appendChild(createCartItemElement(product));
-      totalPrice.innerHTML = (parseInt(totalPrice.innerHTML) || 0) + parseInt(product.price);
-    })
+      const priceSum = (parseFloat(totalPrice.innerHTML) || 0) + parseFloat(product.price);
+      totalPrice.innerHTML = Number(priceSum.toFixed(2)).toString();
+    });
   saveCartData();
 };
 
@@ -111,7 +114,9 @@ fetchProductList();
 
 window.onload = function onload() {
   const fullListParsed = JSON.parse(localStorage.getItem('Saved Cart List')); 
+  const totalPriceParsed = JSON.parse(localStorage.getItem('Total Price')); 
+  totalPrice.innerHTML = totalPriceParsed;
   const cartAreaEspantalho = document.getElementsByClassName('cart__items')[0];
   cartAreaEspantalho.innerHTML = fullListParsed;
-  cartAreaEspantalho.addEventListener(('click'),cartItemClickListener);
+  cartAreaEspantalho.addEventListener(('click'), cartItemClickListener);
  };
