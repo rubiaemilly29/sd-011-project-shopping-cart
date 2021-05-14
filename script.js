@@ -89,9 +89,9 @@ function cleanCart() {
   const cleanButton = document.querySelector('.empty-cart');
   
   cleanButton.addEventListener('click', () => {
-    const allProducts = document.querySelector('.cart__items');
-    console.log(allProducts);
-    allProducts.innerHTML = '';
+    // const allProducts = document.querySelector('.cart__items');
+    // console.log(allProducts);
+    cartListItems.innerHTML = '';
     sumPrices();
     localStorage.removeItem('items');
   });
