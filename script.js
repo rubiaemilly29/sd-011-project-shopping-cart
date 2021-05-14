@@ -17,12 +17,12 @@ function createCustomElement(element, className, innerText) {
 function sumPrices() {
   const totalPrice = document.querySelector('.total-price');
   const productsList = document.querySelectorAll('.cart__item');
-  let sumPrices = 0;
+  let sumValues = 0;
   productsList.forEach((element) => {
     const value = element.innerText.split('$');
-    sumPrices += Number(value[1]);
+    sumValues += Number(value[1]);
   });
-  totalPrice.innerHTML = `Preço Total: ${sumPrices}`;
+  totalPrice.innerHTML = `Preço Total: ${sumValues}`;
 }
 
 function cartItemClickListener(event) {
@@ -37,7 +37,6 @@ function createCartItemElement({ id: sku, title: name, price }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
-  console.log(sumPrices(price));
   list.appendChild(li);
   return li;
 }
