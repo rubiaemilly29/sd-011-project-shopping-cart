@@ -67,6 +67,12 @@ const loadEvents = () => {
       addCartApi(event.path[1].children[0].innerText);
     }
   });
+  const btnClear = document.querySelector('.empty-cart');
+  const insertItem = document.querySelector('.cart__items');
+  btnClear.addEventListener('click', () => {
+    insertItem.innerHTML = '';
+    localStorage.setItem('Save', insertItem.innerHTML);
+  });
 };
 
 const loadCart = () => {
