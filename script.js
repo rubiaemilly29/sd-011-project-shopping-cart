@@ -9,7 +9,6 @@ const sumCart = () => {
     sum += Number(formattedString[1]);
   });
   currentPrice.innerHTML = `${sum}`;
-  console.log(currentCartItems);
 };
 
 const storeCart = () => {
@@ -28,9 +27,13 @@ function getSkuFromProductItem(item) {
 }
 
 const idPromise = async (item) => {
-  const itemPromise = await fetch(`https://api.mercadolibre.com/items/${item}`);
-  const result = await itemPromise.json();
-  return result;
+  try {
+    const itemPromise = await fetch(`https://api.mercadolibre.com/items/${item}`);
+    const result = await itemPromise.json();
+    return result;
+  } catch (error) {
+    console.log('error')
+  }
 };
 
 function createCustomElement(element, className, innerText) {
@@ -104,6 +107,7 @@ const emptyCart = () => {
   emptyButton.addEventListener('click', () => {
     cartContainer.innerHTML = '';
     localStorage.clear();
+    sumCart();
   });
 };
 
