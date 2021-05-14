@@ -91,4 +91,3 @@ function removeList() {
     cart.removeChild(cart.firstChild);
   }
 }
-
