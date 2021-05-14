@@ -107,6 +107,6 @@ window.onload = function onload() {
   btnErase.addEventListener('click', () => {
   const olList = document.querySelector(olCart);
   olList.innerHTML = '';
-  sumValues();
 });
+sumValues();
 };
