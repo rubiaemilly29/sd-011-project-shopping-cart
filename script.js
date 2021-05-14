@@ -12,15 +12,26 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-const searchComputers = () => (new Promise((resolve) => {
+const searchComputers = () => {
+  const container = document.querySelector('.items');
+  const span = document.createElement('span');
+  span.className = 'loading';
+  container.appendChild(span);
+  span.innerText = 'loading...';
+  const loading = document.querySelector('.loading');
+
+  return new Promise((resolve) => {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((response) => response.json())
-    .then((data) => resolve(data.results));
-  })
-);
+    .then((data) => {
+      container.removeChild(loading);
+      resolve(data.results);
+    });
+  });   
+};
 
 const addComputers = (id) => {
-  const container = document.querySelector('.cart');
+  const container = document.querySelector('.cart__items');
   const span = document.createElement('span');
   span.className = 'loading';
   container.appendChild(span);
@@ -53,6 +64,36 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+async function sumPrices() {
+  const allPrices = JSON.parse(localStorage.getItem('listCar'));
+  let price = 0;
+  if (allPrices === null) {
+    return price;  
+  }
+  allPrices.forEach((element) => {
+    price += element.salePrice;
+  });
+  return price;
+}
+
+async function displayPrices() {
+  const listCar = document.querySelector('.cart');
+  let totalPrice = document.querySelector('.total-price');
+  const price = await sumPrices();
+  if (totalPrice === null) {
+    const textTotalPrice = document.createElement('section');
+    textTotalPrice.className = 'display-total-price';
+    textTotalPrice.innerHTML = 'Preço total: $ ';
+    listCar.appendChild(textTotalPrice);
+    totalPrice = document.createElement('span');
+    totalPrice.className = 'total-price';
+    totalPrice.innerHTML = price;
+    textTotalPrice.appendChild(totalPrice);
+  } else {
+    totalPrice.innerHTML = price;
+  }
+}
+
 function cartItemClickListener(event) {
   const itemsCart = document.getElementsByClassName('cart__items');
   itemsCart[0].removeChild(event.target);
@@ -66,6 +107,7 @@ const atualCar = variavel.filter((elementRemove) => {
     return false;
 });
 localStorage.setItem('listCar', JSON.stringify(atualCar));
+displayPrices();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -76,12 +118,9 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-const addComputerCartClick = (event) => {
-  const computerSelected = event.target.parentNode;
+function addComputerCart(computers) {
   const itemsCart = document.getElementsByClassName('cart__items');
-  addComputers(computerSelected.childNodes[0].innerText)
-    .then((computers) => {
-   const newItem = { sku: computers.id, name: computers.title, salePrice: computers.price,
+  const newItem = { sku: computers.id, name: computers.title, salePrice: computers.price,
   };
   const item = createCartItemElement(newItem);
   itemsCart[0].appendChild(item);
@@ -92,6 +131,15 @@ const addComputerCartClick = (event) => {
   } else {
     localStorage.setItem('listCar', JSON.stringify([newItem]));
   }
+}
+
+const addComputerCartClick = (event) => {
+  const computerSelected = event.target.parentNode;
+  addComputers(computerSelected.childNodes[0].innerText)
+    .then((computers) => {
+  addComputerCart(computers);
+  sumPrices();
+  displayPrices();
   });
 };
 
@@ -138,9 +186,11 @@ function clearCar() {
     listCar.removeChild(listCar.lastChild);
   }
   localStorage.clear();
+  displayPrices();
 }
 
 window.onload = function onload() {
+  displayPrices();
   refreshCar();
   includesComputerCar();
   const btn = document.querySelector('.empty-cart');
