@@ -29,7 +29,7 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  // in progress
+  event.target.remove();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -40,11 +40,17 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+// References:
+// Rest API Header: https://stackoverflow.com/questions/43209924/rest-api-use-the-accept-application-json-http-header
+// fetch: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+// Introduction to fetch: https://developers.google.com/web/updates/2015/03/introduction-to-fetch
+// The Coding Train - fetch(): https://youtu.be/tc8DU14qX6I
+
 const mercadoLivreAPI = () => {
     const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
     const method = { method: 'GET', headers: { Accept: 'application/json' } };
-    const list = document.getElementsByClassName('items');
-    
+    const list = document.querySelector('.items');
+
     return fetch(url, method)
       .then((response) => response.json())
       .then((json) => json.results
@@ -53,6 +59,21 @@ const mercadoLivreAPI = () => {
       ))));
 };
 
+const sendToCart = () => {
+  const method = { method: 'GET', headers: { Accept: 'application/json' } };
+  const addToCart = document.querySelectorAll('.item__add'); // according to line 22
+  const itemsInCart = document.querySelector('.cart__items');
+
+  addToCart.forEach((items) => 
+    items.addEventListener('click', () => 
+      fetch(`https://api.mercadolibre.com/items/${items.innerText}`, method)
+        .then((response) => response.json())
+        .then((product) => itemsInCart.appendChild(createCartItemElement(
+          { sku: product.id, name: product.title, salePrice: product.price },
+      )))));
+};
+
 window.onload = function onload() {
   mercadoLivreAPI();
+  sendToCart();
 };
