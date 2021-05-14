@@ -85,8 +85,21 @@ async function getProducts() {
   } catch (error) { console.log(`Erro: ${error}`); }
 }
 
+function cleanCart() {
+  const cleanButton = document.querySelector('.empty-cart');
+  
+  cleanButton.addEventListener('click', () => {
+    const allProducts = document.querySelector('.cart__items');
+    console.log(allProducts);
+    allProducts.innerHTML = '';
+    sumPrices();
+    localStorage.removeItem('items');
+  });
+}
+
 window.onload = function onload() { 
   getProducts();
   cartListItems.innerHTML = localStorage.getItem('items');
   sumPrices();
+  cleanCart();
 };
