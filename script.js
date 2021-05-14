@@ -87,10 +87,17 @@ const getCart = () => {
   }
 };
 
+// Task 5
+// in progress
+const totalPrice = () => {
+  itemsCart.forEach((items) => items + items);
+};
+
 const asyncStart = async () => {
   await mercadoLivreAPI();
   await sendToCart();
   await getCart();
+  await totalPrice();
 };
 
 window.onload = function onload() {
