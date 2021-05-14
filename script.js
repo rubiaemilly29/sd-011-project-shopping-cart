@@ -53,4 +53,21 @@ fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
   });
 });
 
+const buttonAddCart = document.querySelector('.item_add');
+buttonAddCart.addEventListener('click', () => {
+  const itemId = document.querySelector('.item_skul');
+fetch(`https://api.mercadolibre.com/items/${itemId}`)
+.then((response) => response.json())
+.then((jsonBody) => {
+  console.log(jsonBody);   
+  const productItenmDetals = {
+    sku: jsonBody.id,
+    name: jsonBody.title,
+    salePrice: jsonBody.salePrice,
+  };
+  const productAddCart = createCartItemElement(productItenmDetals);
+  buttonAddCart.appendChild(productAddCart);  
+});
+});
+
 window.onload = function onload() { };
