@@ -121,7 +121,17 @@ function includesComputerCar() {
   );
 }
 
+function clearCar() {
+  const listCar = document.querySelector('.cart__items');
+  while (listCar.firstChild) {
+    listCar.removeChild(listCar.lastChild);
+  }
+  localStorage.clear();
+}
+
 window.onload = function onload() {
   refreshCar();
   includesComputerCar();
+  const btn = document.querySelector('.empty-cart');
+  btn.addEventListener('click', clearCar);
 };
