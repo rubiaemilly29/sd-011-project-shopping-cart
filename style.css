@@ -67,10 +67,15 @@
   display: flex;
   flex-basis: 30%;
   flex-flow: column wrap;
+  align-items: center;
 }
 
 .cart .cart__title {
   flex-basis: 1;
   font-size: 16pt;
   text-align: center;
+}
+
+.total-price-container {
+  margin: 10px 0;
 }

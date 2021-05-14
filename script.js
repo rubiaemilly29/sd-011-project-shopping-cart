@@ -1,5 +1,6 @@
 const itemsSection = document.querySelector('.items');
 const shoppingCartItems = document.querySelector('.cart__items');
+const totalPrice = document.querySelector('.total-price');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -36,17 +37,36 @@ function isItemInCart(itemId) {
     .some((item) => item.innerText.includes(itemId));
 }
 
+function updateStorage() {
+  localStorage.setItem('cart', shoppingCartItems.innerHTML);
+  localStorage.setItem('total', totalPrice.innerHTML);
+}
+
+function updateTotal(type, value) {
+  const parsedValue = Number(`${value}`);
+  const currentTotal = Number(`${totalPrice.innerHTML}`);
+  const newTotal = type === '+' ? currentTotal + parsedValue : currentTotal - parsedValue;
+  const parsedNewTotal = Number(newTotal.toFixed(2));
+
+  totalPrice.innerHTML = parsedNewTotal.toString();
+}
+
 function cartItemClickListener(event) {
   event.target.remove();
+  updateTotal('-', event.target.dataset.price);
+  updateStorage();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
 
   li.className = 'cart__item';
+  li.dataset.price = salePrice;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   shoppingCartItems.appendChild(li);
+  updateTotal('+', salePrice);
+  updateStorage();
 }
 
 function fetchItem(itemId) {
@@ -67,9 +87,10 @@ function addItemHandler(event) {
   }
 }
 
-function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
+function createProductItemElement({ id: sku, title: name, thumbnail: image, price }) {
   const section = document.createElement('section');
   section.className = 'item';
+  section.dataset.price = price;
 
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
@@ -80,11 +101,26 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
+function initializeCart() {
+  const savedCart = localStorage.getItem('cart');
+
+  if (savedCart) {
+    shoppingCartItems.innerHTML = savedCart;
+    Array
+      .from(shoppingCartItems.children)
+      .forEach((item) => item.addEventListener('click', cartItemClickListener));
+  } else {
+    localStorage.setItem('cart', '');
+    localStorage.setItem('total', '0');
+  }
+  totalPrice.innerHTML = localStorage.getItem('total');
+}
+
 function processData(data) {
   data.results.forEach((item) => itemsSection.appendChild(createProductItemElement(item)));
 }
 
-function fetchProducts(searchTerm) {
+async function fetchProducts(searchTerm) {
   const apiEndpoint = `https://api.mercadolibre.com/sites/MLB/search?q=${searchTerm}`;
   const requestParameters = { headers: new Headers({ Accept: 'application/json' }) };
 
@@ -94,6 +130,12 @@ function fetchProducts(searchTerm) {
     .catch(printFetchError);
 }
 
-window.onload = async () => {
-  await fetchProducts('computador');
+window.onload = () => {
+  fetchProducts('computador');
+  initializeCart();
+  document.querySelector('.empty-cart').addEventListener('click', () => {
+    shoppingCartItems.innerHTML = '';
+    totalPrice.innerHTML = '0';
+    updateStorage();
+  });
 };
