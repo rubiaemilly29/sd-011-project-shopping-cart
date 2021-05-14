@@ -1,5 +1,6 @@
 const paramJSON = { headers: { Accept: 'application/json' } };
 const arrayOfShoppedItems = [];
+const cartItemsContainer = '.cart__items';
 
 function sumCart() {
   const getTotal = document.querySelector('.total-price');
@@ -8,21 +9,17 @@ function sumCart() {
 }
 
 function saveToLocalStorage() {
-  const cartItem = document.querySelector('.cart__items')
+  const cartItem = document.querySelector(cartItemsContainer);
   const cartContainerStorage = cartItem.innerHTML;
   console.log(cartContainerStorage);
   window.localStorage.setItem('cart', JSON.stringify(cartContainerStorage));
 }
 
 function getLocalStorage() {
-  const cartContainer = document.querySelector('.cart__items')
+  const cartContainer = document.querySelector(cartItemsContainer);
   const cartInnerHtml = window.localStorage.getItem('cart');
   cartContainer.innerHTML = cartInnerHtml;
   console.log(cartInnerHtml);
-}
-
-function removeFromLocalStorage(key) {
-  window.localStorage.removeItem(key);
 }
 
 function getProductList() {
@@ -63,10 +60,6 @@ function loopCreateElement(array) {
   array.forEach((element) => getItemsSection.appendChild(createProductItemElement(element)));
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
 function cartItemClickListener(event) {
   const thisElement = event.target;
   arrayOfShoppedItems.push(thisElement.classList[0] * -1);
@@ -85,8 +78,8 @@ function createCartItemElement({ sku, name, salePrice }) {
 }
 
 function insertItemToCart(object) {
-  const cartContainer = document.querySelector('.cart__items');
-  cartContainer.appendChild(createCartItemElement(object))
+  const cartContainer = document.querySelector(cartItemsContainer);
+  cartContainer.appendChild(createCartItemElement(object));
 }
 
 function fetchSelectedItem(param) {
@@ -94,7 +87,7 @@ function fetchSelectedItem(param) {
     .then((response) => response.json())
     .then(({ id, title, price }) => ({ sku: id, name: title, salePrice: price }))
     .then((object) => insertItemToCart(object))
-    .then(() => saveToLocalStorage()) //recebe parâmetro para inserir a chave
+    .then(() => saveToLocalStorage())
     .then(() => sumCart());
 }
 
@@ -108,7 +101,7 @@ function insertElemenOnChart() {
 function cleanCart() {
   const cleanButton = document.querySelector('.empty-cart');
   cleanButton.addEventListener('click', () => {
-    const cartContainer = document.querySelector('.cart__items');
+    const cartContainer = document.querySelector(cartItemsContainer);
     cartContainer.innerHTML = '';
     arrayOfShoppedItems.length = 0;
     sumCart();
@@ -118,10 +111,10 @@ function cleanCart() {
 
 function createLoader() {
   const itemsContainer = document.querySelector('.items');
-  const createLoader = document.createElement('div');
-  createLoader.innerText = 'CARREGANDO';
-  createLoader.className = 'loading';
-  itemsContainer.appendChild(createLoader);
+  const createLoaderDiv = document.createElement('div');
+  createLoaderDiv.innerText = 'CARREGANDO';
+  createLoaderDiv.className = 'loading';
+  itemsContainer.appendChild(createLoaderDiv);
 }
 
 function removeLoader() {
@@ -140,5 +133,5 @@ async function execute() {
 
 window.onload = function onload() {
   execute();
-  getLocalStorage()
+  getLocalStorage();
 };
