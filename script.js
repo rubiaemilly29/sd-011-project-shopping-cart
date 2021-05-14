@@ -5,15 +5,25 @@ function createProductImageElement(imageSource) {
   return img;
 }
  
-function cartItemClickListener(event) {
-  event.target.parentElement.removeChild(event.target)
-}
-
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
   e.innerText = innerText;
   return e;
+}
+
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
+
+function saveLocalStorage() {
+  const cartI = document.getElementsByClassName('cart__items')[0].innerHTML;
+  localStorage.setItem('myList', cartI);
+}
+
+function cartItemClickListener(event) {
+  event.target.parentNode.removeChild(event.target);
+  saveLocalStorage();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -31,9 +41,10 @@ function additem(event) {
     .then((response2) => {
       const listItem = createCartItemElement(
         { sku: response2.id, name: response2.title, salePrice: response2.price },
-      );
+);
       const cart = document.querySelector('.cart__items');
       cart.appendChild(listItem);
+      saveLocalStorage();
     });
 }
 
@@ -51,32 +62,21 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
 window.onload = function onload() {
-  fetch('https://api.mercadolibre.com/sites/MLB/search?q=computer')
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((responde) => responde.json())
     .then((item) => {
       const elementos = document.querySelector('.items');
       item.results.forEach((value) => {
-        const objeto = {
-          sku: value.id,
-          name: value.title,
-          image: value.thumbnail,
-        };
+        const objeto = { sku: value.id, name: value.title, image: value.thumbnail };
         elementos.appendChild(createProductItemElement(objeto));
       });
     });
-};
-
-function save () {
-  const saveOl = document.querySelector('cart__items')
-if (localStorage.getItem(saveOl) !== null) {
-  const objSalvo =(localStorage.getItem(saveOl));
-  saveOl.innerHTML = objSalvo;
-  return saveOl;
-}
-}
-save()
+    const saveItems = window.localStorage.getItem('myList');
+    document.querySelector('.cart__items').innerHTML = saveItems;
+    let liItem = document.getElementsByClassName('cart__items');
+    liItem = Array.from(liItem);
+    liItem.forEach((itens) => {
+    itens.addEventListener('click', cartItemClickListener);
+    });
+  };
