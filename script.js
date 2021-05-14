@@ -32,7 +32,7 @@ const getItens = () => {
   .then((response) => response.json())
   .then((result) => {
     result.results.forEach((item) => {
-      const items = document.getElementsByClassName('items')[0];
+      const items = document.querySelector('.items');
       items.appendChild(createProductItemElement(item));
     });
   });
