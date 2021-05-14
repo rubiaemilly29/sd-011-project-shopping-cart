@@ -2,7 +2,7 @@ body {
   margin: 0;
 }
 
-.items, .cart {
+.items , .cart {
   padding-top: 20px;
 }
 
@@ -101,7 +101,7 @@ body {
   padding: 25px;
   z-index: -1;
   opacity: 0;
-  transition: opacity .25s ease;
+  transition: opacity 0.25s ease;
 }
 
 .loading-overlay {
@@ -111,16 +111,16 @@ body {
   left: 0;
   height: 100vh;
   width: 100vw;
-  background-color: rgba(0, 0, 0, .85);
+  background-color: rgba(0, 0, 0, 0.85);
   z-index: -1;
   opacity: 0;
-  transition: opacity .25s ease;
+  transition: opacity 0.25s ease;
   backdrop-filter: blur(3px);
 }
 
 .show-loading {
   opacity: 1;
-  transition: opacity .25s ease;
+  transition: opacity 0.25s ease;
 }
 
 .bring-loading-forward {
