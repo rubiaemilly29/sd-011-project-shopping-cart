@@ -1,48 +1,22 @@
-const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+const endPoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
 
-const fetchPCList = () => {
-  const myObject = {
-    method: 'GET',
-    headers: { Accept: 'application/json' }
-  };
-
-  fetch(API_URL, myObject)
-    .then(response => response.json())
-    .then(data => {
-      for (const itemsInfo of data.results) {
-        const objectTest = {
-          sku: itemsInfo.id,
-          name: itemsInfo.title,
-          image: createProductImageElement('https://cdn.britannica.com/84/206384-131-207CC735/Javan-gliding-tree-frog.jpg'),
-        };
-        console.log(itemsInfo.id);
-        console.log(itemsInfo.title);
-        console.log(itemsInfo);
-        console.log(createProductItemElement(objectTest));
-      }
-    })
-}
-
-window.onload = function onload() { 
-  fetchPCList();
+const createProductImageElement = (imageSource) => {
+  const imgFeature = document.createElement('img');
+  imgFeature.className = 'item__image';
+  imgFeature.src = imageSource;
+  return imgFeature;
 };
 
-function createProductImageElement(imageSource) {
-  let img = document.createElement('img');
-  img.className = 'item__image';
-  img.src = imageSource;
-  return img;
-}
-
-function createCustomElement(element, className, innerText) {
+const createCustomElement = (element, className, innerText) => {
   const e = document.createElement(element);
   e.className = className;
   e.innerText = innerText;
   return e;
-}
+};
 
-function createProductItemElement({ sku, name, image }) {
+const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) => {
   const section = document.createElement('section');
+  const sectionOfItems = document.querySelector('.items');
   section.className = 'item';
 
   section.appendChild(createCustomElement('span', 'item__sku', sku));
@@ -50,21 +24,45 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
-  return section;
-}
+  sectionOfItems.appendChild(section);
+  return sectionOfItems;
+};
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+const getProductInfo = (object) => (object.results.forEach((info) => {
+    const objectInfo = {
+      id: info.id,
+      title: info.title,
+      thumbnail: info.thumbnail,
+    };
+    createProductItemElement(objectInfo);
+  }));
 
-function cartItemClickListener(event) {
+const fetchPCList = () => {
+  const myObject = {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+  };
+  fetch(endPoint, myObject)
+    .then((response) => response.json())
+    .then((object) => {
+      getProductInfo(object);
+    });
+};
+
+window.onload = () => {
+  fetchPCList();
+};
+
+const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
+
+const cartItemClickListener = (event) => {
   // coloque seu código aqui
-}
+};
 
-function createCartItemElement({ sku, name, salePrice }) {
+const createCartItemElement = ({ sku, name, salePrice }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
-}
+};
