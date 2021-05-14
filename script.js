@@ -3,8 +3,19 @@ const cartItems = document.querySelector('.cart__items');
 const totalPrice = document.querySelector('#spanPrice');
 const emptyCart = document.querySelector('.empty-cart');
 
+const saveStorage = ({ id, title, price }) => {
+  let stored = localStorage.items;
+  if (!stored) {
+    stored = [];
+  } else {
+    stored = JSON.parse(stored);
+  }
+  stored.push({ id, title, price });
+  localStorage.items = JSON.stringify(stored);
+};
+
 const clearCartItems = () => {
-  emptyCart.addEventListener('click', (el) => {
+  emptyCart.addEventListener('click', () => {
     cartItems.innerHTML = '';
     totalPrice.innerText = 0;
     localStorage.items = cartItems.innerHTML;
@@ -45,6 +56,16 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+const removeFromStorage = (id) => {
+  let stored = localStorage.items;
+  if (!localStorage.items) {
+    return;
+  }
+  stored = JSON.parse(stored);
+  stored = stored.filter((el) => el.id !== id);
+  localStorage.items = JSON.stringify(stored);
+};
+
 function cartItemClickListener(event) {
   event.target.remove();
   const dataPrice = parseFloat(event.target.dataset.price);
@@ -66,6 +87,13 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
 const addItemToCart = (item) => {
   cartItems.appendChild(createCartItemElement(item));
   updatePrices(item.price);
+};
+
+const handleProductClick = async (event) => {
+  const itemId = getSkuFromProductItem(event.target.parentNode);
+  const item = await productMLItem(itemId);
+  addItemToCart(item);
+  saveStorage(item);
 };
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
@@ -95,34 +123,6 @@ const exportProductsToPage = async (product) => {
 };
 
 exportProductsToPage(productMLArray);
-
-const handleProductClick = async (event) => {
-  const itemId = getSkuFromProductItem(event.target.parentNode);
-  const item = await productMLItem(itemId);
-  addItemToCart(item);
-  saveStorage(item);
-};
-
-const saveStorage = ({ id, title, price }) => {
-  let stored = localStorage.items;
-  if (!stored) {
-    stored = [];
-  } else {
-    stored = JSON.parse(stored);
-  }
-  stored.push({ id, title, price });
-  localStorage.items = JSON.stringify(stored);
-};
-
-const removeFromStorage = (id) => {
-  let stored = localStorage.items;
-  if (!localStorage.items) {
-    return;
-  }
-  stored = JSON.parse(stored);
-  stored = stored.filter((el) => el.id !== id);
-  localStorage.items = JSON.stringify(stored);
-};
 
 window.onload = () => {
   if (typeof localStorage.items !== 'undefined') {
