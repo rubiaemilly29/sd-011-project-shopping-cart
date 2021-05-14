@@ -111,7 +111,7 @@ function fetchItem(itemId) {
   fetch(apiEndpoint, requestParameters)
     .then(checkResponse)
     .then(createCartItemElement)
-    .then(() => handleLoadingOut(350))
+    .then(() => handleLoadingOut(300))
     .catch(printFetchError);
   handleLoadingIn();
 }
