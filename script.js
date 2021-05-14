@@ -14,12 +14,14 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// Remove local storage product, Remove Cart Item product, Subtract from total price
 function cartItemClickListener(event, cartItems, count, salePrice) {
   localStorage.removeItem(`product${count}`);
   cartItems.removeChild(event.target);
    total.innerText = parseFloat(Number(total.innerText) - Number(salePrice));
 }
 
+// Create Cart Items, Create Local Storage Items, Sum total value of Items
 function createCartItemElement({ sku, name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -34,6 +36,7 @@ function createCartItemElement({ sku, name, price: salePrice }) {
    return li;
 }
 
+// Create Section Items (append on Section)
 function createProductItemElement({ id: sku, title: name, thumbnail: image, price }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -53,6 +56,8 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image, pric
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
+// Fetch mercado livre API, Remove loading span, 
+// forEach on objJson calling createProductItemElement, setting localStore object
 const getProduct = async () => {
   const getLoading = document.querySelector('.loading');
   const getCart = document.querySelector('.cart');  
@@ -70,6 +75,7 @@ const getProduct = async () => {
   });
   };
 
+  // Erase button on onload
   window.onload = function onload() {
     getProduct();
     
