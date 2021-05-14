@@ -28,7 +28,7 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function cartItemClickListener(event) {
+function cartItemClickListener(event) { // para remover da lista
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -39,37 +39,58 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-const render = (json) => {
+function render(json) {
   json.results.forEach((element) => {
     const newObject = {
       sku: element.id,
       name: element.title,
       image: element.thumbnail,
     };
-    const result = createProductItemElement(newObject);
+    const newItem = createProductItemElement(newObject);
     const sectionItems = document.querySelector('.items');
-    sectionItems.appendChild(result);
+    sectionItems.appendChild(newItem);
   });
-};
+}
 
-const getItem = (term) => new Promise((resolve, reject) => {
-    // const param = { headers: { Accept: 'application/json' } };
-    fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${term}#json`)
-      .then((response) => {
-        response.json()
-          .then((json) => {
-            render(json);
-            resolve();
-          })
-          .catch((error) => reject(error));
-      })
-      .catch((error) => reject(error));
-  });
+async function getItem(term) {
+  try {
+    const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${term}#json`);
+    const json = await response.json();
+    render(json);
+  } catch (error) {
+    alert('algo de errado não está certo');
+  }
+}
 
-const fecthItems = () => {
-  getItem('computador');
-};
+async function addItemToCart(event) {
+  const currentId = await getSkuFromProductItem((event.target).parentNode);
+  console.log(currentId);
+  try {
+    const response = await fetch(`https://api.mercadolibre.com/items/${currentId}`);
+    const json = await response.json();
+    const objectItem = {
+      sku: json.id,
+      name: json.title,
+      salePrice: json.price,
+    };
+    const cartItem = createCartItemElement(objectItem);
+    const cartItems = document.querySelector('.cart__items');
+    cartItems.appendChild(cartItem);  
+  } catch (error) {
+    alert('ao clicar botão de adicionar ao carrinho');
+  }
+}
+
+async function createObjectButtons() {
+  await getItem('computador');
+  try {
+    const objectButtonsAdd = document.querySelectorAll('.item__add');
+    objectButtonsAdd.forEach((button) => button.addEventListener('click', addItemToCart));
+  } catch (error) {
+    alert('erro ao criar objeto com os botões adicionar ao carrinho');
+  }
+}
 
 window.onload = function onload() { 
-  fecthItems();
+  createObjectButtons();
 };
