@@ -12,6 +12,23 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+function cartItemClickListener(event) {
+  // coloque seu código aqui!
+}
+
+function createCartItemElement({ id: sku, title: name, price }) {
+  const li = document.createElement('li');
+  const list = document.querySelector('.cart__items');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
+  li.addEventListener('click', cartItemClickListener);
+
+  list.appendChild(li);
+  return li;
+}
+
+const cartItemsList = document.querySelector('.cart__items');
+
 const onClick = async (id) => {
   const url = `https://api.mercadolibre.com/items/${id}`;
 
@@ -19,7 +36,8 @@ const onClick = async (id) => {
       const response = await fetch(url);
       const data = await response.json();
       const newItemToCart = createCartItemElement(data);
-    } catch(error) { console.log(`Erro: ${error}`); }
+      cartItemsList.appendChild(newItemToCart);
+    } catch (error) { console.log(`Erro: ${error}`); }
 };
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
@@ -42,23 +60,8 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui!
-}
-
-function createCartItemElement({ id: sku, title: name, price }) {
-  const li = document.createElement('li');
-  const list = document.querySelector('.cart__items');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
-  li.addEventListener('click', cartItemClickListener);
-
-  list.appendChild(li);
-  return li;
-}
-
-async function getProducts(query) {
-  const url = `https://api.mercadolibre.com/sites/MLB/search?q=$${query}`;
+async function getProducts() {
+  const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
 
   try {
     const response = await fetch(url);
@@ -68,8 +71,6 @@ async function getProducts(query) {
   } catch (error) { console.log(`Erro: ${error}`); }
 }
 
-getProducts('computador');
-
-// window.onload = function onload() { 
-//   // addProductToCart();
-// };
+window.onload = function onload() { 
+  getProducts();
+};
