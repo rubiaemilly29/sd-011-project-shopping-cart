@@ -31,15 +31,16 @@ function createCartItemElement({ sku, name, salePrice }) {
 
 // REQUISITO 4
 // Consulta em https://www.blogson.com.br/carrinho-de-compras-com-localstorage-do-html-5/#:~:text=Gravando%20dados&text=Para%20gravar%20dados%20na%20localStorage,posi%C3%A7%C3%A3o%20do%20produto%20no%20carrinho.
-const getCartItems = document.querySelector('.cart__items');
+const getCartItems = '.cart__items';
+// document.querySelector(getCartItems);
 
 const saveCart = () => {
-  const cartList = getCartItems.innerHTML;
+  const cartList = document.querySelector(getCartItems).innerHTML;
   localStorage.setItem('savedCart', cartList);
 };
 
 const reloadCart = () => {
-  const cartList = getCartItems;
+  const cartList = document.querySelector(getCartItems);
   const loadCart = localStorage.getItem('savedCart');
   cartList.innerHTML = loadCart;
 };
@@ -58,7 +59,7 @@ const fetchToCartItem = (event) => {
          salePrice: json.price,
         };
       console.log(cartItem);
-      getCartItems.appendChild(createCartItemElement(cartItem));
+      document.querySelector(getCartItems).appendChild(createCartItemElement(cartItem));
       saveCart();
   });
 };
