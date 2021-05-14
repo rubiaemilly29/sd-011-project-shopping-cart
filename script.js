@@ -1,4 +1,6 @@
 const mainOrdenedList = '.cart__items';
+const anyItemOfList = '.cart__item';
+const createDiv = document.createElement('div');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -33,7 +35,7 @@ function cartItemClickListener(event) {
   event.target.remove();
   const cartItems = document.querySelector(mainOrdenedList).innerHTML;
   localStorage.setItem('cartItems', cartItems);
-  // somatoryPrices();
+  sumProducts();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -54,25 +56,52 @@ const addCartButton = () => {
       const resultOfId = await idResult.json();
       const idProduct = createCartItemElement(resultOfId);
       ordenedList.appendChild(idProduct);
-      
+
       localStorage.setItem('cartItems', ordenedList.innerHTML);
-      // somatoryPrices();
+      sumProducts();
     });
   });
 };
+
+// Função responsável por somar os preços das coisas adicionadas ao carrinho!
+function sumProducts() {
+  const toSum = document.querySelectorAll(anyItemOfList);
+  let totalSum = 0;
+
+  toSum.forEach((item) => {
+    const catchedText = item.innerText;
+    totalSum += parseFloat(catchedText.split('$')[1]);
+  });
+  const displayPrice = document.querySelector('.total-price');
+  displayPrice.innerText = totalSum;
+}
 
 // Função responsável por deixar algumas execuções na fila de espera.
 async function fetchItems() {
   const API = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const resultOfProducts = await API.json();
   const productContainers = document.querySelector('.items');
-  
+
   resultOfProducts.results.forEach((element) => {
     const anyProduct = createProductItemElement(element);
     productContainers.appendChild(anyProduct);
   });
-  
+
   addCartButton();
+  empytCart();
+}
+
+function empytCart() {
+  const empytButton = document.querySelector('.empty-cart');
+  empytButton.addEventListener('click', () => {
+    const cartProducts = document.querySelectorAll(anyItemOfList);
+    cartProducts.forEach((item) => {
+      item.remove();
+    });
+    sumProducts();
+    const cartItems = document.querySelector(mainOrdenedList).innerHTML;
+    localStorage.setItem('cartItems', cartItems);
+  });
 }
 
 window.onload = function onload() {
@@ -80,9 +109,10 @@ window.onload = function onload() {
   const cartItems = document.querySelector(mainOrdenedList);
   if (localStorage.cartItems) {
     cartItems.innerHTML = localStorage.getItem('cartItems');
-    const cartItem = document.querySelectorAll('.cart__item');
+    const cartItem = document.querySelectorAll(anyItemOfList);
     cartItem.forEach((product) => {
       product.addEventListener('click', cartItemClickListener);
     });
+    sumProducts();
   }
 };
