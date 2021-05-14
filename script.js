@@ -22,9 +22,9 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-  function cartItemClickListener() {
-    //  coloque seu código aqui
-    //  event as parameter
+  function cartItemClickListener(event) {
+    const cartContainer = document.querySelector('.cart__items');
+    cartContainer.removeChild(event.target);
   }
 
 function createCartItemElement({ sku, name, salePrice }) {
