@@ -120,6 +120,7 @@ function clearShoppingCart() {
   emptyCart().addEventListener('click', () => {
     cartItems().innerHTML = '';
     sumItemsCart();
+    setLocalStorage();
   });
 }
 
