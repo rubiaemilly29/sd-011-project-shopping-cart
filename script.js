@@ -61,3 +61,7 @@ const createProduct = () => {
 }
 
 
+
+setTimeout((() => {
+  return document.querySelector('.item__add');
+}), 1000)
