@@ -40,18 +40,36 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+function addToCart() {
+  const addItemBtn = document.querySelector('.items');
+  addItemBtn.addEventListener('click', (event) => {
+  const eventClassName = event.target.className;
+    if (eventClassName === 'item__add') {
+      const itemSelected = event.target.parentNode;
+      const acceptableParams = { headers: { Accept: 'application/json' } };
+      const skuItem = getSkuFromProductItem(itemSelected);
+      fetch(`https://api.mercadolibre.com/items/${skuItem}`, acceptableParams)
+      .then((response) => response.json().then((json) => {
+        const cartItems = document.querySelector('.cart__items');
+        const objectItem = { sku: json.id, name: json.title, salePrice: json.price };
+        cartItems.appendChild(createCartItemElement(objectItem));
+        }))
+      .catch((error) => alert(error));
+    } 
+    });
+  }
+
 function getItemsFromML() {
   const endpoint = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
   const acceptableParams = { headers: { Accept: 'application/json' } };
   fetch(endpoint, acceptableParams)
-    .then((response) => response.json()
-    .then((json) => {  
+    .then((response) => response.json().then((json) => {  
       json.results.forEach((item, index) => {
         const itemsContainer = document.querySelector('.items');
-        const objectItem = {
-          sku: json.results[index].id,
-          name: json.results[index].title,
-          salePrice: json.results[index].price,
+        const objectItem = { 
+          sku: json.results[index].id, 
+          name: json.results[index].title, 
+          salePrice: json.results[index].price, 
           image: json.results[index].thumbnail,
         };
         itemsContainer.appendChild(createProductItemElement(objectItem));
@@ -61,4 +79,5 @@ function getItemsFromML() {
 
 window.onload = function onload() { 
   getItemsFromML();
+  addToCart();
 };
