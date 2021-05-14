@@ -71,11 +71,11 @@ function getProducts(query) {
 
 function buttonCleanItens() {
   const button = document.querySelector('.empty-cart');
-  const olfind = document.querySelector('.cart__items')
+  const olfind = document.querySelector('.cart__items');
   button.addEventListener('click', () => {
-    console.log(olfind.innerHTML = '')
-  })
-  localStorage.clear()
+    olfind.innerHTML = '';
+  });
+  localStorage.clear();
 }
 
 function getSkuFromProductItem(item) {
@@ -84,6 +84,6 @@ function getSkuFromProductItem(item) {
 
 window.onload = function onload() {
   getProducts('computador');
-  buttonCleanItens()
+  buttonCleanItens();
   document.querySelector(olDistribution).innerHTML = localStorage.getItem('Product');
 };
