@@ -24,11 +24,11 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
-const loadApi = async (search = 'computador') =>
+const loadApi = (search = 'computador') =>
   fetch(`https://api.mercadolibre.com/sites/MLB/search?q=$${search}`)
   .then((response) => response.json()
     .then((object) => {
-      document.querySelector('.load').style.display = 'none';
+      document.querySelector('.loading').remove();
       object.results.forEach((elem) => {
         const intemSection = document.querySelector('.items');
         const creatCard = createProductItemElement(elem);
