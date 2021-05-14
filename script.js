@@ -3,6 +3,7 @@ const cartItems = document.querySelector('.cart__items');
 const totalPrice = document.querySelector('#spanPrice');
 const emptyCart = document.querySelector('.empty-cart');
 const cart = document.querySelector('.cart');
+// const loading = document.querySelector('.loading');
 
 const saveStorage = ({ id, title, price }) => {
   let stored = localStorage.items;
