@@ -13,7 +13,7 @@ function createCustomElement(element, className, innerText) {
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+  event.target.parentElement.removeChild(event.target);
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -38,7 +38,8 @@ async function addItemToCart(event) {
   const cartList = document.querySelector('.cart__items');
   const id = await getSkuFromProductItem(event.target.parentElement);
   const item = await getItemByID(id);
-  cartList.appendChild(createCartItemElement(item));
+  cartList.appendChild(createCartItemElement(item))
+  .addEventListener('click', cartItemClickListener);
 }
 
 function createProductItemElement({ sku, name, image }) {
