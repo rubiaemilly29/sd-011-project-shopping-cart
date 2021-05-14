@@ -1,8 +1,10 @@
  const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
  const itemsSection = document.getElementsByClassName('items')[0];
  const cartArea = document.getElementsByClassName('cart__items')[0];
+ const totalPrice = document.getElementsByClassName('total-price')[0];
  //
  let fullListStringified = JSON.stringify(cartArea.innerHTML);
+ 
 
 /// / LOCALSTORAGE
 function saveCartData() {
@@ -10,6 +12,8 @@ function saveCartData() {
   localStorage.setItem('Saved Cart List', fullListStringified);
 }
 //
+
+
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -44,6 +48,12 @@ function getSkuFromProductItem(item) {
 /// / REMOVE FROM CART
 
 function cartItemClickListener(event) {
+  let crazyObj = Object.fromEntries(event.target.innerHTML.split(' | ').map((entry) => {
+   return entry.split(": ")
+  }));
+  let crazyObjPrice = crazyObj.PRICE.match(/\d+/g).map(Number).join('.');
+  totalPrice.innerHTML -= parseInt(crazyObjPrice);
+  console.log('buguei')
   event.target.remove();
   saveCartData();
 }
@@ -52,7 +62,7 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  // li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
@@ -67,7 +77,8 @@ const fetchProductItem = async (apiKey) => {
     .then((response) => response.json())
     .then((product) => {
       cartArea.appendChild(createCartItemElement(product));
-    });
+      totalPrice.innerHTML = (parseInt(totalPrice.innerHTML) || 0) + parseInt(product.price);
+    })
   saveCartData();
 };
 
@@ -100,9 +111,7 @@ fetchProductList();
 
 window.onload = function onload() {
   const fullListParsed = JSON.parse(localStorage.getItem('Saved Cart List')); 
-  cartArea.innerHTML = fullListParsed;
-  cartArea.addEventListener(('click'), (e) => {
-    e.target.remove();
-    saveCartData();
-  });
+  const cartAreaEspantalho = document.getElementsByClassName('cart__items')[0];
+  cartAreaEspantalho.innerHTML = fullListParsed;
+  cartAreaEspantalho.addEventListener(('click'),cartItemClickListener);
  };
