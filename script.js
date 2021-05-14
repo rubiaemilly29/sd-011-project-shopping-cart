@@ -90,7 +90,7 @@ const addItemCart = () => {
   const buttom = document.querySelector('.items');
   buttom.addEventListener('click', (event) => {
     if (event.target.className === 'item__add') {
-      const id = event.target.parentElement.firstElementChild.innerText;
+      const id = getSkuFromProductItem(event.target.parentElement);
       const listCart = document.querySelector('.cart__items');
       fetch(`https://api.mercadolibre.com/items/${id}`)
       .then((response) => response.json())
