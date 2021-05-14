@@ -8,6 +8,19 @@ const appendPriceContainer = async () => {
   cartSectionParagraph.appendChild(totalPrice);
 };
 
+const createLoading = (container) => {
+  const loadingText = document.createElement('span');
+  loadingText.className = 'loading';
+  loadingText.innerText = 'loading...';
+  container.appendChild(loadingText);
+};
+
+const deleteLoading = () => {
+  const loadingText = document.querySelector('.loading');
+  const cartList = loadingText.parentNode;
+  cartList.removeChild(loadingText);
+};
+
 // Atualiza o preço final
 const updateTotalPrice = async () => {
   const prices = document.querySelectorAll('li.cart__item');
@@ -70,9 +83,11 @@ function createCartItemElement({ sku, name, salePrice }) {
 
 const btnAddCartEvent = async (event) => {
   const id = getSkuFromProductItem(event.target.parentElement);
-  const item = await fetchById(id);
-  const li = createCartItemElement({ sku: item.id, name: item.title, salePrice: item.price });
   const cart = document.querySelector(cartListClass);
+  createLoading(cart);
+  const item = await fetchById(id);
+  deleteLoading();
+  const li = createCartItemElement({ sku: item.id, name: item.title, salePrice: item.price });
   cart.appendChild(li);
   updateTotalPrice();
   localStorage.setItem('cart', cart.innerHTML);
@@ -111,10 +126,12 @@ const fetchProducts = (QUERY) => fetch(`https://api.mercadolibre.com/sites/MLB/s
     .then((r) => r.results);
 
 const createList = async () => {
+  const section = document.querySelector('section.items');
+  createLoading(section);
   const productsArr = await fetchProducts('computador');
+  deleteLoading();
   productsArr.forEach(({ id: sku, title: name, thumbnail: image }) => {
     const htmlItems = createProductItemElement({ sku, name, image });
-    const section = document.querySelector('section.items');
     section.appendChild(htmlItems);
   });
 };
