@@ -70,13 +70,12 @@ const addItemtoShoppingCart = (event) => {
         salePrice: json.price,
       };
       olCart.appendChild(createCartItemElement(obj));
-    })
-}
+    });
+};
 
-const items = document.querySelector('.items')
-items.addEventListener('click', addItemtoShoppingCart)
+const items = document.querySelector('.items');
+items.addEventListener('click', addItemtoShoppingCart);
 
 window.onload = async () => {
   await getProductList('computador');
 };
-
