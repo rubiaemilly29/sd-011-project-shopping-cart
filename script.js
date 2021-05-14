@@ -29,9 +29,9 @@ function createProductItemElement({ sku, name, image }) {
 const getItens = () => {
   const endpoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
   fetch(endpoint)
-  .then((r) => r.json())
+  .then((response) => response.json())
   .then((result) => {
-    result.results.foreach((item) => {
+    result.results.forEach((item) => {
       const items = document.getElementsByClassName('items')[0];
       items.appendChild(createProductItemElement(item));
     });
