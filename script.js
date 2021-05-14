@@ -73,8 +73,9 @@ window.onload = function onload() {
     });
   const savedItems = window.localStorage.getItem('myListItems');
   document.querySelector('.cart__items').innerHTML = savedItems;
-   const liItemsSaved = document.getElementsByClassName('cart__item');
-   for (let i = 0; i < liItemsSaved.length; i += 1) {
-     liItemsSaved[i].addEventListener('click', cartItemClickListener);
-   }
+  let liItemsSaved = document.getElementsByClassName('cart__item');
+  liItemsSaved = Array.from(liItemsSaved);
+  liItemsSaved.forEach((element) => {
+    element.addEventListener('click', cartItemClickListener);
+  });
 };
