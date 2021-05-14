@@ -62,7 +62,7 @@ const addItem = (event) => {
     .then((response) => response.json())
     .then((item) => ol.appendChild(createCartItemElement(item)));
   }
-}
+};
 
 window.onload = function onload() { 
  getItens();
