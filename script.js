@@ -56,6 +56,7 @@ const addCartApi = (ItemID) => fetch(`https://api.mercadolibre.com/items/${ItemI
       .then((object) => {
         const insertItem = document.querySelector('.cart__items');
         insertItem.appendChild(createCartItemElement(object));
+        localStorage.setItem('Save', insertItem.innerHTML);
       });
   });
 
@@ -68,7 +69,13 @@ const loadEvents = () => {
   });
 };
 
+const loadCart = () => {
+  const insertItem = document.querySelector('.cart__items');
+  insertItem.innerHTML = localStorage.getItem('Save');
+};
+
 window.onload = function onload() {
   loadApi();
   loadEvents();
+  loadCart();
 };
