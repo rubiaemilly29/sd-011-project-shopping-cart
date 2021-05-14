@@ -12,35 +12,12 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-const searchComputer = () => (new Promise((resolve, reject) => {
+const searchComputers = () => (new Promise((resolve) => {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((response) => response.json())
     .then((data) => resolve(data.results))
-    .catch((erro) => reject(erro));
-})
-);
-
-function includeComputerCar() {
-const sectionItems = document.getElementsByClassName('items');
-  (searchComputer()
-    .then((lista) => {
-     lista.forEach((product) => {
-      const item = createProductItemElement({
-        sku: product.id,
-        name: product.title,
-        image: product.thumbnail,
-      });
-      sectionItems[0].appendChild(item);
-    });
-    const buttons = document.getElementsByClassName('item__add');
-    for (let index = 0; index < buttons.length; index += 1) {
-      const button = buttons[index];
-      button.addEventListener('click', addComputerCartClick);
-    }
   })
-  );
-}
-
+);
 
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
@@ -69,6 +46,19 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-window.onload = function onload() { 
-  includeComputerCar();
+window.onload = function onload() {
+  const sectionItems = document.getElementsByClassName('items');
+  console.log(sectionItems);
+  (searchComputers()
+    .then((computers) => {
+      computers.forEach((computer) => {
+        const item = createProductItemElement({
+          sku: computer.id, 
+          name: computer.title, 
+          image: computer.thumbnail,
+        });
+        sectionItems[0].appendChild(item);
+      });
+    })
+  );
 };
