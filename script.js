@@ -48,7 +48,6 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-
 function addProductOnShoppingCart(query) {
   const param = { method: 'GET', headers: { Accept: 'application/json' } }; 
   fetch(`https://api.mercadolibre.com/items/${query}`, param)
