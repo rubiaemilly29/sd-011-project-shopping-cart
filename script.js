@@ -3,8 +3,8 @@ totalPrice.className = 'total-price';
 totalPrice.innerHTML = '0';
 
 const appendPriceContainer = async () => {
-  const cartSection = document.querySelector('section.cart p');
-  cartSection.appendChild(totalPrice);
+  const cartSectionParagraph = document.querySelector('section.cart p');
+  cartSectionParagraph.appendChild(totalPrice);
 };
 
 // Atualiza o preço final
@@ -16,6 +16,16 @@ const updateTotalPrice = async () => {
     sum += Number(prodStrings[1]);
   });
   totalPrice.innerHTML = `${sum}`;
+};
+
+const emptyAll = () => {
+  const bntClear = document.querySelector('.empty-cart');
+  bntClear.addEventListener('click', () => {
+    const cartList = document.querySelector('ol.cart__items');
+    cartList.innerHTML = '';
+    localStorage.setItem('cart', cartList.innerHTML);
+    updateTotalPrice();
+  });
 };
 
 // Encontra um produto da API pelo seu id
@@ -31,17 +41,17 @@ function getSkuFromProductItem(item) {
   // Cria a função que será realizada ao clicar no item da lista de compras
 function cartItemClickListener(event) {
   // coloque seu código aqui
-  const cartList = event.target.parentNode;
-  cartList.removeChild(event.target);
+  const container = event.target.parentNode;
+  container.removeChild(event.target);
   updateTotalPrice();
-  localStorage.setItem('cart', cartList.innerHTML);
+  localStorage.setItem('cart', container.innerHTML);
 }
 
   // Carrega os itens do carrinho salvos no localStorage
 const loadCart = () => {
-  const cartList = document.querySelector('ol.cart__items');
   const cart = localStorage.getItem('cart');
   if (cart) {
+    const cartList = document.querySelector('ol.cart__items');
     cartList.innerHTML = cart;
     const cartItems = document.querySelectorAll('.cart__items .cart__item');
     cartItems.forEach((item) => item.addEventListener('click', cartItemClickListener));
@@ -61,10 +71,10 @@ const btnAddCartEvent = async (event) => {
   const id = getSkuFromProductItem(event.target.parentElement);
   const item = await fetchById(id);
   const li = createCartItemElement({ sku: item.id, name: item.title, salePrice: item.price });
-  const cartList = document.querySelector('ol.cart__items');
-  cartList.appendChild(li);
+  const cart = document.querySelector('ol.cart__items');
+  cart.appendChild(li);
   updateTotalPrice();
-  localStorage.setItem('cart', cartList.innerHTML);
+  localStorage.setItem('cart', cart.innerHTML);
 };
 
 function createProductImageElement(imageSource) {
@@ -112,4 +122,5 @@ window.onload = function onload() {
   createList();
   appendPriceContainer();
   loadCart();
+  emptyAll();
 };
