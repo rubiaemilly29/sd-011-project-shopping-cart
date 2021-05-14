@@ -30,7 +30,6 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
-
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -43,28 +42,23 @@ function createCartItemElement({ sku, name, salePrice }) {
 
 function getItemsFromML() {
   const endpoint = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
-  const acceptableParams = {
-    headers: { 'Accept': 'application/json' }
-  };
-
+  const acceptableParams = { headers: { Accept: 'application/json' } };
   fetch(endpoint, acceptableParams)
     .then((response) => response.json()
     .then((json) => {  
-            
       json.results.forEach((item, index) => {
-        let objectItem = {
+        const itemsContainer = document.querySelector('.items');
+        const objectItem = {
           sku: json.results[index].id,
           name: json.results[index].title,
           salePrice: json.results[index].price,
-          image: json.results[index].thumbnail
-        };       
-        createProductItemElement(objectItem);
-      })
-    }))
-    .catch(() => console.log('Deu erro'))
+          image: json.results[index].thumbnail,
+        };
+        itemsContainer.appendChild(createProductItemElement(objectItem));
+      });
+    }));
 }
 
 window.onload = function onload() { 
   getItemsFromML();
 };
-  
