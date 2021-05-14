@@ -35,7 +35,7 @@ const getItens = () => {
       const items = document.getElementsByClassName('items')[0];
       items.appendChild(createProductItemElement(item));
     });
-  });
+  })
 }
 
 getItens();
