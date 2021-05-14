@@ -1,6 +1,7 @@
 
 window.onload = async () => {
   await productList();
+  await getItem();
 };
 
 function createProductImageElement(imageSource) {
@@ -59,14 +60,17 @@ const productList = () => {
         document.querySelector('.items').appendChild(createProductItemElement(myProduct));
       });
     })
-    .then(() => {
-      const list = document.querySelector('ol')
-      const li = document.createElement('li');
-      const {sku, name, salePrice } = JSON.parse(localStorage.getItem('item1'));
-      li.innerHTML = `SKU: ${sku} | NAME: ${name} | PRICE: ${salePrice}`
-      list.appendChild(li);
-    })
 };
+
+const getItem = () => {
+  const list = document.querySelector('ol')
+  for (let i = 0; i < localStorage.length; i += 1) {
+    const li = document.createElement('li');
+    const {sku, name, salePrice } = JSON.parse(localStorage.getItem('item1'));
+    li.innerHTML = `SKU: ${sku} | NAME: ${name} | PRICE: ${salePrice}`
+    list.appendChild(li);
+  }
+}
 
 
 function getSkuFromProductItem(item) {
