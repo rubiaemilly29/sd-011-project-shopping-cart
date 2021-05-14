@@ -1,3 +1,11 @@
+body {
+  margin: 0;
+}
+
+.items, .cart {
+  padding-top: 20px;
+}
+
 .top-bar {
   align-items: center;
   display: flex;
@@ -106,14 +114,22 @@
   background-color: rgba(0, 0, 0, .6);
   z-index: -1;
   opacity: 0;
-  transition: opacity .2s ease;
+  transition: opacity .25s ease;
 }
 
 .show-loading {
   opacity: 1;
-  transition: opacity .2s ease;
+  transition: opacity .25s ease;
 }
 
 .bring-loading-forward {
   z-index: 999;
+}
+
+.freeze-scroll {
+  overflow: hidden;
+}
+
+.freeze-scroll .container {
+  overflow-y: scroll;
 }

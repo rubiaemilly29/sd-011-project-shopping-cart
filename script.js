@@ -1,8 +1,8 @@
 const itemsSection = document.querySelector('.items');
 const shoppingCartItems = document.querySelector('.cart__items');
 const totalPrice = document.querySelector('.total-price');
-const loadingOverlay = document.querySelector('.loading-overlay');
-const loadingText = document.querySelector('.loading');
+let loadingOverlay = document.querySelector('.loading-overlay');
+let loadingText = document.querySelector('.loading');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -71,14 +71,37 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   updateStorage();
 }
 
+function addLoading() {
+  document.body.insertAdjacentElement('afterbegin', loadingOverlay);
+  loadingOverlay.appendChild(loadingText);
+}
+
+function removeLoading() {
+  loadingText.remove();
+  loadingOverlay.remove();
+}
+
 function toggleLoadingZindex() {
   loadingOverlay.classList.toggle('bring-loading-forward');
   loadingText.classList.toggle('bring-loading-forward');
 }
 
 function toggleLoading() {
+  document.body.classList.toggle('freeze-scroll');
   loadingOverlay.classList.toggle('show-loading');
   loadingText.classList.toggle('show-loading');
+}
+
+function handleLoadingIn() {
+  addLoading();
+  setTimeout(toggleLoadingZindex, 30);
+  setTimeout(toggleLoading, 50);
+}
+
+function handleLoadingOut(baseDelay) {
+  setTimeout(toggleLoading, baseDelay);
+  setTimeout(toggleLoadingZindex, baseDelay + 200);
+  setTimeout(removeLoading, baseDelay + 400);
 }
 
 function fetchItem(itemId) {
@@ -88,13 +111,9 @@ function fetchItem(itemId) {
   fetch(apiEndpoint, requestParameters)
     .then(checkResponse)
     .then(createCartItemElement)
-    .then(() => {
-      setTimeout(toggleLoading, 1000);
-      setTimeout(toggleLoadingZindex, 1500);
-    })
+    .then(() => handleLoadingOut(350))
     .catch(printFetchError);
-  toggleLoading();
-  toggleLoadingZindex();
+  handleLoadingIn();
 }
 
 function addItemHandler(event) {
@@ -145,7 +164,9 @@ async function fetchProducts(searchTerm) {
   fetch(apiEndpoint, requestParameters)
     .then(checkResponse)
     .then(processData)
+    .then(() => handleLoadingOut(700))
     .catch(printFetchError);
+  handleLoadingIn();
 }
 
 window.onload = () => {
