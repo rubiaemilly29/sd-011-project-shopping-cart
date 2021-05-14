@@ -40,8 +40,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-function mercadoLivreAPI() {
-  Promise((resolve, reject) => {
+const mercadoLivreAPI = () => new Promise((resolve, reject) => {
     const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
     const list = document.getElementsByClassName('items');
     const method = { method: 'GET', headers: { Accept: 'application/json' } };
@@ -54,8 +53,7 @@ function mercadoLivreAPI() {
       ))));
 
     resolve();
-  });
-}
+});
 
 window.onload = function onload() {
   mercadoLivreAPI();
