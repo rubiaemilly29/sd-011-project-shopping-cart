@@ -1,3 +1,4 @@
+const ol = '.cart__items';
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -28,11 +29,11 @@ function createProductItemElement({ sku, name, image }) {
 // getSkuFromProductItem();
 
 const sumPrices = () => {
-  const totalPrice = document.querySelector('.total-price');
-  const lis = [...document.querySelectorAll('.cart__item')];
-  totalPrice.innerText = 0;
-  const somaLis = lis.reduce((acc, curr) => acc + Number(curr.innerText.split('PRICE: $')[1]), 0);
-  totalPrice.innerText = somaLis;
+const totalPrice = document.querySelector('.total-price');
+const lis = [...document.querySelectorAll('.cart__item')];
+totalPrice.innerText = 0;
+const somaLis = lis.reduce((acc, curr) => acc + Number(curr.innerText.split('PRICE: $')[1]), 0);
+totalPrice.innerText = somaLis;
 };
 
 function cartItemClickListener(event, contador) {
@@ -50,45 +51,45 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }, conta
 }
 
 const getItens = () => {
-  const buttonCart = document.querySelectorAll('.item__add');
-  const itensCart = document.querySelector('.cart__items');
-  buttonCart.forEach((elemento) => elemento.addEventListener('click', () => {
-    const id = elemento.parentElement.firstChild.innerText;
-    const contador = itensCart.childElementCount;
-    fetch(`https://api.mercadolibre.com/items/${id}`)
-      .then((response) => response.json())
-      .then((data) => itensCart.appendChild(createCartItemElement(data, contador)))
-      .then(() => sumPrices());
-    localStorage.setItem(`items ${contador}`, id);
+const buttonCart = document.querySelectorAll('.item__add');
+const itensCart = document.querySelector(ol);
+buttonCart.forEach((elemento) => elemento.addEventListener('click', () => {
+const id = elemento.parentElement.firstChild.innerText;
+const contador = itensCart.childElementCount;
+ fetch(`https://api.mercadolibre.com/items/${id}`)
+  .then((response) => response.json())
+  .then((data) => itensCart.appendChild(createCartItemElement(data, contador)))
+  .then(() => sumPrices());
+  localStorage.setItem(`items ${contador}`, id);
   }));
 };
 
 const recuperaLocalStorage = () => {
-  const itensCart = document.querySelector('.cart__items');
-  for (let index = 0; index < localStorage.length; index += 1) {
+const itensCart = document.querySelector(ol);
+for (let index = 0; index < localStorage.length; index += 1) {
     const local = localStorage.getItem(`items ${index}`);
-    fetch(`https://api.mercadolibre.com/items/${local}`)
-      .then((response) => response.json())
-      .then((data) => itensCart.appendChild(createCartItemElement(data, index)))
-      .then(() => sumPrices());
-  }
+  fetch(`https://api.mercadolibre.com/items/${local}`)
+    .then((response) => response.json())
+    .then((data) => itensCart.appendChild(createCartItemElement(data, index)))
+    .then(() => sumPrices());
+      }
 };
 
 const listOfProducts = () => {
-  const api = `https://api.mercadolibre.com/sites/MLB/search?q=${'computador'}`;
-  const myObject = {
-    method: 'GET',
-    headers: { Accept: 'application/json' },
-  };
+const api = `https://api.mercadolibre.com/sites/MLB/search?q=${'computador'}`;
+const myObject = {
+  method: 'GET',
+  headers: { Accept: 'application/json' },
+};
   fetch(api, myObject)
-    .then((response) => {
-      response.json().then((data) => data.results
-        .forEach(({ id, title, thumbnail }) => {
-          const sectionItem = document.querySelector('.items');
-          const objList = createProductItemElement({ sku: id, name: title, image: thumbnail });
-          sectionItem.appendChild(objList);
-        })).then(() => getItens()).then(() => recuperaLocalStorage());
-    });
+  .then((response) => {
+    response.json().then((data) => data.results
+    .forEach(({ id, title, thumbnail }) => {
+      const sectionItem = document.querySelector('.items');
+      const objList = createProductItemElement({ sku: id, name: title, image: thumbnail });
+      sectionItem.appendChild(objList);
+    })).then(() => getItens()).then(() => recuperaLocalStorage());
+  });
 };
 
 const esvaziar = () => {
@@ -100,6 +101,6 @@ const esvaziar = () => {
 };
 
 window.onload = () => {
-  listOfProducts();
-  esvaziar();
+listOfProducts();
+esvaziar();
 };
