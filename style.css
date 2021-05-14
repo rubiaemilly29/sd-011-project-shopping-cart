@@ -31,7 +31,7 @@
 }
 
 .item {
-  border: 2px solid blue;
+  border: 3px solid rgb(64, 189, 14);
   border-radius: 5px;
   box-sizing: border-box;
   display: flex;
@@ -39,6 +39,7 @@
   height: auto;
   margin: 5px;
   width: 200px;
+  transition: 2s;
 }
 
 .item .item__sku {
