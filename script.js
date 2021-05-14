@@ -43,7 +43,7 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  // 
+  event.target.parentNode.removeChild(event.target);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -66,7 +66,7 @@ function fetchSelectedItem(param) {
   .then((object) => insertItemToCart(object));
 }
 
-function getElement() {
+function insertElemenOnChart() {
   const getItemsBoard = document.querySelectorAll('.item');
   getItemsBoard.forEach((element) => element.lastChild.addEventListener('click', (event) => {
     console.log(event.target.parentNode.firstChild.innerText);
@@ -77,7 +77,7 @@ function getElement() {
 async function execute() {
   const productList = await getProductList();
   await loopCreateElement(productList);
-  await getElement();
+  await insertElemenOnChart();
 }
 
 window.onload = function onload() {
