@@ -69,11 +69,21 @@ function getProducts(query) {
   }));
 }
 
+function buttonCleanItens() {
+  const button = document.querySelector('.empty-cart');
+  const olfind = document.querySelector('.cart__items')
+  button.addEventListener('click', () => {
+    console.log(olfind.innerHTML = '')
+  })
+  localStorage.clear()
+}
+
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
 window.onload = function onload() {
   getProducts('computador');
+  buttonCleanItens()
   document.querySelector(olDistribution).innerHTML = localStorage.getItem('Product');
 };
