@@ -1,5 +1,3 @@
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -17,12 +15,12 @@ function createCustomElement(element, className, innerText) {
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
+  
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
+  
   return section;
 }
 
@@ -41,3 +39,23 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+function generatePageItems(API_URL, itemsContainer) {
+  fetch(API_URL) // Baixando dados da api
+  .then((response) => response.json()) // Fazendo o parsing
+  .then(({ results }) => { // Passando a chave results do objeto json recebido como parametro para a arrow function
+    results.forEach((result) => {
+      const item = createProductItemElement( // Passando para a constante item o objeto retornado da funcao createProductItemElement
+        { sku: result.id, name: result.title, image: result.thumbnail }, // Passando os valores que a funcão recebe como argumento, não entendi pq nomes tão confusos
+        );
+        itemsContainer.appendChild(item); // Adicionando cada item retornado da funcao createProduct.... ainda esta dentro do foreach
+      });
+    });
+}
+
+window.onload = function onload() { 
+  const itemsContainer = document.querySelector('.items');
+  const API_URL = 'https://api.mercadolibre.com/sites/MLA/search?q=Computador';
+  
+  generatePageItems(API_URL, itemsContainer);
+};
