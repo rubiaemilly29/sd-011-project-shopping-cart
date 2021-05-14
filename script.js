@@ -88,9 +88,15 @@ const getCart = () => {
 };
 
 // Task 5
-// in progress
 const totalPrice = () => {
-  itemsCart.forEach((items) => items + items);
+  const priceClass = document.querySelector('.total-price');
+
+  const total = itemsCart.reduce((acc, curr) => {
+    const price = curr.sales;
+    return acc + price;
+  }, 0);
+
+  priceClass.textContent = (Math.round(total * 100) / 100);
 };
 
 const asyncStart = async () => {
