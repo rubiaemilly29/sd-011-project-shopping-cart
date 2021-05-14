@@ -80,6 +80,13 @@ const retrieveCart = async () => {
   } 
 };
 
+const emptyCart = () => {
+  localStorage.clear();
+  actualItems.innerHTML = '';
+};
+
+document.querySelector('.empty-cart').addEventListener('click', emptyCart);
+
 const createStore = async () => {
   await retrieveCart();
   await createItems();
