@@ -14,23 +14,36 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+function updateTotalPrice() {
+  let items = document.getElementsByClassName('cart__item');
+  items = Array.from(items);
+  console.log(items);
+  const prices = items.map((domElement) => parseFloat(domElement.dataset.price, 10));
+  console.log(prices);
+  const result = prices.reduce((acc, curr) => acc + curr, 0);
+  const priceEl = document.querySelector('.total-price');
+  priceEl.innerText = result;
+}
+
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
 function saveItemsLocalStorage() {
-  const cart2 = document.getElementsByClassName('cart__items')[0].innerHTML;
-  localStorage.setItem('myListItems', cart2);
+  const cart = document.getElementsByClassName('cart__items')[0].innerHTML;
+  localStorage.setItem('myListItems', cart);
 }
 
 function cartItemClickListener(event) {
   event.target.parentNode.removeChild(event.target);
+  updateTotalPrice();
   saveItemsLocalStorage();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
+  li.dataset.price = salePrice;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
@@ -39,15 +52,18 @@ function createCartItemElement({ sku, name, salePrice }) {
 function handleButtonAdd(event) {
   const sku = event.target.parentElement.querySelector('.item__sku').innerText;
   // OU getSkuFromProductItem(event.target.parentElement)
-  // console.log(sku);
   fetch(`https://api.mercadolibre.com/items/${sku}`)
     .then((response) => response.json())
     .then((response) => {
+      console.log('AQUI', response);
       const li = createCartItemElement({ sku: response.id, 
         name: response.title,
         salePrice: response.price });
-      const cart1 = document.querySelector(CARTITEMS);
-      cart1.appendChild(li);
+      const cart = document.querySelector(CARTITEMS);
+      cart.appendChild(li);
+
+      updateTotalPrice();
+
       saveItemsLocalStorage();
     });
 }
@@ -70,6 +86,7 @@ function cleanCart() {
   const ol = document.querySelector(CARTITEMS);
   ol.innerHTML = ' ';
   saveItemsLocalStorage();
+  updateTotalPrice();
 }
 
 function loadFromLocalStorage() {
@@ -99,6 +116,8 @@ window.onload = function onload() {
   loadFromLocalStorage();
 
   loadProductsFromAPI();
+
+  updateTotalPrice();
 
   const buttonEmpty = document.querySelector('.empty-cart');
   buttonEmpty.addEventListener('click', cleanCart);
