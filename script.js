@@ -34,9 +34,16 @@ const fetchCart = (ItemID) => {
   fetch(apiUrlCart, param)
   .then((results) => results.json())
   .then((data) => (
-    cartOl.appendChild(createCartItemElement(data))
+    cartOl.appendChild(createCartItemElement(data))    
   ));
+
+  localStorage.setItem('productsSave', cartOl.innerHTML);
 };
+
+const loadSaveProducts = () => {
+  const cartOl = document.querySelector('.cart__items');
+  cartOl.innerHTML = localStorage.getItem('productsSave');
+  };
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
@@ -74,4 +81,5 @@ const queryProduct = () => fetchProduct('computador');
 
 window.onload = function onload() {
   queryProduct();
+  loadSaveProducts();
 };
