@@ -1,5 +1,6 @@
 let returnAPI = [];
 let cart;
+let listCart;
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -49,6 +50,7 @@ const removeCart = (itemRemove) => {
   returnAPI.forEach((value, index) => {
     if (value === excluir) {
       returnAPI.splice(index, 1);
+      localStorage.removeItem(itemRemove);
     }
   });
   return sumCart();
@@ -86,23 +88,27 @@ function searchItems(search) {
   });
 }
 
+const requisitionAddCart = (event) => {
+  const id = getSkuFromProductItem(event.target.parentElement);
+  fetch(`https://api.mercadolibre.com/items/${id}`)
+  .then((response) => response.json())
+  .then((object) => { 
+  const item = { sku: object.id, name: object.title, salePrice: object.price };
+  localStorage.setItem(object.id, JSON.stringify(item));
+  listCart.appendChild(createCartItemElement(item));
+  returnAPI.push({ sku: object.id, salePrice: object.price });
+  sumCart();
+  })
+  .catch((error) => {
+    window.alert(error);
+  });
+};
+
 const addItemCart = () => {
   const buttom = document.querySelector('.items');
   buttom.addEventListener('click', (event) => {
     if (event.target.className === 'item__add') {
-      const id = getSkuFromProductItem(event.target.parentElement);
-      const listCart = document.querySelector('.cart__items');
-      fetch(`https://api.mercadolibre.com/items/${id}`)
-      .then((response) => response.json())
-      .then((object) => { 
-        const item = { sku: object.id, name: object.title, salePrice: object.price };
-        listCart.appendChild(createCartItemElement(item));
-        returnAPI.push({ sku: object.id, salePrice: object.price });
-        sumCart();
-      })
-      .catch((error) => {
-        window.alert(error);
-      });
+      requisitionAddCart(event);
     }
   });
 };
@@ -110,6 +116,7 @@ const addItemCart = () => {
 function clearCart() {
   const buttomClear = document.querySelector('.empty-cart');
   buttomClear.addEventListener('click', () => {
+    localStorage.clear();
     const itemCart = document.querySelectorAll('.cart__item');
     for (let index = itemCart.length; index > 0; index -= 1) {
       cart.removeChild(itemCart[index - 1]);
@@ -119,11 +126,25 @@ function clearCart() {
   });
 }
 
+const getValues = () => {
+  const keys = Object.values(localStorage);
+  if (keys.length > 0) {
+    keys.forEach((value) => {
+      const obj = JSON.parse(value);
+      listCart.appendChild(createCartItemElement(obj));
+      returnAPI.push({ sku: obj.sku, salePrice: obj.salePrice });
+      sumCart();
+    });
+  }
+};
+
 window.onload = function onload() {
   const search = 'computador';
   searchItems(search);
   addItemCart();
   cart = document.querySelector('.cart__items');
+  listCart = document.querySelector('.cart__items');
   sumCart();
+  getValues();
   clearCart();
 };
