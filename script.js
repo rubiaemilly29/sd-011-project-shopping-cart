@@ -84,7 +84,17 @@ const retriveLocalStorage = () => {
   cartContainer.innerHTML = savedCart;
 };
 
+const emptyCart = () => {
+  const emptyButton = document.querySelector('.empty-cart');
+  const cartContainer = document.querySelector(itemsList);
+  emptyButton.addEventListener('click', () => {
+    cartContainer.innerHTML = '';
+    localStorage.clear();
+  });
+};
+
 window.onload = function onload() {
-fetchProduct();
-retriveLocalStorage();
+  fetchProduct();
+  retriveLocalStorage();
+  emptyCart();
 };
