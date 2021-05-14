@@ -11,8 +11,7 @@ function sumCart() {
 function saveToLocalStorage() {
   const cartItem = document.querySelector(cartItemsContainer);
   const cartContainerStorage = cartItem.innerHTML;
-  console.log(cartContainerStorage);
-  window.localStorage.setItem('cart', JSON.stringify(cartContainerStorage));
+  window.localStorage.setItem('cart', cartContainerStorage);
 }
 
 function getLocalStorage() {
