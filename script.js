@@ -1,4 +1,7 @@
-window.onload = function onload() { };
+
+window.onload = async () => {
+  await productList();
+};
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -20,14 +23,13 @@ function cartItemClickListener(event) {
 
 function createCartItemElement({ sku, name, price: salePrice }) {
   const li = document.createElement('li');
+  const itemCur = {sku, name, salePrice};
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   const itemLitst = document.querySelector('ol');
   itemLitst.appendChild(li);
-  const itemCur = [sku, name, salePrice];
   localStorage.setItem(`item${itemLitst.childElementCount}`, JSON.stringify(itemCur));
-
   return li;
 }
 
@@ -56,14 +58,18 @@ const productList = () => {
         };
         document.querySelector('.items').appendChild(createProductItemElement(myProduct));
       });
-    });
+    })
+    .then(() => {
+      const list = document.querySelector('ol')
+      const li = document.createElement('li');
+      const {sku, name, salePrice } = JSON.parse(localStorage.getItem('item1'));
+      li.innerHTML = `SKU: ${sku} | NAME: ${name} | PRICE: ${salePrice}`
+      list.appendChild(li);
+    })
 };
-productList();
+
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-window.onload = async () => {
-  await productList();
-};
