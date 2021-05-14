@@ -5,7 +5,7 @@ function createProductImageElement(imageSource) {
   return img;
 }
 function cartItemClickListener(event) {
-
+  event.target.parentNode.removeChild(event.target);
 }
 
 function createCustomElement(element, className, innerText) {
@@ -27,13 +27,13 @@ function handleButtonAdd(event) {
   // console.log(sku);
   fetch(`https://api.mercadolibre.com/items/${sku}`)
     .then((response) => response.json())
-      .then((response) => {
-        const li = createCartItemElement({ sku: response.id, 
-          name: response.title,
-          salePrice: response.price });
-        const cart = document.querySelector('.cart__items');
-        cart.appendChild(li);
-      });
+    .then((response) => {
+      const li = createCartItemElement({ sku: response.id, 
+        name: response.title,
+        salePrice: response.price });
+      const cart = document.querySelector('.cart__items');
+      cart.appendChild(li);
+    });
 }
 
 function createProductItemElement({ sku, name, image }) {
