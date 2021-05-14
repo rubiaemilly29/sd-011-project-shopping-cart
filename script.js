@@ -1,4 +1,5 @@
 const cartItems = () => document.querySelector('.cart__items');
+const emptyCart = () => document.querySelector('.empty-cart');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -100,7 +101,14 @@ function getMercadoLivreItens() {
     });
 }
 
+function clearShoppingCart() {
+  emptyCart().addEventListener('click', () => {
+    cartItems().innerHTML = '';
+  });
+}
+
 window.onload = function onload() { 
   getMercadoLivreItens();
   recupereLocalStorage();
+  clearShoppingCart();
 };
