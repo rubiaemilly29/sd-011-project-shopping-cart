@@ -18,19 +18,19 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function cartItemClickListener(event, sku) {
+function cartItemClickListener(event, id) {
   const cart = document.querySelector('.cart__items');
   cart.removeChild(event.target);
-  localStorage.removeItem(`${sku}`, event.target);
+  localStorage.removeItem(`${id}`, event.target);
 }
 
 function createCartItemElement(computer) {
   const li = document.createElement('li');
-  const { sku, name, price } = computer;
+  const { id, title, price } = computer;
   li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
+  li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', (event) =>
-    cartItemClickListener(event, computer.sku));
+    cartItemClickListener(event, `${id}`));
   return li;
 }
 
@@ -38,16 +38,16 @@ function addToCart(computer) {
    const li = createCartItemElement(computer);
    const cart = document.querySelector('.cart__items');
    cart.appendChild(li);
-   localStorage.setItem(`${computer.sku}`, cart.innerHTML);
+   localStorage.setItem(`${computer.id}`, cart.innerHTML);
 }
 
 function createProductItemElement(computer) {
   const section = document.createElement('section');
   section.className = 'item';
 
-  section.appendChild(createCustomElement('span', 'item__sku', computer.sku));
-  section.appendChild(createCustomElement('span', 'item__title', computer.name));
-  section.appendChild(createProductImageElement(computer.image));
+  section.appendChild(createCustomElement('span', 'item__sku', computer.id));
+  section.appendChild(createCustomElement('span', 'item__title', computer.title));
+  section.appendChild(createProductImageElement(computer.thumbnail));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
     .addEventListener('click', () => addToCart(computer));
   return section;
@@ -57,15 +57,9 @@ const fetchComputer = async () => {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const computers = await response.json();
   computers.results.forEach((computer) => {
-    const myComputer = {
-      sku: computer.id,
-      name: computer.title,
-      image: computer.thumbnail,
-      price: computer.price,
-    };
-    document.querySelector('.items').appendChild(createProductItemElement(myComputer));
+    document.querySelector('.items').appendChild(createProductItemElement(computer));
     const item = localStorage.getItem(`${computer.id}`);
-    if (item) addToCart(myComputer);
+    if (item) addToCart(computer);
   });
 };
 
