@@ -1,10 +1,11 @@
- const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
- const itemsSection = document.getElementsByClassName('items')[0];
- const cartArea = document.getElementsByClassName('cart__items')[0];
- const totalPrice = document.getElementsByClassName('total-price')[0];
- //
- let fullListStringified = JSON.stringify(cartArea.innerHTML);
- let totalPriceStringified = JSON.stringify(totalPrice.innerHTML);
+const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+const itemsSection = document.getElementsByClassName('items')[0];
+const cartArea = document.getElementsByClassName('cart__items')[0];
+const totalPrice = document.getElementsByClassName('total-price')[0];
+const emptyCart = document.getElementsByClassName('empty-cart')[0];
+//
+let fullListStringified = JSON.stringify(cartArea.innerHTML);
+let totalPriceStringified = JSON.stringify(totalPrice.innerHTML);
 
 /// / LOCALSTORAGE
 function saveCartData() {
@@ -13,6 +14,17 @@ function saveCartData() {
   totalPriceStringified = JSON.stringify(totalPrice.innerHTML);
   localStorage.setItem('Total Price', totalPriceStringified);
 }
+
+// EMPTY CART
+function emptyCartFunction() {
+  cartArea.innerHTML = '';
+  totalPrice.innerHTML = '';
+  saveCartData();
+}
+emptyCart.addEventListener('click', () => {
+  emptyCartFunction();
+});
+
 //
 
 function createProductImageElement(imageSource) {
