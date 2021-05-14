@@ -14,8 +14,13 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
+function totalPrice() {
+  let items = document.getElementsByClassName('cart__item');
+  items = Array.from(items);
+  const prices = items.map((item) => parseFloat(item.dataset.price, 10));
+  const result = prices.reduce((acc, curr) => acc + curr, 0);
+  const cartPrice = document.querySelector('.total-price');
+  cartPrice.innerText = result;
 }
 
 function saveCartItems() {
@@ -26,12 +31,14 @@ function cartItemClickListener(event) {
   if (event !== null && event.target !== null && event.target.parentNode !== null) {
   event.target.parentNode.removeChild(event.target);
   saveCartItems();
+  totalPrice();
   }
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
+  li.dataset.price = salePrice;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
@@ -48,6 +55,7 @@ function createEvent(event) {
         const cartItem = document.querySelector(carItems);
         cartItem.appendChild(listItem);
         saveCartItems();
+        totalPrice();
   });
 }
 
@@ -66,10 +74,15 @@ function createProductItemElement({ sku, name, image }) {
 }
 
 function promise() {
+  const listItens = document.querySelector('.items');
+  const load = document.createElement('spam');
+  load.classList = 'loading';
+  load.innerText = 'loading...';
+  listItens.appendChild(load);
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
   .then((response) => response.json())
   .then((item) => {
-    const listItens = document.querySelector('.items');
+    listItens.innerText = '';
     item.results.forEach((element) => {
       const obj = { sku: element.id, name: element.title, image: element.thumbnail };
       listItens.appendChild(createProductItemElement(obj));
@@ -93,6 +106,7 @@ function promise() {
     const ol = document.querySelector(carItems);
     ol.innerHTML = '';
     saveCartItems();
+    totalPrice();
     });
   }
 
@@ -100,4 +114,5 @@ function promise() {
 promise();
 saveItems();
 clearCart();
+totalPrice();
   };
