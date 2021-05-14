@@ -25,19 +25,20 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-function localizeAndAddValues(price) {
+function updatePrice(price) {
   const paragraph = document.querySelector('.total-price');
   if (paragraph.innerHTML !== Number) {
-    paragraph.innerText = price + Number(paragraph.innerHTML);
+    paragraph.innerText = (price + Number(paragraph.innerHTML));
   } else {
     paragraph.innerText = '0';
   }
+  localStorage.setItem('totalprice',paragraph.innerText)
 }
 
 function cartItemClickListener(event) {
   event.target.remove(olDistribution);
   const priceToRemove = event.target.innerText.split('$')[1];
-  localizeAndAddValues(Number(priceToRemove) * -1);
+  updatePrice(Number(priceToRemove) * -1);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -46,6 +47,14 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
+}
+
+function loadingSite() {
+  document.querySelector('.loading').innerHTML = 'loading...'
+}
+
+function siteloaded() {
+  document.querySelector('.loading').innerHTML = ''
 }
 
 function addProductOnShoppingCart(query) {
@@ -60,11 +69,12 @@ function addProductOnShoppingCart(query) {
     });
     document.querySelector(olDistribution).appendChild(creatElementOl);
     localStorage.setItem('Product', document.querySelector(olDistribution).innerHTML);
-    localizeAndAddValues(data.price);
+    updatePrice(data.price);
   });
 }
 
 function getProducts(query) {
+  loadingSite()
   const param = { method: 'GET', headers: { Accept: 'application/json' } }; 
   fetch(`https://api.mercadolibre.com/sites/MLB/search?q=$${query}`, param)
   .then((response) => response.json())
@@ -78,7 +88,8 @@ function getProducts(query) {
       addProductOnShoppingCart(value.id);
     });
     document.querySelector('.items').appendChild(returnOfElement);
-  }));
+  }))
+  .then(() => siteloaded())
 }
 
 function buttonCleanItens() {
@@ -94,8 +105,17 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+function loadFromLocalStorage() {
+  document.querySelector(olDistribution).innerHTML = localStorage.getItem('Product');
+  localStorage.getItem('Product');
+  const liSelection = document.querySelectorAll('li');
+  liSelection.forEach((element) => element.addEventListener('click', cartItemClickListener));
+  const paragraph = document.querySelector('.total-price')
+  paragraph.innerText = localStorage.getItem('totalprice');
+}
+
 window.onload = function onload() {
   getProducts('computador');
   buttonCleanItens();
-  document.querySelector(olDistribution).innerHTML = localStorage.getItem('Product');
+  loadFromLocalStorage();
 };
