@@ -22,7 +22,7 @@ function sumPrices() {
     const value = element.innerText.split('$');
     sumValues += Number(value[1]);
   });
-  totalPrice.innerHTML = `Preço Total: ${sumValues}`;
+  totalPrice.innerHTML = `${sumValues}`;
 }
 
 function cartItemClickListener(event) {
