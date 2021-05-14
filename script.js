@@ -1,5 +1,3 @@
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -21,7 +19,7 @@ function getSkuFromProductItem(item) {
 function cartItemClickListener(event, id) {
   const cart = document.querySelector('.cart__items');
   cart.removeChild(event.target);
-  localStorage.removeItem(`${id}`, event.target);
+  localStorage.setItem('cart', cart.innerHTML);
 }
 
 function createCartItemElement(computer) {
@@ -38,7 +36,7 @@ function addToCart(computer) {
    const li = createCartItemElement(computer);
    const cart = document.querySelector('.cart__items');
    cart.appendChild(li);
-   localStorage.setItem(`${computer.id}`, cart.innerHTML);
+   localStorage.setItem('cart', cart.innerHTML);
 }
 
 function createProductItemElement(computer) {
@@ -58,11 +56,16 @@ const fetchComputer = async () => {
   const computers = await response.json();
   computers.results.forEach((computer) => {
     document.querySelector('.items').appendChild(createProductItemElement(computer));
-    const item = localStorage.getItem(`${computer.id}`);
-    if (item) addToCart(computer);
   });
 };
 
+const loadCartItems = async () => {
+  const cart = document.querySelector('.cart__items');
+  const items = localStorage.getItem('cart');
+  if (items) cart.innerHTML = items;
+}
+
 window.onload = () => {
   fetchComputer();
+  loadCartItems();
 };
