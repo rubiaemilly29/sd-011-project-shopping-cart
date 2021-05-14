@@ -19,6 +19,13 @@ const searchComputers = () => (new Promise((resolve) => {
   })
 );
 
+const addComputers = (id) => (new Promise((resolve) => {
+  fetch(`https://api.mercadolibre.com/items/${id}`)
+    .then((response) => response.json())
+    .then((data) => resolve(data));
+})
+);
+
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -35,7 +42,7 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function cartItemClickListener(event) {
+function cartItemClickListener() {
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -46,19 +53,37 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+const addComputerCartClick = (event) => {
+  const computerSelected = event.target.parentNode;
+  const itemsCart = document.getElementsByClassName('cart__items');
+  addComputers(computerSelected.childNodes[0].innerText)
+    .then((computers) => {
+    const item = createCartItemElement({
+      sku: computers.id,
+      name: computers.title,
+      salePrice: computers.price,
+    });
+    itemsCart[0].appendChild(item);
+    });  
+};
+
 window.onload = function onload() {
   const sectionItems = document.getElementsByClassName('items');
-  console.log(sectionItems);
-  (searchComputers()
-    .then((computers) => {
-      computers.forEach((computer) => {
+    (searchComputers()
+      .then((computers) => {
+       computers.forEach((computer) => {
         const item = createProductItemElement({
           sku: computer.id, 
           name: computer.title, 
           image: computer.thumbnail,
-        });
+        }); 
         sectionItems[0].appendChild(item);
       });
+      const buttons = document.getElementsByClassName('item__add');
+      for (let index = 0; index < buttons.length; index += 1) {
+        const button = buttons[index];
+        button.addEventListener('click', addComputerCartClick);
+      }
     })
   );
 };
