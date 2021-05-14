@@ -1,5 +1,3 @@
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -14,7 +12,8 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ sku, name, image }) {
+function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
+  const itens = document.querySelector('.items');
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -22,7 +21,7 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
+  itens.appendChild((section));
   return section;
 }
 
@@ -31,18 +30,7 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  const API = 'https://api.mercadolibre.com/sites/MLB/search?q=computador'
-  const param = {
-    method: 'GET',
-    headers: { 'Accept': 'application/json' },
-  };
-  const computador = new Promise((resolve, reject) => {
-    fetch(API, param)
-    .then((result) => result.json)
-    .then((d) => console.log(d));
-  });
 }
-cartItemClickListener();
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
@@ -51,3 +39,18 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+function getProduct(obj = 'computador') {
+  return new Promise(() => {
+    fetch(`https://api.mercadolibre.com/sites/MLB/search?q="${obj}"`)
+    .then((response) => response.json())
+    .then((produtos) => produtos.results.forEach((produtosSelecionado) => {
+      createProductItemElement(produtosSelecionado);
+      
+    }));
+  });
+}
+
+window.onload = function onload() { 
+  getProduct();
+};
