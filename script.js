@@ -1,10 +1,23 @@
 const sectionItems = document.getElementById('sectionItems');
 const cartItems = document.querySelector('.cart__items');
-const totalPrice = document.querySelector('.total-price');
+const totalPrice = document.querySelector('#spanPrice');
+const emptyCart = document.querySelector('.empty-cart');
+
 const myObj = {
   method: 'GET',
   headers: { Accept: 'application/json' },
 };
+
+const clearCart = () => {
+  emptyCart.addEventListener('click', () => {
+    cartItems.innerHTML = '';
+    totalPrice.innerText = 0;
+    localStorage.items = cartItems.innerHTML;
+    localStorage.totalPrice = totalPrice.innerText;
+  });
+};
+
+clearCart();
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -34,9 +47,11 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   const dataPrice = event.target.getAttribute('data-price');
-  const price = parseFloat(totalPrice.innerText).toFixed(2);
+  const price = parseFloat(localStorage.totalPrice).toFixed(2);
   totalPrice.innerText = (price - dataPrice).toFixed(2);
   event.target.remove();
+  localStorage.totalPrice = totalPrice.innerText;
+  localStorage.items = cartItems.innerHTML;
 
   // coloque seu código aqui
 }
@@ -54,11 +69,10 @@ const addItemToCart = async (el) => {
   const itemId = await getSkuFromProductItem(el.target.parentNode);
   const item = await productMLItem(itemId);
   cartItems.appendChild(createCartItemElement(item));
-  //   if (totalPrice.hidden) {
-  //     totalPrice.hidden = false;
-  //   }
   const price = parseFloat(totalPrice.innerText);
   totalPrice.innerText = (price + item.price).toFixed(2);
+  localStorage.totalPrice = totalPrice.innerText;
+  localStorage.items = cartItems.innerHTML;
 };
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
@@ -87,4 +101,10 @@ const exportProductsToPage = async (product) => {
   });
 };
 
-exportProductsToPage(productMLArray);
+window.onload = () => {
+  exportProductsToPage(productMLArray);
+  if (localStorage.items && localStorage.totalPrice) {
+    cartItems.innerHTML = localStorage.items;
+    totalPrice.innerText = localStorage.totalPrice;
+  }
+};
