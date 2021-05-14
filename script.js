@@ -1,8 +1,8 @@
 const itemsSection = document.querySelector('.items');
 const shoppingCartItems = document.querySelector('.cart__items');
 const totalPrice = document.querySelector('.total-price');
-let loadingOverlay = document.querySelector('.loading-overlay');
-let loadingText = document.querySelector('.loading');
+const loadingOverlay = document.querySelector('.loading-overlay');
+const loadingText = document.querySelector('.loading');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
