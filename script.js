@@ -1,5 +1,3 @@
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -23,7 +21,6 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-  mainSection.appendChild(section);
 
   return section;
 }
@@ -35,12 +32,16 @@ const apiFetch = () => {
   fetch(apiUrl, apiHeader).then((response) => response.json).then((json) => {
     console.log(json.results);
     const jsonResults = json.results;
+    const mainSection = document.getElementsByClassName('items');
     jsonResults.forEach((cpu) => {
-      createProductItemElement(cpu);
+     mainSection.appendChild(createProductItemElement(cpu));
     });
   });
 };
-apiFetch();
+
+window.onload = function onload() {
+  apiFetch();
+};
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
