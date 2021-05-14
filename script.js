@@ -70,22 +70,21 @@ function createProductItemElement({ sku, name, image, price }) {
 }
 
 const fetchProducts = (product) => {
+  const loading = document.querySelector('.loading');
   const API_URL = `https://api.mercadolibre.com/sites/MLB/search?q=$${product}`;
-  const myObject = {
-    method: 'GET',
-    headers: { Accept: 'application/json' },
-  };
-  fetch(API_URL, myObject)
+  fetch(API_URL)
     .then((response) => response.json())
-      .then((products) => products.results.forEach(({ id, title, thumbnail, price }) => {
-        document.querySelector('.items')
-        .appendChild(createProductItemElement({ sku: id, name: title, image: thumbnail, price }));
-      }))
+      .then((products) => {
+        loading.parentNode.removeChild(loading);
+        products.results.forEach(({ id, title, thumbnail, price }) => {
+          document.querySelector('.items')
+          .appendChild(createProductItemElement({ sku: id, name: title, image: thumbnail, price }));
+        });
+      })
       .then(() => {
         for (let index = 0; index < localStorage.length; index += 1) {
           const [sku, name, price] = localStorage.getItem(`item${index}`).split('|');
-          const saved = { sku, name, price };
-          createCartItemElement(saved);
+          createCartItemElement({ sku, name, price });
         }
       });
 };
