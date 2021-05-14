@@ -16,25 +16,13 @@ function createCustomElement(element, className, innerText) {
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
+  
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
+  
   return section;
-}
-
-function cartItemClickListener(event) {
-  event.target.remove(olDistribution);
-}
-
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
 }
 
 function localizeAndAddValues(price) {
@@ -45,6 +33,21 @@ function localizeAndAddValues(price) {
     paragraph.innerText = '0';
   }
 }
+
+function cartItemClickListener(event) {
+  event.target.remove(olDistribution);
+  const priceToRemove = event.target.innerText.split('$')[1];
+  localizeAndAddValues(Number(priceToRemove) * -1);
+}
+
+function createCartItemElement({ sku, name, salePrice }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.addEventListener('click', cartItemClickListener);
+  return li;
+}
+
 
 function addProductOnShoppingCart(query) {
   const param = { method: 'GET', headers: { Accept: 'application/json' } }; 
