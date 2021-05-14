@@ -20,9 +20,11 @@ function saveCartItems() {
   const cart1 = document.getElementsByClassName('cart__items')[0].innerHTML;
   localStorage.setItem('listItems', cart1);
 }
-function cartItemClickListener(event) {
+function cartItemClickListener(event) { 
+  if (event !== null && event.target !== null && event.target.parentNode !== null) {
   event.target.parentNode.removeChild(event.target);
   saveCartItems();
+  }
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
