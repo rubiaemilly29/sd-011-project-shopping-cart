@@ -32,7 +32,7 @@ function cartItemClickListener(event) {
   // coloque seu código aqui
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
@@ -40,13 +40,35 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-window.onload = async function onload() {
+const addCartButton = () => {
+  const addButtons = document.querySelectorAll('.item__add');
+  const ordenedList = document.querySelector('.cart__items');
+  addButtons.forEach((addButton) => {
+    addButton.addEventListener('click', async () => {
+      const productId = addButton.parentNode.firstElementChild.innerText;
+      const idResult = await fetch(`https://api.mercadolibre.com/items/${productId}`);
+      const resultOfId = await idResult.json();
+      const idProduct = createCartItemElement(resultOfId);
+      ordenedList.appendChild(idProduct);
+      // somatoryPrices();
+    });
+  });
+};
+
+// Função responsável por deixar algumas execuções na fila de espera.
+async function fetchItems() {
   const API = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const resultOfProducts = await API.json();
   const productContainers = document.querySelector('.items');
-
+  
   resultOfProducts.results.forEach((element) => {
     const anyProduct = createProductItemElement(element);
     productContainers.appendChild(anyProduct);
   });
+  
+  addCartButton();
+}
+
+window.onload = function onload() {
+  fetchItems();
 };
