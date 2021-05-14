@@ -45,9 +45,7 @@ function createCartItemElement(sku, name, salePrice) {
 }
 
 async function addItemToCart(event) {
-  let cart = document.querySelector('.cart');
-  cart = cart.children[0]
-  console.log(cart)
+  let cart = document.querySelector('.cart__items');
 
   const ITEM = event.path[1].children[0].innerText;
   const itemInfo = await fetch(`https://api.mercadolibre.com/items/${ITEM}`)
