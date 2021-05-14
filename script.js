@@ -26,9 +26,9 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
+function getSkuFromProductItem(item) {
+   return item.querySelector('span.item__sku').innerText;
+}
 
 // Task 3
 function cartItemClickListener(event) {
@@ -59,9 +59,9 @@ const mercadoLivreAPI = () => {
   return fetch(url, method)
     .then((response) => response.json())
     .then((json) => json.results
-    .forEach((items) => list.appendChild(createProductItemElement(
-      { sku: items.id, name: items.title, image: items.thumbnail },
-    ))));
+      .forEach((items) => list.appendChild(createProductItemElement(
+        { sku: items.id, name: items.title, image: items.thumbnail },
+      ))));
 };
 
 // Task 2
@@ -76,13 +76,13 @@ const sendToCart = () => {
         .then((response) => response.json())
         .then((product) => itemsInCart.appendChild(createCartItemElement(
           { sku: product.id, name: product.title, salePrice: product.price },
-      ))).then(() => localStorage.setItem('cart', itemsCart.innerHTML))));
+      ))).then(() => localStorage.setItem('itemsCart', itemsCart.innerHTML))));
 };
 
 // Task 4
 const getCart = () => {
-  if (localStorage.cart) {
-    itemsCart.innerHTML = localStorage.getItem('cart');
+  if (localStorage.itemsCart) {
+    itemsCart.innerHTML = localStorage.getItem('itemsCart');
     itemsCart.addEventListener('click', cartItemClickListener);
   }
 };
