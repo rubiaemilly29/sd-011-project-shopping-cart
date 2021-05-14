@@ -29,6 +29,7 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) { // para remover da lista
+  event.target.remove();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -64,7 +65,6 @@ async function getItem(term) {
 
 async function addItemToCart(event) {
   const currentId = await getSkuFromProductItem((event.target).parentNode);
-  console.log(currentId);
   try {
     const response = await fetch(`https://api.mercadolibre.com/items/${currentId}`);
     const json = await response.json();
