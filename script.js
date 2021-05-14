@@ -30,12 +30,19 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
+  console.log(event.target.innerText);
+  const storage = Object.entries(localStorage);
+  storage.forEach((element) => {
+    if (element[1] === event.target.innerText) {
+      localStorage.removeItem(element[0]);
+    }
+  });
   event.target.remove();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
-  li.className = 'cart__item';
+  li.className = 'cart__item'; // ////////////////////////////////////////////////////////////////////////////////////////////////
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
@@ -68,7 +75,9 @@ function addToCart() {
     .then((r) => r.json())
     .then((data) => {
       const { id: sku, title: name, price: salePrice } = data;
-      carrin.appendChild(createCartItemElement({ sku, name, salePrice }));
+      const createItem = createCartItemElement({ sku, name, salePrice });
+      carrin.appendChild(createItem);
+      localStorage.setItem(`${data.id}`, createItem.innerText);
     });
   }));
 }
@@ -78,11 +87,37 @@ const emptyCart = () => {
   emptyButton.addEventListener('click', () => {
     const cartItems = document.querySelectorAll('.cart__item');
     cartItems.forEach((item) => item.remove());
+    localStorage.clear();
   });
+};
+
+/* const storage = async () => {
+  const cartItems = document.querySelector('.cart__items').children;
+  if (cartItems) {
+    cartItems.forEach((item) => localStorage.setItem('cartItem', item.innerText));
+  }
+}; */
+/* storage(); */
+
+const checkStorage = () => {
+  if (localStorage.length > 0) {
+    const storage = Object.values(localStorage);
+    console.log(storage);
+    storage.forEach((item) => {
+      console.log(item);
+      const carrin = document.querySelector('.cart__items');
+      const li = document.createElement('li');
+      li.className = 'cart__item';
+      li.innerText = item;
+      li.addEventListener('click', cartItemClickListener);
+      carrin.appendChild(li);
+    });
+  }
 };
 
 window.onload = async function onload() {
   await fetchProducts();
   addToCart();
   emptyCart();
+  checkStorage();
  };
