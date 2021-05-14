@@ -23,11 +23,9 @@ const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) =>
   return items.appendChild(section);
 };
 
-const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
-
 const saveLocalStorage = () => {
-  const searchOl = document.querySelector('.cart__items').outerHTML;
-  localStorage.setItem('cart', searchOl);
+  const shoppingCart = document.querySelector('.cart__items');
+  localStorage.setItem('cart', shoppingCart.innerHTML);
 };
 
 const sumTotalPrice = () => {
@@ -43,6 +41,14 @@ const cartItemClickListener = (event) => {
   event.target.remove();
   saveLocalStorage();
   sumTotalPrice();
+};
+
+const loadLocalStorage = () => {
+  const cart = document.querySelector('.cart__items');
+  if (localStorage.length !== 0) {
+    cart.innerHTML = localStorage.getItem('cart');
+  }
+  cart.addEventListener('click', cartItemClickListener);
 };
 
 const createCartItemElement = ({ id: sku, title: name, price: salePrice }) => {
@@ -98,28 +104,20 @@ async function getItensApi(query) {
 }
 
 const emptyCartButton = () => {
-  const emptyButton = document.querySelector('.empty-cart');
-  emptyButton.addEventListener('click', () => {
-    document.querySelector('.cart__items').innerHTML = '';
+  const buttonClearCart = document.querySelector('.empty-cart');
+  buttonClearCart.addEventListener('click', () => {
+    const itemsCart = document.querySelectorAll('.cart__item');
+    itemsCart.forEach((item) => {
+      item.remove();
+    });
     sumTotalPrice();
     saveLocalStorage();
   });
 };
 
-const loadLocalStorage = () => {
-  if (localStorage.getItem('cart') !== null) {
-    const searchOl = document.querySelector('.cart__items');
-    searchOl.outerHTML = localStorage.getItem('cart');
-    const searchItems = document.querySelectorAll('.cart__item');
-    searchItems.forEach((item) => item.addEventListener('click', cartItemClickListener));
-  }
-};
-
 window.onload = function onload() {
   getItensApi('computador');
-  // .then(() => document.querySelector('.loading').remove())
-  // .catch((error) => console.error(error));
   loadLocalStorage();
-  emptyCartButton();
   sumTotalPrice();
+  emptyCartButton();
 };
