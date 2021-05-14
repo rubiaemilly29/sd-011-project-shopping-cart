@@ -3,7 +3,7 @@ const fetchApi = (endPoint) => {
   const param = { headers: { Accept: 'application/json' } };
   return fetch(endPoint, param)
   .then((response) => response.json())
-  .catch((error) => alert(error));
+  .catch((error) => console.log(error));
 };
 
 const formatToBody = (resp) => {
@@ -68,6 +68,15 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+const emptyCart = () => { 
+  const emptyButton = document.querySelector('.empty-cart');
+  emptyButton.addEventListener('click', (event) => {
+    const nodes = [...event.target.parentNode.lastElementChild.children];
+    nodes.forEach((el) => event.target.parentNode.lastElementChild.removeChild(el));
+    localStorage.clear();
+  });
+};
+
 const pushCartItems = (value) => {
   shoppingCart.push(value);
   return shoppingCart;
@@ -76,7 +85,11 @@ const pushCartItems = (value) => {
 const retrieveCartItems = () => {
   const cartItems = document.querySelector('.cart__items');
   const items = JSON.parse(localStorage.getItem('myShoppingCart'));
-  items.forEach((ele) => cartItems.appendChild(createCartItemElement(ele[0])));
+  try {
+    items.forEach((ele) => cartItems.appendChild(createCartItemElement(ele[0])));
+  } catch (error) {
+    console.log('Carrinho vazio');
+  }
 };
 
 const addItemToCart = async (id) => {
@@ -106,7 +119,8 @@ const exec = async () => {
   }));
 };
 
-window.onload = async function onload() {  
-  await exec();
+window.onload = function onload() {  
+  exec();
   retrieveCartItems();
+  emptyCart();
 };
