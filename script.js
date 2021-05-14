@@ -1,18 +1,43 @@
+const totalPrice = document.createElement('span');
+totalPrice.className = 'total-price';
+totalPrice.innerHTML = '0';
+
+const appendPriceContainer = async () => {
+  const cartSection = document.querySelector('section.cart p');
+  cartSection.appendChild(totalPrice);
+};
+
+// Atualiza o preço final
+const updateTotalPrice = async () => {
+  const prices = document.querySelectorAll('li.cart__item');
+  let sum = 0;
+  prices.forEach((product) => {
+    const prodStrings = product.innerText.split('$');
+    sum += Number(prodStrings[1]);
+  });
+  totalPrice.innerHTML = `${sum}`;
+};
+
+// Encontra um produto da API pelo seu id
 const fetchById = (ItemID) => fetch(`https://api.mercadolibre.com/items/${ItemID}`)
   .then((r) => r.json())
   .then((r) => r);
 
+  // Encontra o id de um produto
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+  // Cria a função que será realizada ao clicar no item da lista de compras
 function cartItemClickListener(event) {
   // coloque seu código aqui
   const cartList = event.target.parentNode;
   cartList.removeChild(event.target);
+  updateTotalPrice();
   localStorage.setItem('cart', cartList.innerHTML);
 }
 
+  // Carrega os itens do carrinho salvos no localStorage
 const loadCart = () => {
   const cartList = document.querySelector('ol.cart__items');
   const cart = localStorage.getItem('cart');
@@ -21,6 +46,7 @@ const loadCart = () => {
     const cartItems = document.querySelectorAll('.cart__items .cart__item');
     cartItems.forEach((item) => item.addEventListener('click', cartItemClickListener));
   }
+  updateTotalPrice();
 };
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -37,6 +63,7 @@ const btnAddCartEvent = async (event) => {
   const li = createCartItemElement({ sku: item.id, name: item.title, salePrice: item.price });
   const cartList = document.querySelector('ol.cart__items');
   cartList.appendChild(li);
+  updateTotalPrice();
   localStorage.setItem('cart', cartList.innerHTML);
 };
 
@@ -83,5 +110,6 @@ const createList = async () => {
 
 window.onload = function onload() {
   createList();
+  appendPriceContainer();
   loadCart();
 };
