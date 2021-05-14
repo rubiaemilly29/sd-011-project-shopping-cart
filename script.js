@@ -1,3 +1,5 @@
+const cartItemName = '.cart__items';
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -17,7 +19,7 @@ function getSkuFromProductItem(item) {
 }
 
 function saveLocalStorage() {
-  const cartI = document.getElementsByClassName('cart__items')[0].innerHTML;
+  const cartI = document.getElementsByClassName(cartItemName)[0].innerHTML;
   localStorage.setItem('myList', cartI);
 }
 
@@ -44,7 +46,7 @@ function additem(event) {
       const listItem = createCartItemElement(
         { sku: response2.id, name: response2.title, salePrice: response2.price },
       );
-      const cart = document.querySelector('.cart__items');
+      const cart = document.querySelector(cartItemName);
       cart.appendChild(listItem);
       saveLocalStorage();
     });
@@ -75,10 +77,17 @@ window.onload = function onload() {
       });
     });
   const saveItems = window.localStorage.getItem('myList');
-  document.querySelector('.cart__items').innerHTML = saveItems;
-  let liItem = document.getElementsByClassName('cart__items');
+  document.querySelector(cartItemName).innerHTML = saveItems;
+  let liItem = document.getElementsByClassName(cartItemName);
   liItem = Array.from(liItem);
   liItem.forEach((itens) => {
     itens.addEventListener('click', cartItemClickListener);
   });
 };
+
+function removeList() {
+  const cart = document.querySelector(cartItemName);
+  while (cart.firstChild) {
+    cart.removeChild(cart.firstChild);
+  }
+}
