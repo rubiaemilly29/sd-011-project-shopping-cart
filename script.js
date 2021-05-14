@@ -77,21 +77,19 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-const fetchProduct = () => {
+const fetchProducts = async () => {
   const URL = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
-  const fetchItem = new Promise((resolve) => fetch(URL)
-  .then((response) => response.json())
-    .then((data) => data.results)
-    .then((product) => {
-      resolve();
-      product.forEach((item) => {
-        const { id: sku, title: name, thumbnail: image } = item;
-        const newItem = createProductItemElement({ sku, name, image });
-        document.querySelector('.items').appendChild(newItem);
-      });
-    }));
-
-    return fetchItem;
+  try {
+    const productArray = await fetch(URL);
+    const productResults = await productArray.json();
+    await productResults.results.forEach((item) => {
+      const { id: sku, title: name, thumbnail: image } = item;
+      const newProduct = createProductItemElement({ sku, name, image });
+      document.querySelector('.items').appendChild(newProduct);
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const retriveLocalStorage = () => {
@@ -116,7 +114,7 @@ const whileLoadPromise = async () => {
     loadingElement.innerText = 'Loading...';
     const itemList = document.querySelector('.items');
     itemList.appendChild(loadingElement);
-    await fetchProduct();
+    await fetchProducts();
     await itemList.removeChild(loadingElement);
   } catch (error) {
     console.log('error');
