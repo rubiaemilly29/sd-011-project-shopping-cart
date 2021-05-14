@@ -1,4 +1,18 @@
-window.onload = function onload() { };
+window.onload = function onload() {
+};
+
+// function sendToStorage() {
+
+//   localStorage.setItem('ShoppingCart', ShoppingCart);  
+// }
+// (localStorage.getItem('ShoppingCart'));
+
+const emptyButton = document.querySelector('.empty-cart');
+emptyButton.addEventListener('click', () => {
+  const ShoppingCart = document.querySelector('.cart__items');
+  ShoppingCart.querySelectorAll('*').forEach((n) => n.remove());
+  return localStorage.clear();
+});
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
