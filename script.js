@@ -1,6 +1,18 @@
 const items = document.querySelector('.items');
 const cart = document.querySelector('.cart__items');
 
+async function toggleLoading() {
+  let loading = document.querySelector('.loading');
+  if (!loading) {
+    loading = document.createElement('h2');
+    loading.classList.add('loading');
+    loading.innerText = 'Loading';
+    cart.parentElement.appendChild(loading);
+  } else {
+    loading.remove();
+  }
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -68,9 +80,11 @@ async function appendCartItem(event) {
   } else {
     id = getSkuFromProductItem(event.target.parentElement);
   }
+  await toggleLoading();
   const product = await fetchProduct(id);
   const { title: name, price: salePrice } = product;
   cart.appendChild(createCartItemElement({ sku: id, name, salePrice }));
+  await toggleLoading();
   saveCart();
 }
 
@@ -81,6 +95,7 @@ async function fetchProductList(query) {
 }
 
 async function appendProductList(query) {
+  await toggleLoading();
   const productList = await fetchProductList(query);
   await productList.forEach((element) => {
     const { id: sku, title: name, thumbnail: image } = element;
@@ -88,6 +103,7 @@ async function appendProductList(query) {
   });
   const buttonList = document.querySelectorAll('.item__add');
   buttonList.forEach((element) => element.addEventListener('click', appendCartItem));
+  await toggleLoading();
 }
 
 function loadCart() {
