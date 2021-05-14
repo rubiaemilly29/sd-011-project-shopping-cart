@@ -19,12 +19,23 @@ const searchComputers = () => (new Promise((resolve) => {
   })
 );
 
-const addComputers = (id) => (new Promise((resolve) => {
+const addComputers = (id) => {
+  const container = document.querySelector('.cart');
+  const span = document.createElement('span');
+  span.className = 'loading';
+  container.appendChild(span);
+  span.innerText = 'loading...';
+  const loading = document.querySelector('.loading');
+
+return new Promise((resolve) => {
   fetch(`https://api.mercadolibre.com/items/${id}`)
     .then((response) => response.json())
-    .then((data) => resolve(data));
-})
-);
+    .then((data) => {
+      container.removeChild(loading);
+      resolve(data);
+    });
+});
+};  
 
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
