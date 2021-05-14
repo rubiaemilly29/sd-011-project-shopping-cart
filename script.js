@@ -30,6 +30,7 @@ function createProductItemElement({ sku, name, image }) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
+// Task 3
 function cartItemClickListener(event) {
   event.target.remove();
   localStorage.setItem('cart', itemsCart.innerHTML);
@@ -78,16 +79,18 @@ const sendToCart = () => {
       ))).then(() => localStorage.setItem('cart', itemsCart.innerHTML))));
 };
 
-// Task 3
+// Task 4
 const getCart = () => {
-  if (localStorage.cart) itemsCart.innerHTML = localStorage.getItem('cart');
+  if (localStorage.cart) {
+    itemsCart.innerHTML = localStorage.getItem('cart');
+    itemsCart.addEventListener('click', cartItemClickListener);
+  }
 };
 
 const asyncStart = async () => {
   await mercadoLivreAPI();
   await sendToCart();
   await getCart();
-  itemsCart.addEventListener('click', cartItemClickListener);
 };
 
 window.onload = function onload() {
