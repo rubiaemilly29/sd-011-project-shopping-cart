@@ -31,7 +31,7 @@
 }
 
 .item {
-  border: 2px solid blue;
+  border: 2px solid gray;
   border-radius: 5px;
   box-sizing: border-box;
   display: flex;
@@ -56,7 +56,7 @@
 }
 
 .item .item__add {
-  background-color: green;
+  background-color: rgb(108, 163, 108);
   border: 0;
   cursor: pointer;
   margin: 0;
