@@ -1,3 +1,7 @@
+// Projeto desenvolvido durante minha permanência turma 10, fiquei em recuperação e não conseguir os 90%
+// Vou aproveitar o que eu ja desenvolvi e chegar aos 100% com a turma 11 
+// https://github.com/tryber/sd-010-b-project-shopping-cart/pull/40
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -28,8 +32,31 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+function localStorageItems() {
+  const cartItems = document.querySelector('.items').innerHTML;
+  localStorage.setItem('cart', cartItems);
+}
+
+const totalPrice = async () => {
+  const cartItems = document.querySelectorAll('.cart__item');
+  let total = 0;
+  await cartItems.forEach((Item) => {
+    total += parseFloat(Item.innerHTML.split('$')[1]);
+  });
+  document.querySelector('.total-price').innerHTML = `${total}`;
+};
+
+const createPrice = (callback) => {
+  const price = document.createElement('span');
+  price.className = 'total-price';
+  document.querySelector('.cart').appendChild(price);
+  callback();
+};
+
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+  event.target.remove();
+  localStorageItems();
+  totalPrice();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -37,23 +64,53 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  localStorageItems();
   return li;
 }
 
 const addToCart = async (event) => {
   const idSku = getSkuFromProductItem(event.currentTarget);
   const endpoint = `https://api.mercadolibre.com/items/${idSku}`;
-  await fetch(endpoint)
-    .then((Response) => Response.json())
-    .then((data) => {
+  await fetch(endpoint).then((Response) => Response.json()).then((data) => {
     const { id: sku, title: name, price: salePrice } = data;
     const cartItem = createCartItemElement({ sku, name, salePrice });
     const cartItems = document.querySelector('.cart__items');
-    cartItems.appendChild(cartItem);  // chamar preço total
+    cartItems.appendChild(cartItem);
+    totalPrice();
+  });
+};
+
+const clickEvent = () => {
+  const buttons = document.querySelectorAll('.item');
+  buttons.forEach((button) => {
+    button.addEventListener('click', addToCart);
+  });
+};
+
+const loadProducts = async () => {
+  const endpoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+  await fetch(endpoint).then((Response) => Response.json()).then((data) => {
+    const items = document.querySelector('.items');
+    data.results.forEach((product) => {
+      const { id: sku, title: name, thumbnail: image } = product;
+      const item = createProductItemElement({ sku, name, image });
+      items.appendChild(item);
+    });
+  });
+};
+
+const clearCart = () => {
+  const emptyCartButton = document.querySelector('.empty-cart');
+  emptyCartButton.addEventListener('click', () => {
+    document.querySelector('.cart__items').innerHTML = '';
+    totalPrice();
   });
 };
 
 window.onload = async function onload() {
-  addToCart(); // para nao dar erro no avaliador por enquanto
-  createCartItemElement(); // para nao dar erro no avaliador por enquanto
+  await loadProducts();
+  document.querySelector('.loading').remove();
+  clickEvent();
+  clearCart();
+  createPrice(totalPrice);
 };
