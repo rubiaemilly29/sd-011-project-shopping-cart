@@ -75,5 +75,6 @@
   text-align: center;
 }
 .loading {
-  font-size: 50px;
+  font-size: 100px;
+  margin: 30px;
 }
