@@ -21,7 +21,6 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
-
   return section;
 }
 
@@ -56,4 +55,3 @@ fetch('https://api.mercadolibre.com/sites/MLB/search?q=computer')
   });
 }); 
 };
-
