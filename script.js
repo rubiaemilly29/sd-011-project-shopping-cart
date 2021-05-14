@@ -1,6 +1,7 @@
 const totalPrice = document.createElement('span');
 totalPrice.className = 'total-price';
 totalPrice.innerHTML = '0';
+const cartListClass = 'ol.cart__items';
 
 const appendPriceContainer = async () => {
   const cartSectionParagraph = document.querySelector('section.cart p');
@@ -21,7 +22,7 @@ const updateTotalPrice = async () => {
 const emptyAll = () => {
   const bntClear = document.querySelector('.empty-cart');
   bntClear.addEventListener('click', () => {
-    const cartList = document.querySelector('ol.cart__items');
+    const cartList = document.querySelector(cartListClass);
     cartList.innerHTML = '';
     localStorage.setItem('cart', cartList.innerHTML);
     updateTotalPrice();
@@ -51,7 +52,7 @@ function cartItemClickListener(event) {
 const loadCart = () => {
   const cart = localStorage.getItem('cart');
   if (cart) {
-    const cartList = document.querySelector('ol.cart__items');
+    const cartList = document.querySelector(cartListClass);
     cartList.innerHTML = cart;
     const cartItems = document.querySelectorAll('.cart__items .cart__item');
     cartItems.forEach((item) => item.addEventListener('click', cartItemClickListener));
@@ -71,7 +72,7 @@ const btnAddCartEvent = async (event) => {
   const id = getSkuFromProductItem(event.target.parentElement);
   const item = await fetchById(id);
   const li = createCartItemElement({ sku: item.id, name: item.title, salePrice: item.price });
-  const cart = document.querySelector('ol.cart__items');
+  const cart = document.querySelector(cartListClass);
   cart.appendChild(li);
   updateTotalPrice();
   localStorage.setItem('cart', cart.innerHTML);
