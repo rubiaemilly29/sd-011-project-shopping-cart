@@ -45,6 +45,16 @@ function getSkuFromProductItem(item) {
 function cartItemClickListener(event) {
   const itemsCart = document.getElementsByClassName('cart__items');
   itemsCart[0].removeChild(event.target);
+
+const variavel = JSON.parse(localStorage.getItem('listCar'));
+const itemSelected = (event.target).innerText;
+const atualCar = variavel.filter((elementRemove) => {
+  if (!itemSelected.includes(elementRemove.sku)) {
+    return true;
+  }
+    return false;
+});
+localStorage.setItem('listCar', JSON.stringify(atualCar));
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -60,16 +70,37 @@ const addComputerCartClick = (event) => {
   const itemsCart = document.getElementsByClassName('cart__items');
   addComputers(computerSelected.childNodes[0].innerText)
     .then((computers) => {
-    const item = createCartItemElement({
-      sku: computers.id,
-      name: computers.title,
-      salePrice: computers.price,
-    });
-    itemsCart[0].appendChild(item);
-    });  
+   const newItem = { sku: computers.id, name: computers.title, salePrice: computers.price,
+  };
+  const item = createCartItemElement(newItem);
+  itemsCart[0].appendChild(item);
+  const variavel = JSON.parse(localStorage.getItem('listCar'));
+  if (variavel != null) {
+    variavel.push(newItem);
+    localStorage.setItem('listCar', JSON.stringify(variavel));
+  } else {
+    localStorage.setItem('listCar', JSON.stringify([newItem]));
+  }
+  });
 };
 
-window.onload = function onload() {
+function refreshCar() {
+  const itemCar = JSON.parse(localStorage.getItem('listCar'));
+  const sectionCart = document.getElementsByClassName('cart__items');
+
+  if (itemCar != null) {
+    itemCar.forEach((computer) => {
+      const item = createCartItemElement({
+        sku: computer.sku,
+        name: computer.name,
+        salePrice: computer.salePrice,
+      });
+      sectionCart[0].appendChild(item);
+    });
+  }
+}
+
+function includesComputerCar() {
   const sectionItems = document.getElementsByClassName('items');
     (searchComputers()
       .then((computers) => {
@@ -88,4 +119,9 @@ window.onload = function onload() {
       }
     })
   );
+}
+
+window.onload = function onload() {
+  refreshCar();
+  includesComputerCar();
 };
