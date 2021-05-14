@@ -64,8 +64,15 @@ const addItem = (event) => {
   }
 };
 
+const removeAll = () => {
+  const items = document.querySelector('.cart__items');
+  items.innerHTML = '';
+};
+
 window.onload = function onload() { 
  getItens();
  const items = document.querySelector('.items');
+ const cartItems = document.querySelector('.empty-cart');
  items.addEventListener('click', addItem);
+ cartItems.addEventListener('click', removeAll);
 };
