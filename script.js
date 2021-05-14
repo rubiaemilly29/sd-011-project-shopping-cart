@@ -24,10 +24,11 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
-const loadApi = (search = 'computador') =>
+const loadApi = async (search = 'computador') =>
   fetch(`https://api.mercadolibre.com/sites/MLB/search?q=$${search}`)
   .then((response) => response.json()
     .then((object) => {
+      document.querySelector('.load').style.display = 'none';
       object.results.forEach((elem) => {
         const intemSection = document.querySelector('.items');
         const creatCard = createProductItemElement(elem);
@@ -35,9 +36,9 @@ const loadApi = (search = 'computador') =>
       });
     }));
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 function cartItemClickListener(event) {
   const insertItem = document.querySelector(cartitems);
