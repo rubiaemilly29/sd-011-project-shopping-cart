@@ -1,4 +1,19 @@
 const paramJSON = { headers: { Accept: 'application/json' } };
+
+function saveToLocalStorage() {
+  const cartContainerStorage = document.querySelector('.cart__items').innerHTML;
+  window.localStorage.setItem('cart', cartContainerStorage);
+}
+
+function getLocalStorage() {
+  const cartInnerHtml = window.localStorage.getItem('cart');
+  return cartInnerHtml;
+}
+
+function insertiStorageIntoContainer() {
+  document.querySelector('.cart__items').innerHTML = getLocalStorage();
+}
+
 function getProductList() {
   const APIurl = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
   return fetch(APIurl, paramJSON)
@@ -43,7 +58,9 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  event.target.parentNode.removeChild(event.target);
+  const thisElement = event.target;
+  thisElement.parentNode.removeChild(thisElement);
+  saveToLocalStorage();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -63,21 +80,30 @@ function fetchSelectedItem(param) {
   return fetch(`https://api.mercadolibre.com/items/${param}`, paramJSON)
   .then((response) => response.json())
   .then(({ id, title, price }) => ({ sku: id, name: title, salePrice: price }))
-  .then((object) => insertItemToCart(object));
+  .then((object) => insertItemToCart(object))
+  .then(() => saveToLocalStorage());
 }
 
 function insertElemenOnChart() {
   const getItemsBoard = document.querySelectorAll('.item');
   getItemsBoard.forEach((element) => element.lastChild.addEventListener('click', (event) => {
-    console.log(event.target.parentNode.firstChild.innerText);
-    return fetchSelectedItem(event.target.parentNode.firstChild.innerText);
+    fetchSelectedItem(event.target.parentNode.firstChild.innerText);
   }));
+}
+
+function cleanCart() {
+  const cleanButton = document.querySelector('.empty-cart');
+  const cartContainer = document.querySelector('.cart__items');
+  cleanButton.addEventListener('click', () => {
+    cartContainer.innerHTML = '';
+  });
 }
 
 async function execute() {
   const productList = await getProductList();
   await loopCreateElement(productList);
   await insertElemenOnChart();
+  await cleanCart();
 }
 
 window.onload = function onload() {
