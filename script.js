@@ -31,6 +31,32 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+// Função responsável por somar os preços das coisas adicionadas ao carrinho!
+function sumProducts() {
+  const toSum = document.querySelectorAll(anyItemOfList);
+  let totalSum = 0;
+
+  toSum.forEach((item) => {
+    const catchedText = item.innerText;
+    totalSum += parseFloat(catchedText.split('$')[1]);
+  });
+  const displayPrice = document.querySelector('.total-price');
+  displayPrice.innerText = totalSum;
+}
+
+function emptyCart() {
+  const empytButton = document.querySelector('.empty-cart');
+  empytButton.addEventListener('click', () => {
+    const cartProducts = document.querySelectorAll(anyItemOfList);
+    cartProducts.forEach((item) => {
+      item.remove();
+    });
+    sumProducts();
+    const cartItems = document.querySelector(mainOrdenedList).innerHTML;
+    localStorage.setItem('cartItems', cartItems);
+  });
+}
+
 function cartItemClickListener(event) {
   event.target.remove();
   const cartItems = document.querySelector(mainOrdenedList).innerHTML;
@@ -63,19 +89,6 @@ const addCartButton = () => {
   });
 };
 
-// Função responsável por somar os preços das coisas adicionadas ao carrinho!
-function sumProducts() {
-  const toSum = document.querySelectorAll(anyItemOfList);
-  let totalSum = 0;
-
-  toSum.forEach((item) => {
-    const catchedText = item.innerText;
-    totalSum += parseFloat(catchedText.split('$')[1]);
-  });
-  const displayPrice = document.querySelector('.total-price');
-  displayPrice.innerText = totalSum;
-}
-
 // Função responsável por deixar algumas execuções na fila de espera.
 async function fetchItems() {
   const API = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
@@ -88,20 +101,7 @@ async function fetchItems() {
   });
 
   addCartButton();
-  empytCart();
-}
-
-function empytCart() {
-  const empytButton = document.querySelector('.empty-cart');
-  empytButton.addEventListener('click', () => {
-    const cartProducts = document.querySelectorAll(anyItemOfList);
-    cartProducts.forEach((item) => {
-      item.remove();
-    });
-    sumProducts();
-    const cartItems = document.querySelector(mainOrdenedList).innerHTML;
-    localStorage.setItem('cartItems', cartItems);
-  });
+  emptyCart();
 }
 
 window.onload = function onload() {
