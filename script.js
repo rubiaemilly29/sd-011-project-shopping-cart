@@ -65,8 +65,8 @@ const addItem = (event) => {
 };
 
 const removeAll = () => {
-  const items = document.querySelector('.cart__items');
-  items.innerHTML = '';
+  const cart = document.querySelector('.cart__items');
+  cart.innerHTML = '';
 };
 
 window.onload = function onload() { 
