@@ -62,6 +62,13 @@ const getMlComputers = (query) => {
   });
 });
 };
+function deleteAllCart() {
+  const cart = document.querySelector('ol.cart__items');
+  while (cart.firstChild) { cart.removeChild(cart.lastChild); }
+  }
+
 window.onload = async () => {
   await getMlComputers('computador');
+  const buttonEmpty = document.querySelector('.empty-cart');
+  buttonEmpty.addEventListener('click', deleteAllCart);
 }; 
