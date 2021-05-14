@@ -15,32 +15,39 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ sku, name, image }) {
-  const section = document.createElement('section');
-  section.className = 'item';
-
-  section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
-  return section;
-}
-
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+  const cart = document.querySelector('.cart__items');
+  cart.removeChild(event.target);
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement(computer) {
   const li = document.createElement('li');
   li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.innerText = `SKU: ${computer.sku} | NAME: ${computer.name} | PRICE: $${computer.price}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
+}
+
+function addToCart(computer) {
+   const li = createCartItemElement(computer);
+   const cart = document.querySelector('.cart__items');
+   cart.appendChild(li);
+}
+
+function createProductItemElement(computer) {
+  const section = document.createElement('section');
+  section.className = 'item';
+
+  section.appendChild(createCustomElement('span', 'item__sku', computer.sky));
+  section.appendChild(createCustomElement('span', 'item__title', computer.name));
+  section.appendChild(createProductImageElement(computer.image));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
+    .addEventListener('click', () => addToCart(computer));
+  return section;
 }
 
 const fetchComputer = async () => {
@@ -53,10 +60,12 @@ const fetchComputer = async () => {
       sku: computer.id,
       name: computer.title,
       image: computer.thumbnail,
+      price: computer.price,
     };
     document.querySelector('.items').appendChild(createProductItemElement(myComputer));
   });
 };
+
 window.onload = () => {
   fetchComputer();
 };
