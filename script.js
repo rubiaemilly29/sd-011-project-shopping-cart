@@ -1,19 +1,3 @@
-window.onload = () => {
-  getProduct(); // para
-};
-
-const getProduct = (computador) => {
-     fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${computador}`)
-    .then((response) => response.json())
-    .then((data => data.results // retorna os dados
-      .forEach(({ id, title, thumbnail }) => { // acha os termos e associa ao create product
-      const getSection = document.querySelector('.items');
-      const toCreate =  createProductItemElement({ sku: id, name: title, image: thumbnail }); // associo os dois
-      getSection.appendChild(toCreate);
-})));
-}
-getProduct();
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -40,18 +24,36 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+const getProduct = (computador) => {
+     fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${computador}`)
+    .then((response) => response.json())
+    .then((data) => data.results // retorna os dados
+      .forEach(({ id, title, thumbnail }) => { // acha os termos e associa ao create product - quero buscar no array dos produtos - o que esta no array
+      const getSection = document.querySelector('.items'); // invoca a classe items, pois nao existe no escopo da fnção
+      const toCreate = createProductItemElement({ sku: id, name: title, image: thumbnail }); // associo as chaves aos valores a serem recebidos la do api
+      getSection.appendChild(toCreate);
+}));
+};
+getProduct();
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-}
+// function cartItemClickListener(event) {
+//   // coloque seu código aqui
+
+// }
+// const getOl = document.querySelector('cart__items'); // chamando o pai
+
+// function createCartItemElement({ sku, name, salePrice }) {
+//   const li = document.createElement('li');
+//   li.className = 'cart__item';
+//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+//   li.addEventListener('click', cartItemClickListener);
+//   return li;
+// }
+
+window.onload = () => {
+  getProduct(); // chama a função, assim ela é criada ao iniciar o site
+};
