@@ -32,7 +32,7 @@ function updatePrice(price) {
   } else {
     paragraph.innerText = '0';
   }
-  localStorage.setItem('totalprice',paragraph.innerText)
+  localStorage.setItem('totalprice', paragraph.innerText);
 }
 
 function cartItemClickListener(event) {
@@ -50,11 +50,11 @@ function createCartItemElement({ sku, name, salePrice }) {
 }
 
 function loadingSite() {
-  document.querySelector('.loading').innerHTML = 'loading...'
+  document.querySelector('.loading').innerHTML = 'loading...';
 }
 
 function siteloaded() {
-  document.querySelector('.loading').innerHTML = ''
+  document.querySelector('.loading').innerHTML = '';
 }
 
 function addProductOnShoppingCart(query) {
@@ -74,7 +74,7 @@ function addProductOnShoppingCart(query) {
 }
 
 function getProducts(query) {
-  loadingSite()
+  loadingSite();
   const param = { method: 'GET', headers: { Accept: 'application/json' } }; 
   fetch(`https://api.mercadolibre.com/sites/MLB/search?q=$${query}`, param)
   .then((response) => response.json())
@@ -89,7 +89,7 @@ function getProducts(query) {
     });
     document.querySelector('.items').appendChild(returnOfElement);
   }))
-  .then(() => siteloaded())
+  .then(() => siteloaded());
 }
 
 function buttonCleanItens() {
@@ -110,7 +110,7 @@ function loadFromLocalStorage() {
   localStorage.getItem('Product');
   const liSelection = document.querySelectorAll('li');
   liSelection.forEach((element) => element.addEventListener('click', cartItemClickListener));
-  const paragraph = document.querySelector('.total-price')
+  const paragraph = document.querySelector('.total-price');
   paragraph.innerText = localStorage.getItem('totalprice');
 }
 
