@@ -1,3 +1,5 @@
+const cartitems = '.cart__items';
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -38,7 +40,7 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  const insertItem = document.querySelector('.cart__items');
+  const insertItem = document.querySelector(cartitems);
   const pricePanel = document.querySelector('.total-price');
   const panelCalc = Number(pricePanel.innerText - event.target.ariaValueText);
   pricePanel.innerText = parseFloat(panelCalc.toFixed(2));
@@ -63,7 +65,7 @@ const addCartApi = (ItemID) => fetch(`https://api.mercadolibre.com/items/${ItemI
   .then((response) => {
     response.json()
       .then((object) => {
-        const insertItem = document.querySelector('.cart__items');
+        const insertItem = document.querySelector(cartitems);
         insertItem.appendChild(createCartItemElement(object));
         localStorage.setItem('Save', insertItem.innerHTML);
       });
@@ -79,7 +81,7 @@ const loadEvents = () => {
   });
   // Botão limpar o carrionho
   const btnClear = document.querySelector('.empty-cart');
-  const insertItem = document.querySelector('.cart__items');
+  const insertItem = document.querySelector(cartitems);
   btnClear.addEventListener('click', () => {
     insertItem.innerHTML = '';
     localStorage.setItem('Save', insertItem.innerHTML);
@@ -87,7 +89,7 @@ const loadEvents = () => {
 };
 
 const loadCart = () => {
-  const insertItem = document.querySelector('.cart__items');
+  const insertItem = document.querySelector(cartitems);
   insertItem.innerHTML = localStorage.getItem('Save');
 };
 
