@@ -19,10 +19,12 @@ const searchComputer = () => (new Promise((resolve, reject) => {
     .catch((erro) => reject(erro));
 })
 );
+
+function includeComputerCar() {
 const sectionItems = document.getElementsByClassName('items');
-searchComputer()
-  .then((lista) => {
-    lista.forEach((product) => {
+  (searchComputer()
+    .then((lista) => {
+     lista.forEach((product) => {
       const item = createProductItemElement({
         sku: product.id,
         name: product.title,
@@ -30,7 +32,15 @@ searchComputer()
       });
       sectionItems[0].appendChild(item);
     });
-  });
+    const buttons = document.getElementsByClassName('item__add');
+    for (let index = 0; index < buttons.length; index += 1) {
+      const button = buttons[index];
+      button.addEventListener('click', addComputerCartClick);
+    }
+  })
+  );
+}
+
 
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
@@ -59,8 +69,6 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-createProductItemElement();
-
 window.onload = function onload() { 
-  searchComputer();
+  includeComputerCar();
 };
