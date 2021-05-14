@@ -15,8 +15,7 @@ function createCustomElement(element, className, innerText) {
 }
 
 function cartItemClickListener(event) {
-  const cart = cartItems();
-  cart.removeChild(event.target);
+  cartItems().removeChild(event.target);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -40,17 +39,29 @@ function recupereLocalStorage() {
   }
 }
 
+function requestItemsFromAPI(event) {
+  const productId = event.target.parentNode.firstChild.innerText;
+  
+  return new Promise((resolve, reject) => {
+    fetch(`https://api.mercadolibre.com/items/${productId}`)
+      .then((result) => result.json())
+      .then((json) => {
+        const itemData = {
+          sku: json.id,
+          name: json.title,
+          salePrice: json.price,
+        };
+        resolve(itemData);
+      });
+    });
+}
+
 function addItensToShoppingCart() {
   const buttom = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
   buttom.addEventListener('click', (event) => {
-    const productId = event.target.parentNode.firstChild.innerText;
-  
-    fetch(`https://api.mercadolibre.com/items/${productId}`)
-    .then((result) => result.json())
-    .then((json) => {
-      cartItems().appendChild(
-        createCartItemElement({ sku: json.id, name: json.title, salePrice: json.price }),
-        );
+    requestItemsFromAPI(event)
+      .then((selectedItem) => {
+        cartItems().appendChild(createCartItemElement(selectedItem));
     });
 
     setLocalStorage();
