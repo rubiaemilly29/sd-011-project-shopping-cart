@@ -39,7 +39,29 @@ function cartItemClickListener(event) {
   return li;
 }
 
-fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+const addToCart = () => {
+const buttonAddCart = document.querySelectorAll('.item__add');
+const carItensAdd = document.querySelector('.cart__items');
+buttonAddCart.forEach((element) => { 
+   element.addEventListener('click', () => {
+   const id = element.parentNode.firstChild.innerText;   
+   fetch(`https://api.mercadolibre.com/items/${id}`)
+   .then((response) => response.json())
+   .then((jsonBody) => {
+     const productItenmDetals = {
+       sku: jsonBody.id,
+       name: jsonBody.title,
+       salePrice: jsonBody.price,
+    };
+      const productAddCart = createCartItemElement(productItenmDetals);      
+     carItensAdd.appendChild(productAddCart);  
+});
+});
+});
+};
+
+const fetchItens = () => {
+   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
 .then((response) => response.json())
 .then((jsonBody) => {
   const productContainer = document.querySelector('.items');
@@ -49,25 +71,12 @@ fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
       name: product.title,
       image: product.thumbnail };
     const productElement = createProductItemElement(productDetails);
-    productContainer.appendChild(productElement);
+    productContainer.appendChild(productElement);    
   });
-});
+})
+.then(() => addToCart());
+};
 
-const buttonAddCart = document.querySelector('.item_add');
-buttonAddCart.addEventListener('click', () => {
-  const itemId = document.querySelector('.item_skul');
-fetch(`https://api.mercadolibre.com/items/${itemId}`)
-.then((response) => response.json())
-.then((jsonBody) => {
-  console.log(jsonBody);   
-  const productItenmDetals = {
-    sku: jsonBody.id,
-    name: jsonBody.title,
-    salePrice: jsonBody.salePrice,
-  };
-  const productAddCart = createCartItemElement(productItenmDetals);
-  buttonAddCart.appendChild(productAddCart);  
-});
-});
-
-window.onload = function onload() { };
+window.onload = function onload() {  
+fetchItens();
+};
