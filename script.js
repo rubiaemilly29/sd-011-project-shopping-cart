@@ -36,29 +36,49 @@ function verifiedFetch(url) {
           const newItem = createProductItemElement(itemAtributtes);
           const itemsSection = document.querySelector('.items');
           itemsSection.appendChild(newItem);
-          console.log(result);
         })));
     }
     reject(new Error('endpoint não existe'));
   });
 }
 
+function createCartItemElement({ sku, name, salePrice }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  return li;
+}
+
+async function newCartItem(sku) {
+  const fetchParameter = {
+    method: 'GET',
+    'Content-Type': 'application/json',
+  };
+  return fetch(`https://api.mercadolibre.com/items/${sku}`, fetchParameter)
+    .then((result) => result.json())
+    .then((json) => {
+      const itemAtributtes = {
+        sku: json.id,
+        name: json.title,
+        salePrice: json.price,
+      };
+      const cartItem = createCartItemElement(itemAtributtes);
+      const cartItens = document.querySelector('.cart__items');
+      cartItens.appendChild(cartItem);
+    });
+}
+
+function cartItemClickListener(event) {
+  if (event.target.className === 'item__add') {
+    const sku = event.target.parentNode.firstChild.innerText;
+    newCartItem(sku);
+  }
+}
+
 window.onload = function onload() {
   verifiedFetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
+  const itemsSection = document.querySelector('.items');
+  itemsSection.addEventListener('click', (event) => {
+    cartItemClickListener(event);
+  });
 };
-
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
-
-// function cartItemClickListener(event) {
-//   // coloque seu código aqui
-// }
-
-// function createCartItemElement({ sku, name, salePrice }) {
-//   const li = document.createElement('li');
-//   li.className = 'cart__item';
-//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-//   li.addEventListener('click', cartItemClickListener);
-//   return li;
-// }
