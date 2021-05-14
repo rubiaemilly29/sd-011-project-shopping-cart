@@ -47,10 +47,17 @@ const fetchProducts = async () => {
   return products;
 };
 
+const fetchItem = async (id) => {
+  const response = await fetch(`https://api.mercadolibre.com/items/${id}`);
+  const json = await response.json();
+  const item = await json.res;
+  return item;
+};
+
 const createProductList = async () => {
   const prods = await fetchProducts();
+  const items = document.querySelector('.items');
   prods.forEach(({ id, title, thumbnail }) => {
-    const items = document.querySelector('.items');
     const item = createProductItemElement({ sku: id, name: title, image: thumbnail });
     items.appendChild(item);
   });
