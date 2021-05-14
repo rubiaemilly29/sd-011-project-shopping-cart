@@ -1,8 +1,15 @@
-window.onload = function onload() {
- };
  const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
  const itemsSection = document.getElementsByClassName('items')[0];
  const cartArea = document.getElementsByClassName('cart__items')[0];
+ //
+ let fullListStringified = JSON.stringify(cartArea.innerHTML);
+
+/// / LOCALSTORAGE
+function saveCartData() {
+  fullListStringified = JSON.stringify(cartArea.innerHTML);
+  localStorage.setItem('Saved Cart List', fullListStringified);
+}
+//
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -38,6 +45,7 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   event.target.remove();
+  saveCartData();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -50,25 +58,26 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
 
 /// / ADD TO CART
 // FETCH PRODUCT
-const fetchProductItem = (apiKey) => {
+const fetchProductItem = async (apiKey) => {
   const myObject = {
     method: 'GET',
     headers: { Accept: 'application/json' },
   };
-  fetch(apiKey, myObject)
+  await fetch(apiKey, myObject) // await faz com que seja 'sincrona', esperando ser resolvida pra ler o resto
     .then((response) => response.json())
     .then((product) => {
       cartArea.appendChild(createCartItemElement(product));
     });
+  saveCartData();
 };
 
 itemsSection.addEventListener(('click'), (e) => {
   let productId = '';
   if (e.target.tagName === 'BUTTON') {
     productId = e.target.parentElement.childNodes[0].innerText;
-  }
-  const API_PRODUCT = `https://api.mercadolibre.com/items/${productId}`;
+    const API_PRODUCT = `https://api.mercadolibre.com/items/${productId}`;
   fetchProductItem(API_PRODUCT);
+  }
 });
 
 /// / FETCH LIST
@@ -88,3 +97,12 @@ const fetchProductList = () => {
 };
 
 fetchProductList();
+
+window.onload = function onload() {
+  const fullListParsed = JSON.parse(localStorage.getItem('Saved Cart List')); 
+  cartArea.innerHTML = fullListParsed;
+  cartArea.addEventListener(('click'), (e) => {
+    e.target.remove();
+    saveCartData();
+  });
+ };
