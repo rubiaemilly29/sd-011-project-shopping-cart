@@ -13,7 +13,7 @@ function createCustomElement(element, className, innerText) {
 }
 
 function cartItemClickListener(event) {
-  // x
+  event.target.parentElement.removeChild(event.target);
  }
 
 function createCartItemElement({ sku, name, price }) {
