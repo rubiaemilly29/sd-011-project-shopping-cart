@@ -81,6 +81,7 @@ async function getProducts() {
     const response = await fetch(url);
     const data = await response.json();
     const listOfProducts = data.results;
+    document.querySelector('.loading').remove();
     listOfProducts.forEach((procuct) => createProductItemElement(procuct));
   } catch (error) { console.log(`Erro: ${error}`); }
 }
