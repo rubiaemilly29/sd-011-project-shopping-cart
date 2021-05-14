@@ -1,4 +1,5 @@
 const carItensTag = '.cart__items';
+const totalPriceTag = '.total-price';
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -30,9 +31,15 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
+  const arrayWithPrice = event.target.innerText.split('$');
+  const totalValue = document.querySelectorAll(totalPriceTag)[0];
+  let totalValueInNumber = parseFloat(totalValue.innerText, 10); 
+  totalValueInNumber -= parseFloat(arrayWithPrice[1], 10);
+  totalValue.innerText = (Math.round(totalValueInNumber * 100) / 100).toString();
   event.target.remove();
   const cartMenu = document.querySelectorAll(carItensTag)[0].innerHTML;
   localStorage.cartStatus = cartMenu;
+  localStorage.totalPrice = document.querySelectorAll(totalPriceTag)[0].innerText;
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -75,7 +82,15 @@ async function addOnCart(itemId) {
         const myData = { sku: item.id, name: item.title, salePrice: item.price };
         const newSecton = createCartItemElement(myData);
         document.querySelectorAll(carItensTag)[0].appendChild(newSecton);
-      });
+        return item;
+      })
+        .then((item) => {
+          const totalValue = document.querySelectorAll(totalPriceTag)[0];
+          let totalValueInNumber = parseFloat(totalValue.innerText, 10);
+          const priceOfItem = item.price;
+          totalValueInNumber += priceOfItem;
+          totalValue.innerText = (Math.round(totalValueInNumber * 100) / 100).toString();
+        });
   }
 
 function buttonAddOnCart() {
@@ -85,12 +100,16 @@ function buttonAddOnCart() {
       await addOnCart(values.firstChild.innerText);
       const cartMenu = document.querySelectorAll(carItensTag)[0].innerHTML;
       localStorage.cartStatus = cartMenu;
+      localStorage.totalPrice = document.querySelectorAll(totalPriceTag)[0].innerText;
     });
   });
 }
 
 window.onload = async () => {
   document.querySelectorAll(carItensTag)[0].innerHTML = localStorage.getItem('cartStatus');
+  if (localStorage.getItem('totalPrice') !== null) {
+    document.querySelectorAll(totalPriceTag)[0].innerText = localStorage.getItem('totalPrice');
+  }
   await createCards();
   buttonAddOnCart();
   document.querySelectorAll('.cart__item').forEach((element) => {
