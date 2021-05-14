@@ -12,7 +12,23 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
+/* function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+} */
+
+function cartItemClickListener() {
+} 
+
+function createCartItemElement({ sku, name, price }) {
+  const li = document.createElement('li');
+  const ol = document.querySelector('.cart__items');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
+  li.addEventListener('click', cartItemClickListener);
+  ol.appendChild(li);
+  return li;
+}
+function createProductItemElement({ id: sku, title: name, thumbnail: image, price }) {
   const itens = document.querySelector('.items');
   const section = document.createElement('section');
   section.className = 'item';
@@ -20,33 +36,17 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
+  .addEventListener('click', () => createCartItemElement({ sku, name, price }));
   itens.appendChild((section));
   return section;
 }
-
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
-function cartItemClickListener(event) {
-}
-
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-}
-
 function getProduct(obj = 'computador') {
   return new Promise(() => {
     fetch(`https://api.mercadolibre.com/sites/MLB/search?q="${obj}"`)
     .then((response) => response.json())
     .then((produtos) => produtos.results.forEach((produtosSelecionado) => {
       createProductItemElement(produtosSelecionado);
-      
     }));
   });
 }
