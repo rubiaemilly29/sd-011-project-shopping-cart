@@ -4,15 +4,25 @@ function createProductImageElement(imageSource) {
   img.src = imageSource;
   return img;
 }
-function cartItemClickListener(event) {
-  event.target.parentNode.removeChild(event.target);
-}
 
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
   e.innerText = innerText;
   return e;
+}
+
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
+
+function saveItemsLocalStorage() {
+  const cart2 = document.getElementsByClassName('cart__items')[0].innerHTML;
+  localStorage.setItem('myListItems', cart2);
+}
+function cartItemClickListener(event) {
+  event.target.parentNode.removeChild(event.target);
+  saveItemsLocalStorage();
 }
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
@@ -31,8 +41,9 @@ function handleButtonAdd(event) {
       const li = createCartItemElement({ sku: response.id, 
         name: response.title,
         salePrice: response.price });
-      const cart = document.querySelector('.cart__items');
-      cart.appendChild(li);
+      const cart1 = document.querySelector('.cart__items');
+      cart1.appendChild(li);
+      saveItemsLocalStorage();
     });
 }
 
@@ -49,11 +60,6 @@ function createProductItemElement({ sku, name, image }) {
 
   return section;
 }
-
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
 window.onload = function onload() {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((response) => response.json())
@@ -61,12 +67,14 @@ window.onload = function onload() {
       console.log(body);
       const items = document.querySelector('.items');
       body.results.forEach((value) => {
-        const obj = {
-          sku: value.id,
-          name: value.title,
-          image: value.thumbnail,
-        };
+        const obj = { sku: value.id, name: value.title, image: value.thumbnail };
         items.appendChild(createProductItemElement(obj));
       });
     });
+  const savedItems = window.localStorage.getItem('myListItems');
+  document.querySelector('.cart__items').innerHTML = savedItems;
+   const liItemsSaved = document.getElementsByClassName('cart__item');
+   for (let i = 0; i < liItemsSaved.length; i += 1) {
+     liItemsSaved[i].addEventListener('click', cartItemClickListener);
+   }
 };
