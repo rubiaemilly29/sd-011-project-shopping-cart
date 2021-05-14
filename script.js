@@ -21,8 +21,8 @@ function createTotal() {
  
   let sum = 0;
    for (let index = 0; index < lista.length; index += 1) {
-   const valor = lista[index].innerHTML.split('$')[1];
-   sum += Number(valor);
+    const valor = lista[index].innerHTML.split('$')[1];
+    sum += Number(valor);
   }
   const totalPrice = document.querySelector('.total-price');
   totalPrice.innerHTML = sum;
@@ -32,6 +32,16 @@ function cartItemClickListener(event, contador) {
   const local = event.target;
   local.parentNode.removeChild(local);
   localStorage.removeItem(`item${contador}`);
+  createTotal();
+}
+
+function clearCart() {
+  const li = document.querySelectorAll('.cart__item');
+  const ol = document.querySelector('ol');
+  console.log(li);
+  for (let index = 0; index < li.length; index += 1) {
+    ol.removeChild(li[index]);
+  }
   createTotal();
 }
 
@@ -83,4 +93,7 @@ function fetchProducts() {
 
 window.onload = () => {
   fetchProducts();
+  const cart = document.querySelector('.empty-cart');
+  cart.addEventListener('click', clearCart);
+  console.log(cart);
 };
