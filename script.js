@@ -38,7 +38,6 @@ function cartItemClickListener(event, contador) {
 function clearCart() {
   const li = document.querySelectorAll('.cart__item');
   const ol = document.querySelector('ol');
-  console.log(li);
   for (let index = 0; index < li.length; index += 1) {
     ol.removeChild(li[index]);
   }
@@ -74,9 +73,11 @@ function createProductItemElement({ sku, name, image, price }) {
 function fetchProducts() {
   const endpoint = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
   const conteinerItems = document.querySelector('.items');
+  const loading = document.querySelector('.loading');
   fetch(endpoint) 
   .then((response) => response.json())
   .then((data) => {
+    loading.parentNode.removeChild(loading);
     data.results.forEach(({ id, title, thumbnail, price }) => {
   conteinerItems
   .appendChild(createProductItemElement({ sku: id, name: title, image: thumbnail, price }));
@@ -85,8 +86,7 @@ function fetchProducts() {
   .then(() => {
     for (let index = 0; index < localStorage.length; index += 1) {
       const [sku, name, price] = localStorage.getItem(`item${index}`).split('|');
-      const saveObj = { sku, name, price };
-      createCartItemElement(saveObj);
+      createCartItemElement({ sku, name, price });
     }
   });
 }
@@ -95,5 +95,4 @@ window.onload = () => {
   fetchProducts();
   const cart = document.querySelector('.empty-cart');
   cart.addEventListener('click', clearCart);
-  console.log(cart);
 };
