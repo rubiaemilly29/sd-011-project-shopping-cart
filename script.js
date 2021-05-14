@@ -1,6 +1,8 @@
 const itemsSection = document.querySelector('.items');
 const shoppingCartItems = document.querySelector('.cart__items');
 const totalPrice = document.querySelector('.total-price');
+const loadingOverlay = document.querySelector('.loading-overlay');
+const loadingText = document.querySelector('.loading');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -69,6 +71,16 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   updateStorage();
 }
 
+function toggleLoadingZindex() {
+  loadingOverlay.classList.toggle('bring-loading-forward');
+  loadingText.classList.toggle('bring-loading-forward');
+}
+
+function toggleLoading() {
+  loadingOverlay.classList.toggle('show-loading');
+  loadingText.classList.toggle('show-loading');
+}
+
 function fetchItem(itemId) {
   const apiEndpoint = `https://api.mercadolibre.com/items/${itemId}`;
   const requestParameters = { headers: new Headers({ Accept: 'application/json' }) };
@@ -76,7 +88,13 @@ function fetchItem(itemId) {
   fetch(apiEndpoint, requestParameters)
     .then(checkResponse)
     .then(createCartItemElement)
+    .then(() => {
+      setTimeout(toggleLoading, 1000);
+      setTimeout(toggleLoadingZindex, 1500);
+    })
     .catch(printFetchError);
+  toggleLoading();
+  toggleLoadingZindex();
 }
 
 function addItemHandler(event) {
