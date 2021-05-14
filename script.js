@@ -12,8 +12,10 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 function cartItemClickListener(event) {
+  //still dont clear storage.
   const elem = event.target;
   elem.remove();
+  
 }
 
 function createCartItemElement({ sku, name, price: salePrice }) {
@@ -61,8 +63,9 @@ const getItem = () => {
   for (let i = 0; i < localStorage.length; i += 1) {
     const li = document.createElement('li');
     const { sku, name, salePrice } = JSON.parse(localStorage.getItem('item1'));
-    li.innerHTML = `SKU: ${sku} | NAME: ${name} | PRICE: ${salePrice}`;
+    li.innerHTML = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
     list.appendChild(li);
+    li.addEventListener('click', cartItemClickListener);
   }
 };
 
