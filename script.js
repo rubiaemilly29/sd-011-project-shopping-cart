@@ -31,10 +31,9 @@ function createCartItemElement({ sku, name, price }) {
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
   li.addEventListener('click', (event) => cartItemClickListener(event, contador));
   cartItems.appendChild(li);
-
   return li;
 }
-// add aqui os eventos de localStorage
+
 function createProductItemElement({ sku, name, image, price }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -47,15 +46,11 @@ function createProductItemElement({ sku, name, image, price }) {
   
   return section;
 }
-// function addlocalStorage() {
-//   const cartItems = document.querySelector('.cart__items');
-//   const addButton = document.getElementsByClassName('item__add');
-//   addButton.addEventListener('click', () => {
-//     localStorage.setItem(cartItems, cartItems.innerHTML);
-//   });
-//   const save = localStorage.getItem(cartItems);
-//   cartItems.innerHTML = save;
+
+// function sumCart() {
+//   let sum = 0;
 // }
+
 function fetchProducts() {
   const endpoint = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
   const conteinerItems = document.querySelector('.items');
@@ -66,7 +61,7 @@ function fetchProducts() {
   conteinerItems
   .appendChild(createProductItemElement({ sku: id, name: title, image: thumbnail, price }));
     });
-})
+  })
   .then(() => {
     for (let index = 0; index < localStorage.length; index += 1) {
       const [sku, name, price] = localStorage.getItem(`item${index}`).split('|');
