@@ -1,3 +1,4 @@
+const shoppingCart = [];
 const fetchApi = (endPoint) => {
   const param = { headers: { Accept: 'application/json' } };
   return fetch(endPoint, param)
@@ -67,11 +68,26 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+const pushCartItems = (value) => {
+  shoppingCart.push(value);
+  return shoppingCart;
+};
+
+const retrieveCartItems = () => {
+  const cartItems = document.querySelector('.cart__items');
+  const items = JSON.parse(localStorage.getItem('myShoppingCart'));
+  items.forEach((ele) => cartItems.appendChild(createCartItemElement(ele[0])));
+};
+
 const addItemToCart = async (id) => {
   const cart = document.querySelector('.cart__items');
   await fetchApi(`https://api.mercadolibre.com/items/${id}`)
   .then((response) => formatToCart(response))
-  .then((el) => cart.appendChild(createCartItemElement(el[0])));
+  .then((el) => {
+    const cartValues = pushCartItems(el);
+    localStorage.setItem('myShoppingCart', JSON.stringify(cartValues));
+    cart.appendChild(createCartItemElement(el[0]));
+  });
 };
 
 const getAndCreateElements = async () => {
@@ -90,6 +106,7 @@ const exec = async () => {
   }));
 };
 
-window.onload = function onload() {
-  exec();  
+window.onload = async function onload() {  
+  await exec();
+  retrieveCartItems();
 };
