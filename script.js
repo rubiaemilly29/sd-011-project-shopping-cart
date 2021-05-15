@@ -21,6 +21,8 @@ function cartItemClickListener(event) {
   event.target.remove();
 }
 
+// --------------------------------------------------------
+
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -34,22 +36,29 @@ function createCartItemElement({ sku, name, salePrice }) {
 const getCartItems = '.cart__items';
 // document.querySelector(getCartItems);
 
-const saveCart = () => {
-  const cartList = document.querySelector(getCartItems).innerHTML;
-  localStorage.setItem('savedCart', cartList);
+const getCart = () => {
+  const saveCart = localStorage.getItem('savedCart');
+  const ArrayOfItens = saveCart ? JSON.parse(saveCart) : [];
+  return ArrayOfItens;
 };
 
-const reloadCart = () => {
-  const cartList = document.querySelector(getCartItems);
-  const loadCart = localStorage.getItem('savedCart');
-  cartList.innerHTML = loadCart;
+const saveItems = (cartItem) => {
+  const ArrayOfItens = getCart();
+  ArrayOfItens.push(cartItem);
+  localStorage.setItem('savedCart', JSON.stringify(ArrayOfItens));
+};
+
+const onloadCart = () => {
+  const ArrayOfItens = getCart();
+  ArrayOfItens.forEach(({ sku, name, salePrice }) => {
+  document.querySelector(getCartItems).appendChild(createCartItemElement({ sku, name, salePrice }));
+  });
 };
 
 // REQUISITO 2
 
 const fetchToCartItem = (event) => {
   const id = getSkuFromProductItem(event.target.parentElement);
-  console.log(id);
   fetch(`https://api.mercadolibre.com/items/${id}`)
     .then((response) => response.json())
     .then((json) => {
@@ -58,11 +67,12 @@ const fetchToCartItem = (event) => {
          name: json.title,
          salePrice: json.price,
         };
-      console.log(cartItem);
-      document.querySelector(getCartItems).appendChild(createCartItemElement(cartItem));
-      saveCart();
+        saveItems(cartItem);
+        document.querySelector(getCartItems).appendChild(createCartItemElement(cartItem));
   });
 };
+
+// -------------------------------------------------
 
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
@@ -95,7 +105,9 @@ const createProductList = (term) => {
 
 const setSearch = () => createProductList('computador');
 
+// -------------------------------------------------
+
 window.onload = function onload() { 
   setSearch();
-  reloadCart();
+  onloadCart();
 };
