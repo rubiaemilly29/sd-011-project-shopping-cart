@@ -110,3 +110,6 @@ function removeList() {
     cart.removeChild(cart.firstChild);
   }
 }
+
+
+// Projeto realizado com auxílio das colegas Amanda Barok e Gabriela Azevedo !!.
