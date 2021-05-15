@@ -6,6 +6,14 @@ function saveItems() {
   localStorage.setItem('totalSum', recoverTotalSum().innerHTML);
 }
 
+async function createSumPrice() {
+  const listCart = recoverCartItems().childNodes;
+  const arrayPrices = [];
+  listCart.forEach((item) => arrayPrices.push(Number(item.innerText.split('$')[1])));
+  const totalSum = arrayPrices.reduce((accPrice, price) => accPrice + price, 0);
+  recoverTotalSum().innerText = `Preço total: $${Math.round(totalSum * 100) / 100}`;
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -39,10 +47,7 @@ function getSkuFromProductItem(item) {
 function cartItemClickListener(event) { // para remover da lista
   console.log(event);
   event.target.remove();
-  const currentPrice = event.target.innerText.split('$');
-  let total = Number(recoverTotalSum().innerText);
-  total -= Number(currentPrice[1]);
-  recoverTotalSum().innerText = Math.round(total * 100) / 100;
+  createSumPrice();
   saveItems();
 }
 
@@ -70,7 +75,7 @@ function render(json) {
 function emptyCart() {
   const listCart = document.querySelectorAll('.cart__item');
   listCart.forEach((item) => item.remove());
-  recoverTotalSum().innerText = 0;
+  createSumPrice();
   saveItems();
 }
 
@@ -89,14 +94,7 @@ async function getItemsFromAPI(term) {
   }
 }
 
-async function createSumPrice(value) {
-  let total = Number(recoverTotalSum().innerText);
-  total += value;
-  recoverTotalSum().innerText = Math.round(total * 100) / 100;
-}
-
 async function addItemToCart(event) {
-  console.log((event.target).parentNode);
   const currentId = await getSkuFromProductItem((event.target).parentNode);
   try {
     const response = await fetch(`https://api.mercadolibre.com/items/${currentId}`);
@@ -108,7 +106,7 @@ async function addItemToCart(event) {
     };
     const cartItem = createCartItemElement(objectItem);
     recoverCartItems().appendChild(cartItem);
-    createSumPrice(json.price);
+    createSumPrice();
     saveItems();
   } catch (error) {
     alert('ao clicar botão de adicionar ao carrinho');
@@ -136,6 +134,7 @@ window.onload = function onload() {
   createObjectButtons();
   checkButtonEmptyCart();
   openShoppingCart();
+  createSumPrice();
 };
 
 // não apaga quando salvo no localstorage. Não foi criado dinamicamente
