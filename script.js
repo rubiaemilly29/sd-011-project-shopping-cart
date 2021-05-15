@@ -42,6 +42,7 @@ function addToCart(computer) {
    localStorage.setItem(`${count}`, computer.id);
    const spanTotalPrice = document.querySelector('.total-price');
    spanTotalPrice.innerText = Number(spanTotalPrice.innerText) + computer.price;
+   return li;
 }
 
 function createProductItemElement(computer) {
@@ -76,4 +77,10 @@ const fetchComputer = async () => {
 window.onload = () => {
   fetchComputer();
   const cartSection = document.querySelector('.cart');
+  const clear = document.querySelector('.empty-cart');
+  clear.addEventListener('click', (event) => {
+    const cart = document.querySelector('.cart__items');
+    cart.innerText = '';
+    localStorage.clear();
+  })
 };
