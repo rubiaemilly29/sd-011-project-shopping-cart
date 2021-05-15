@@ -15,13 +15,14 @@ function createCustomElement(element, className, innerText) {
 }
 
 function cartItemClickListener(event, createLi, count, price) {
-  // Tales me ajudou.
+  // Tales e Rodolfo me ajudaram.
   localStorage.removeItem(`produce${count}`);
   createLi.removeChild(event.target);
   totalPrice.innerText = parseFloat(Number(totalPrice.innerText) - Number(price));
 }
 
 function createCartItemElement({ sku, name, price }) {
+  // Rodolfo Resende me ajudou nessa.
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
@@ -56,7 +57,7 @@ const getProduce = async (QUERY) => {
     .then((response) => response.results.forEach((computer) => createProductItemElement(computer)))
     .then(() => {
       cart.removeChild(loading);
-      // tales me ajudou nessa.
+      // tales me ajudou nessa parte do For.
       for (let index = 0; index < localStorage.length; index += 1) {
        const [sku, name, price] = localStorage.getItem(`produce${index}`).split(',');
        const valueLocal = { sku, name, price };
