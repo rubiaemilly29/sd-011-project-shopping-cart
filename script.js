@@ -114,6 +114,7 @@ const createProductList = (term) => {
   fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${term}`)
    .then((response) => response.json()
    .then((json) => {
+    document.querySelector('.loading').remove();
      json.results.forEach((products) => {
        const itemInfo = {
         sku: products.id,
@@ -129,7 +130,20 @@ const setSearch = () => createProductList('computador');
 
 // -------------------------------------------------
 
+// REQUISITO 6
+// Consulta em https://www.devmedia.com.br/while-e-do-while-lacos-de-repeticoes-estrutura-da-linguagem-parte-1/18870
+// Consulta em https://www.w3schools.com/jsref/met_node_removechild.asp
+const empty = () => {
+  const listOfCart = document.querySelector('.cart__items');
+  while (listOfCart.children.length) {
+    listOfCart.removeChild(listOfCart.lastChild);
+  }
+  localStorage.clear();
+  SumOfCart();
+};
+
 window.onload = function onload() { 
   setSearch();
   onloadCart();
+  document.querySelector('.empty-cart').addEventListener('click', empty);
 };
