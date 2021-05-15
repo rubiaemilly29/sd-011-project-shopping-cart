@@ -15,6 +15,7 @@ function createCustomElement(element, className, innerText) {
 }
 
 function cartItemClickListener(event, createLi, count, price) {
+  // Tales me ajudou.
   localStorage.removeItem(`produce${count}`);
   createLi.removeChild(event.target);
   totalPrice.innerText = parseFloat(Number(totalPrice.innerText) - Number(price));
@@ -55,6 +56,7 @@ const getProduce = async (QUERY) => {
     .then((response) => response.results.forEach((computer) => createProductItemElement(computer)))
     .then(() => {
       cart.removeChild(loading);
+      // tales me ajudou nessa.
       for (let index = 0; index < localStorage.length; index += 1) {
        const [sku, name, price] = localStorage.getItem(`produce${index}`).split(',');
        const valueLocal = { sku, name, price };
@@ -66,7 +68,7 @@ const setProduce = () => getProduce('computador');
 
 window.onload = function onload() {
   setProduce();
-    
+  // o Tales da turma 11 me ajudou nessa questão.
   const button = document.getElementsByClassName('empty-cart')[0];
   button.addEventListener('click', () => {
     const cartItems = document.querySelector('.cart__items');
