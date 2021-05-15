@@ -30,6 +30,7 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   event.target.remove();
+  sumPrices();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -47,7 +48,8 @@ const getItem = () => {
     const id = element.parentElement.firstChild.innerText;
     fetch(`https://api.mercadolibre.com/items/${id}`)
       .then((response) => response.json())
-      .then((data) => elementFather.appendChild(createCartItemElement(data)));
+      .then((data) => elementFather.appendChild(createCartItemElement(data)))
+      .then(() => sumPrices());
   }));
 }; 
 
@@ -68,6 +70,14 @@ const list = () => {
       section.appendChild(listObject);
     })).then(() => getItem());
 };
+
+const sumPrices = () => {
+  const totalPrice = document.querySelector('.total-price');
+  const getList = [...document.querySelectorAll('.cart__item')];
+  totalPrice.innerText = 0;
+  const sum = getList.reduce((accumulator, currentValue) => accumulator + Number(currentValue.innerText.split('PRICE: $')[1]),0);
+  totalPrice.innerText = sum;
+}
 
 window.onload = function onload() {
   list();
