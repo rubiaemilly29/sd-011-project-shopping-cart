@@ -1,9 +1,9 @@
 let totalPrice = 0;
 const addprice = async () => {
   document.querySelector('.total-price')
-  .innerText = `Preço Total: ${parseFloat(totalPrice).toFixed(2)}`;
+  .innerText = totalPrice;
   localStorage.removeItem('price');
-  localStorage.setItem('price', parseFloat(totalPrice).toFixed(2)); 
+  localStorage.setItem('price', totalPrice); 
 };
 
 function getSkuFromProductItem(item) {
