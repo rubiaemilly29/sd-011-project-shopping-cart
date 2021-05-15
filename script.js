@@ -5,8 +5,7 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
+function cartItemClickListener() {
 }
 
 function createCustomElement(element, className, innerText) {
@@ -71,6 +70,14 @@ const getProducts = () => {
     });
 };
 
+function deleteAllCart() {
+  const li = document.querySelectorAll('.cart__item');
+  const ol = document.querySelector('ol');
+  li.forEach((list) => ol.removeChild(list));
+}
+
 window.onload = async function onload() {
   await getProducts();
+  document.querySelector('.empty-cart')
+  .addEventListener('click', deleteAllCart);
 };
