@@ -28,10 +28,25 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+const sumPricesCart = () => {
+  const arrayCart = document.querySelectorAll('.cart__item');
+  let sumPricesItems = 0;
+  arrayCart.forEach((itemCart) => {
+    const textItemCart = itemCart.innerText;
+    const textItemCartSplit = textItemCart.split('$');
+    const valueItemCart = parseFloat(textItemCartSplit[1]);
+    sumPricesItems += valueItemCart;
+  });
+  console.log(sumPricesItems);
+  const totalCartItems = document.querySelector('#sum-price');
+  totalCartItems.innerText = `${sumPricesItems}`;
+};
+
 function cartItemClickListener(event) {
   const removeItem = event.target;
   localStorage.removeItem(removeItem.innerText);
   removeItem.remove();
+  sumPricesCart();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -54,7 +69,9 @@ const getItemForCart = (itemID) => {
     const item = createCartItemElement({ sku: json.id, name: json.title, salePrice: json.price });
     document.querySelector('.cart__items').appendChild(item);
     localStorage.setItem(item.innerText, item.innerText);
-  });
+    sumPricesCart();
+  })
+  .catch((error) => 'erro no API');
 };
 
 const addButtonItem = () => {
@@ -76,19 +93,21 @@ const getItens = () => {
   .then((json) => json.results.forEach((item) => {
     const i = createProductItemElement({ sku: item.id, name: item.title, image: item.thumbnail });
     document.querySelector('.items').appendChild(i);
-  }));
+  }))
+  .catch((error) => 'erro no API');
 };
 
 const recoveryCartLocalStorage = () => {
   const local = Object.entries(localStorage);
   local.forEach((itemCart) => {
     const li = document.createElement('li');
-    const litext = itemCart[1];
+    const liText = itemCart[1];
     li.className = 'cart__item';
-    li.innerText = litext;
+    li.innerText = liText;
     li.addEventListener('click', cartItemClickListener);
     document.querySelector('.cart__items').appendChild(li);
   });
+  sumPricesCart();
 };
 
 window.onload = function onload() { 
