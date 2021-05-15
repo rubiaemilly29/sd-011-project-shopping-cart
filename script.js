@@ -87,7 +87,9 @@ window.onload = function onload() {
 
 const saveItems = window.localStorage.getItem('myListItems');
 document.querySelector('.cart__items').innerHTML = saveItems;
-  const itemsSaved = document.getElementsByClassName('cart__items');
-  for (let i = 0; i < itemsSaved.length; i += 1) {
-    itemsSaved[i].addEventListener('click', cartItemClickListener);
-  }
+  
+let itemsSaved = document.getElementsByClassName('cart__items');
+  itemsSaved = Array.from(itemsSaved);
+  itemsSaved.forEach((element) => {
+    element.addEventListener('click', cartItemClickListener);
+  });
