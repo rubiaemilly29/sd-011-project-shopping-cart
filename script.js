@@ -1,8 +1,18 @@
+const olList = document.querySelector('.cart__items');
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
   img.src = imageSource;
   return img;
+}
+
+function addToSaveList() {
+  localStorage.savedList = olList.innerHTML;
+}
+
+function loadSavedList() {
+  olList.innerHTML = localStorage.savedList;
 }
 
 function createCustomElement(element, className, innerText) {
@@ -28,10 +38,6 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function a() {
-  
-}
-
 function cartItemClickListener(event) {
   // coloque seu código aqui
   const cartArea = document.querySelector('.cart');
@@ -39,6 +45,7 @@ function cartItemClickListener(event) {
     const selectedItem = e.target;
     if (selectedItem.className === 'cart__item') {
       selectedItem.parentNode.removeChild(selectedItem);
+      addToSaveList();
     }
   });
 }
@@ -64,9 +71,10 @@ function addToCart() {
         const cartItems = document.querySelector('.cart__items');
         const objectItem = { sku: json.id, name: json.title, salePrice: json.price };
         cartItems.appendChild(createCartItemElement(objectItem));
+        addToSaveList();
         }))
-      .catch((error) => alert(error));
-    } 
+      .catch((error) => console.log(error));
+    }
     });
   }
 
@@ -75,12 +83,12 @@ function getItemsFromML() {
   const acceptableParams = { headers: { Accept: 'application/json' } };
   fetch(endpoint, acceptableParams)
     .then((response) => response.json().then((json) => {  
-      json.results.forEach((item, index) => {
+      json.results.forEach((_, index) => {
         const itemsContainer = document.querySelector('.items');
         const objectItem = { 
           sku: json.results[index].id, 
-          name: json.results[index].title, 
-          salePrice: json.results[index].price, 
+          name: json.results[index].title,
+          salePrice: json.results[index].price,
           image: json.results[index].thumbnail,
         };
         itemsContainer.appendChild(createProductItemElement(objectItem));
@@ -88,7 +96,8 @@ function getItemsFromML() {
     }));
 }
 
-window.onload = function onload() { 
+window.onload = function onload() {
+  loadSavedList();
   getItemsFromML();
   addToCart();
   cartItemClickListener('click');
