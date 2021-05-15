@@ -110,8 +110,24 @@ const recoveryCartLocalStorage = () => {
   sumPricesCart();
 };
 
+const deletAllItensCart = () => {
+  const itemsCart = document.querySelectorAll('.cart__item');
+  console.log(itemsCart);
+  itemsCart.forEach((item) => {
+    localStorage.removeItem(item.innerText);
+    item.remove();
+    sumPricesCart();
+  });
+};
+
+const clearCart = () => {
+  const btnClearCart = document.querySelector('.empty-cart');
+  btnClearCart.addEventListener('click', deletAllItensCart);
+};
+
 window.onload = function onload() { 
   getItens();
   addButtonItem();
   recoveryCartLocalStorage();
+  clearCart();
 };
