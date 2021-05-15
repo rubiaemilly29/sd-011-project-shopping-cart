@@ -14,8 +14,26 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// remove o item do carrinho de compras
+function cartItemClickListener(event) {
+  // coloque seu código aqui
+}
+
+// adiciona o produto ao carrinho de compras
+function createCartItemElement({ sku: id, name: title, salePrice: price }) {
+  const li = document.createElement('li');
+  const cartOl = document.querySelector('.cart__items');
+
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
+  li.addEventListener('click', cartItemClickListener);
+
+  cartOl.appendChild(li);
+  return li;
+}
+
 // cria uma lista de produtos
-function createProductItemElement({ sku, name, image }) {
+function createProductItemElement({ sku, name, image, salePrice }) {
   const section = document.createElement('section');
   section.className = 'item';
   const sectionItem = document.querySelector('.items');
@@ -23,7 +41,8 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
+    .addEventListener('click', () => createCartItemElement({ sku, name, salePrice }));
 
   sectionItem.appendChild(section);
   return section;
@@ -34,27 +53,26 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-// remove o item do carrinho de compras
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
+// const buttonAddToCart = document.getElementsByClassName('item__add');
+// console.log(buttonAddToCart);
 
-// adiciona o produto ao carrinho de compras
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-}
+// buttonAddToCart.forEach((button) => {
+//   button.addEventListener('click', (event) => {
+//     const getEvent = event.target;
+//     console.log(getEvent);
+//   //   fetch(`https://api.mercadolibre.com/items/${ItemID}`)
+//   //     .them((response) => response.json())
+//   //     .then((json) => )
+//   })
+// });
 
 window.onload = function onload() {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
-      .then((response) => response.json())
-      .then((json) => {
-        json.results.forEach(({ id, title, thumbnail }) => {
-          createProductItemElement({ sku: id, name: title, image: thumbnail });
-          });
-      })
-      .catch((e) => window.alert(e));
-  };
+    .then((response) => response.json())
+    .then((json) => {
+      json.results.forEach(({ id, title, thumbnail, price }) => {
+        createProductItemElement({ sku: id, name: title, image: thumbnail, salePrice: price });
+      });
+    })
+    .catch((e) => window.alert(e));
+};
