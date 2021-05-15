@@ -14,15 +14,29 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+const randerCartItem = (li) => {
+  const cartList = document.querySelector('.cart__items');
+  cartList.appendChild(li);
+}
+
+const appendToCart = async (event) => {
+  const itemID = getSkuFromProductItem(event.target.parentElement);
+console.log(itemID);
+  const itemToAdd = await fetch(`https://api.mercadolibre.com/items/${itemID}`);
+  const itemJson = await itemToAdd.json();
+  const liToCart = createCartItemElement(itemJson);
+  randerCartItem(liToCart);
+}
+
 // Cria utilizando as funções anteriores um produto com discrição, imagem e o botão para adiciconar ao carrinho. Tudo em uma sessão e retorna ela
-function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
+function createProductItemElement({ id: sku, title: name, thumbnail: image, price }) {
   const section = document.createElement('section');
   section.className = 'item';
-
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
+    .addEventListener('click', appendToCart);
 
   const sectionItems = document.querySelector('.items');
   sectionItems.appendChild(section);
@@ -36,7 +50,8 @@ function cartItemClickListener(event) {
   // coloque seu código aqui
 }
 
-function createCartItemElement({ sku, name, price }) {
+// Cria um item da lista do carrinho
+function createCartItemElement({ id: sku, title: name, price }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
@@ -48,14 +63,8 @@ const fetchElement = () => {
   fetch(`https://api.mercadolibre.com/sites/MLB/search?q=computador`) 
     .then((response) => response.json())
     .then((response) => response.results.forEach((element) => createProductItemElement(element)))
+    .catch((err) => window.alert(err));
 }
-
-// "https://api.mercadolibre.com/items/$ItemID"
-
-// const buttonAddItem = document.querySelector('.item__add');
-// buttonAddItem.addEventListener('click',)
-
-
 
 window.onload = function onload() { 
   fetchElement();
