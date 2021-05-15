@@ -35,7 +35,6 @@ function getMercadoLivre() {
   promise
     .then((response) => {
       response.json().then((data) => {
-        console.log(data);
         data.results.forEach(({ id, title, thumbnail }) => {
           sectionItems.appendChild(createProductItemElement(
             { sku: id, name: title, image: thumbnail },
