@@ -17,6 +17,13 @@ function cartItemClickListener() {
   cartItem.remove();
 }
 
+function emptyCart() {
+  const emptyButton = document.querySelector('.empty-cart');
+  const cartItems = document.querySelector('.cart__items');
+
+  emptyButton.addEventListener('click', () => { cartItems.innerHTML = ''; });
+}
+
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   
@@ -72,4 +79,5 @@ function getSkuFromProductItem(item) {
 window.onload = function onload() {
   getApiML();
   addCartElement();
+  emptyCart();
 };
