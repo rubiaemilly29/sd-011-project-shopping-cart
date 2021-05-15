@@ -25,7 +25,6 @@ function createCustomElement(element, className, innerText) {
 function cartItemClickListener(event, contador) {
   localStorage.removeItem(`item ${contador}`);
   event.target.remove();
-  localStorage.removeItem();
 }
 
 function createCartItemElement({ sku, name, price }) {
