@@ -62,6 +62,11 @@ const fetchComputerById = async (id) => {
 };
 
 const fetchComputer = async () => {
+  const loading = document.createElement('span');
+  loading.className = 'loading';
+  loading.innerText = 'Loading...';
+  const container = document.querySelector('.container');
+  container.appendChild(loading);
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const computers = await response.json();
   computers.results.forEach((computer) => {
@@ -69,8 +74,9 @@ const fetchComputer = async () => {
   });
   for (let index = 1; index <= localStorage.length; index += 1) {
     const id = localStorage.getItem(`${index}`);
-    fetchComputerById(id);   
+    fetchComputerById(id);
   }
+  container.removeChild(loading);
 };
 
 window.onload = () => {
