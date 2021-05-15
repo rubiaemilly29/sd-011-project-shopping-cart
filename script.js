@@ -12,12 +12,11 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
-function cartItemClickListener(event, count, computer) {
-  const cart = document.querySelector('.cart__items');
+function cartItemClickListener(event, count, computer, cart) {
   cart.removeChild(event.target);
   localStorage.removeItem(`${count}`);
   const spanTotalPrice = document.querySelector('.total-price');
@@ -38,7 +37,7 @@ function addToCart(computer) {
    cart.appendChild(li);
    const count = cart.childElementCount;
    li.addEventListener('click', (event) =>
-   cartItemClickListener(event, count, computer));
+   cartItemClickListener(event, count, computer, cart));
    localStorage.setItem(`${count}`, computer.id);
    const spanTotalPrice = document.querySelector('.total-price');
    spanTotalPrice.innerText = Number(spanTotalPrice.innerText) + computer.price;
@@ -70,17 +69,16 @@ const fetchComputer = async () => {
   });
   for (let index = 1; index <= localStorage.length; index += 1) {
     const id = localStorage.getItem(`${index}`);
-    const pc = fetchComputerById(id);   
+    fetchComputerById(id);   
   }
 };
 
 window.onload = () => {
   fetchComputer();
-  const cartSection = document.querySelector('.cart');
   const clear = document.querySelector('.empty-cart');
-  clear.addEventListener('click', (event) => {
-    const cart = document.querySelector('.cart__items');
-    cart.innerText = '';
+  clear.addEventListener('click', () => {
+    const list = document.querySelector('.cart__items');
+    list.innerText = '';
     localStorage.clear();
-  })
+  });
 };
