@@ -1,4 +1,4 @@
-const recoverTotalSum = () => document.querySelector('.total-sum');
+const recoverTotalSum = () => document.querySelector('.total-price');
 const recoverCartItems = () => document.querySelector('.cart__items');
 
 function saveItems() {
@@ -11,7 +11,7 @@ async function createSumPrice() {
   const arrayPrices = [];
   listCart.forEach((item) => arrayPrices.push(Number(item.innerText.split('$')[1])));
   const totalSum = arrayPrices.reduce((accPrice, price) => accPrice + price, 0);
-  recoverTotalSum().innerText = `Preço total: $${Math.round(totalSum * 100) / 100}`;
+  recoverTotalSum().innerText = Math.round(totalSum * 100) / 100;
 }
 
 function createProductImageElement(imageSource) {
@@ -45,7 +45,6 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) { // para remover da lista
-  console.log(event);
   event.target.remove();
   createSumPrice();
   saveItems();
