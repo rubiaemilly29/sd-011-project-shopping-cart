@@ -72,13 +72,13 @@ function createCartItemElement({ sku, name, salePrice }) {
 function adItem(event) {
   const ev = getSkuFromProductItem(event.target.parentElement);
   const cartList = document.querySelector('.cart__items');
-  fetchID(ev)
+    fetchID(ev)
     .then(({ id, title, price }) => {
       addItem({ sku: id, name: title, salePrice: price });
       return createCartItemElement({ sku: id, name: title, salePrice: price });
     })
     .then((list) => cartList.appendChild(list))
-    .catch((e) => console.log(e));
+    .catch((e) => console.error(e));
 }
 
 function createProductItemElement({ sku, name, image }) {
@@ -94,7 +94,8 @@ function createProductItemElement({ sku, name, image }) {
 
 function loadStorage() {
   const cartArray = getLocalStorage();
-  const cartList = document.querySelector('.cart_items');
+  const cartList = document.querySelector('.cart__items');
+
   cartArray.forEach(({ sku, name, salePrice }) => { 
   cartList.appendChild(createCartItemElement({ sku, name, salePrice })); 
 });
