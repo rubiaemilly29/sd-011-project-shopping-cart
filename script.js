@@ -1,3 +1,5 @@
+const classCartItems = '.cart__items';
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -17,25 +19,25 @@ function getSkuFromProductItem(item) {
 }
 
 const createLoading = (selector) => {
-  const container = document.querySelector(selector);
-  const loading = document.createElement('span');
-  loading.classList.add('loading');
-  loading.innerText = 'loading...';
-  container.appendChild(loading);
+  const containerLoading = document.querySelector(selector);
+  const loadingElement = document.createElement('span');
+  loadingElement.classList.add('loading');
+  loadingElement.innerText = 'loading...';
+  containerLoading.appendChild(loadingElement);
 
-  return [container, loading];
+  return [containerLoading, loadingElement];
 };
 
-const removeLoading = (container, loading) => {
-  container.removeChild(loading);
+const removeLoading = (el, span) => {
+  el.removeChild(span);
 };
 
 const fetchItem = (itemId) => {
-  const [container, loading] = createLoading('.cart__items');
+  const [container, loadingSpan] = createLoading(classCartItems);
   return fetch(`https://api.mercadolibre.com/items/${itemId}`, {})
   .then((response) => response.json())
   .then((data) => {
-    removeLoading(container, loading);
+    removeLoading(container, loadingSpan);
     return data;
   })
   .catch((error) => console.error(error));
@@ -103,7 +105,7 @@ async function addItemToCart({ target }) {
 
   addItemToStorage(item);
 
-  document.querySelector('.cart__items').appendChild(createCartItemElement(item));
+  document.querySelector(classCartItems).appendChild(createCartItemElement(item));
 
   totPrice();
 }
@@ -145,7 +147,7 @@ const addItems = async () => {
 const storageLoad = () => {
   const itemsStorage = JSON.parse(localStorage.getItem('shoppingCart'));
 
-  const container = document.querySelector('.cart__items');
+  const container = document.querySelector(classCartItems);
   
   if (itemsStorage) {
     itemsStorage.forEach((item) => container.appendChild(createCartItemElement(item))); 
@@ -157,7 +159,7 @@ window.onload = function onload() {
   storageLoad();
   totPrice();
   document.querySelector('.empty-cart').addEventListener('click', () => {
-    const container = document.querySelector('.cart__items');
+    const container = document.querySelector(classCartItems);
     container.innerHTML = '';
     localStorage.removeItem('shoppingCart');
     totPrice();
