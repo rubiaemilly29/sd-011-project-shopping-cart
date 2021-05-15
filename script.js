@@ -41,10 +41,6 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
 const calcStoragePrice = () => {
   const price = document.querySelector('.total-price');
   const total = shoppingCart.reduce((acc, curr) => acc + Number(curr[0].salePrice), 0);
@@ -151,6 +147,7 @@ const getAndCreateElements = async () => {
   .then((formated) => formated.forEach((product) => {
     document.querySelector('.items').appendChild(createProductItemElement(product));
   }));
+  await (document.querySelector('.loading').remove());
 };
 
 const exec = async () => {
