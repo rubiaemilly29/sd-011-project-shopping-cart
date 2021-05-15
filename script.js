@@ -100,7 +100,15 @@ const esvaziar = () => {
   });
 };
 
+const load = async (computador) => {
+  const get = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${computador}`);
+  const data = await get.json();
+  document.querySelector('.loading').remove();
+  data.results.forEach((value) => createProductItemElement(value));
+};
+
 window.onload = () => {
+load();
 listOfProducts();
 esvaziar();
 };
