@@ -96,12 +96,15 @@ localStorage.clear();
 };
 
 // requisito 7
-// const load = async () => {
-//   const api
-// }
+const load = async (computador) => {
+  const api = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${computador}`); // colocada em string pois irá receber diferentes parâmetros
+  const data = await api.json();
+  document.querySelector('.loading').remove(); // vai removendo a medida que vai passando
+  data.results.forEach((element) => createProductItemElement(element));
+};
 
 window.onload = () => {
-// load();
+load();
 getProduct(); // chama a função, assim ela é criada ao iniciar o site
 deleteButton();
 };
