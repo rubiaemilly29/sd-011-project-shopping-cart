@@ -4,7 +4,7 @@ async function sumValues() {
   const itensCart = document.querySelectorAll('.cart__item');
   const spanValor = document.querySelector('.total-price');
   let sum = 0;
-  // let sum = parseFloat(spanValor.innerText.split('$')[1]);
+  if (itensCart.length === 0) spanValor.innerHTML = '<h3>R$00.00</h3>';
   itensCart.forEach((item) => {
     console.log(sum);
     const prodValor = parseFloat(item.innerText.split('$')[1]);
@@ -14,7 +14,6 @@ async function sumValues() {
     spanValor.innerHTML = `<h3>${sum}</h3>`;
     console.log(sum);
   });
-  if (itensCart.length === 0) spanValor.innerHTML = '<h3>R$00.00</h3>';
 }
 
 function createProductImageElement(imageSource) {
