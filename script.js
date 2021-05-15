@@ -1,5 +1,22 @@
 const cartItens = '.cart__items';
 
+async function sumValues() {
+  const itensCart = document.querySelectorAll('.cart__item');
+  const spanValor = document.querySelector('.total-price');
+  let sum = 0;
+  // let sum = parseFloat(spanValor.innerText.split('$')[1]);
+  itensCart.forEach((item) => {
+    console.log(sum);
+    const prodValor = parseFloat(item.innerText.split('$')[1]);
+    prodValor.toFixed(2);
+    sum.toFixed(2);
+    sum += prodValor;
+    spanValor.innerHTML = `<h3>${sum}</h3>`;
+    console.log(sum);
+  });
+  if (itensCart.length === 0) spanValor.innerHTML = '<h3>R$00.00</h3>';
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -33,6 +50,7 @@ async function apiOnload() {
     const section = createProductItemElement(result);
     const sectionItens = document.querySelector('.items');
     sectionItens.appendChild(section);
+    sumValues();
   });
 } 
 
@@ -44,6 +62,7 @@ function cartItemClickListener(event) {
   const olCart = document.querySelector(cartItens);
   event.target.remove();
   localStorage.setItem('carrinho', olCart.innerHTML);
+  sumValues();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -59,12 +78,13 @@ function eventAddCart() {
   btnItems.addEventListener('click', async (event) => {
     if (event.target.className === 'item__add') {
       const ItemID = event.target.parentNode.firstChild.innerText;
-        const apiReturn = await fetch(`https://api.mercadolibre.com/items/${ItemID}`);
-        const jsonApi = await apiReturn.json();
-        const li = createCartItemElement(jsonApi);
-        const olCart = document.querySelector('.cart__items');
-        olCart.appendChild(li);
-        localStorage.setItem('carrinho', olCart.innerHTML);
+      const apiReturn = await fetch(`https://api.mercadolibre.com/items/${ItemID}`);
+      const jsonApi = await apiReturn.json();
+      const li = createCartItemElement(jsonApi);
+      const olCart = document.querySelector('.cart__items');
+      olCart.appendChild(li);
+      localStorage.setItem('carrinho', olCart.innerHTML);
+      sumValues();
       }
     });
 }
@@ -79,6 +99,7 @@ window.onload = function onload() {
     console.log(itemCart);
     itemCart.forEach((item) => {
       item.addEventListener('click', cartItemClickListener);
+      sumValues();
     });
   }
 };
