@@ -62,8 +62,8 @@ const createProductList = async () => {
   });
 };
 
-const catchItem = async event => {
-  const itemID = getSkuFromProductItem(event.target.parentElement); //catch product id
+const catchItem = async (event) => {
+  const itemID = getSkuFromProductItem(event.target.parentElement); // catch product id
   const prodList = document.querySelector('ol.cart__items');
   const prod = await fetchItem(itemID);
   const item = createCartItemElement({ sku: prod.id, name: prod.title, salePrice: prod.price });
@@ -73,7 +73,7 @@ const catchItem = async event => {
 const addCartItem = async () => {
   await createProductList();
   const buttons = document.querySelectorAll('button.item__add');
-  buttons.forEach(button =>  button.addEventListener('click', catchItem));
+  buttons.forEach((button) => button.addEventListener('click', catchItem));
 }; 
 
 window.onload = function onload() { 
