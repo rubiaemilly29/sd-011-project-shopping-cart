@@ -1,3 +1,4 @@
+const cartItems = '.cart__items';
 // cria a imagem dos produtos
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -17,19 +18,23 @@ function createCustomElement(element, className, innerText) {
 // remove o item do carrinho de compras
 function cartItemClickListener(event) {
   const eventTg = event.target;
+  const cartOl = document.querySelector(cartItems);
+
   eventTg.remove();
+  localStorage.setItem('items', cartOl.innerHTML);
 }
 
 // adiciona o produto ao carrinho de compras
 function createCartItemElement({ sku: id, name: title, salePrice: price }) {
   const li = document.createElement('li');
-  const cartOl = document.querySelector('.cart__items');
+  const cartOl = document.querySelector(cartItems);
 
   li.className = 'cart__item';
   li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
 
   cartOl.appendChild(li);
+  localStorage.setItem('items', cartOl.innerHTML);
   return li;
 }
 
@@ -54,18 +59,15 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-// const buttonAddToCart = document.getElementsByClassName('item__add');
-// console.log(buttonAddToCart);
-
-// buttonAddToCart.forEach((button) => {
-//   button.addEventListener('click', (event) => {
-//     const getEvent = event.target;
-//     console.log(getEvent);
-//   //   fetch(`https://api.mercadolibre.com/items/${ItemID}`)
-//   //     .them((response) => response.json())
-//   //     .then((json) => )
-//   })
-// });
+function getLocalStorage() {
+  const getStorage = localStorage.getItem('items');
+  const cartOl = document.querySelector(cartItems);
+  
+  cartOl.innerHTML = getStorage;
+  
+  const cartLi = document.querySelectorAll('.cart__item');
+  cartLi.forEach((elements) => elements.addEventListener('click', cartItemClickListener));
+}
 
 window.onload = function onload() {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
@@ -76,4 +78,6 @@ window.onload = function onload() {
       });
     })
     .catch((e) => window.alert(e));
+
+    getLocalStorage();
 };
