@@ -1,4 +1,4 @@
-const substituteOlClass = '.cart__items';
+const substituteOlClass = '.cart__items'; // renomear pois foi citada mais de 3 vezes e o lint reclama
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -26,15 +26,19 @@ function createProductItemElement({ sku, name, image }) {
 //   // return item.querySelector('span.item__sku').innerText;
 // }
 
+// requisito 5
+const sumItemsPrices = () => {
+const sumPrice = document.querySelector('.total-price');
+const getLi = [...document.querySelectorAll('.cart__item')];
+const sumList = getLi.reduce((acc, curr) => acc + Number(curr.innerText.split('PRICE: $')[1]), 0);
+sumPrice.innerText = sumList; // atribui a soma desta no card
+};
+
 function cartItemClickListener(event, contador) { // declara pois ao remover um item do carrinho, ele também é removido
   localStorage.removeItem(`item ${contador}`); // função remove item do local storage para remover com o click
-  return event.target.remove();
+  event.target.remove();
+    sumItemsPrices();
 }
-
-// const sumItems = () => {
-// const sum = document.querySelector('.total-price');
-// const getItemstoSum = document.querySelectorAll('.cart__items');
-// }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }, contador) {
   const li = document.createElement('li');
@@ -53,7 +57,8 @@ buttonAddItems.forEach((eachCarItem) => { // para cada item a ser add no carrinh
     const contador = getOl.childElementCount; // filhos da Ol add na lista
     fetch(`https://api.mercadolibre.com/items/${id}`)
     .then((response) => response.json())
-    .then((data) => getOl.appendChild(createCartItemElement(data, contador)));
+    .then((data) => getOl.appendChild(createCartItemElement(data, contador))) // console.log aqui mostra tudo no servidor
+    .then(() => sumItemsPrices());
     localStorage.setItem(`item ${contador}`, id); // aqui ja esta salvando no local storage com o id
   });
 });
@@ -78,7 +83,7 @@ const getProduct = () => {
    const getSection = document.querySelector('.items'); // invoca a classe items, pois nao existe no escopo da fnção
    const toCreate = createProductItemElement({ sku: id, name: title, image: thumbnail }); // associo as chaves aos valores a serem recebidos la do api
    getSection.appendChild(toCreate);
-})).then(() => addproductToCard())
+})).then(() => addproductToCard()) // será carregada os items ao ser carregada a pagina, pois devido ao onload isso nao iria aparecer e daria erro
    .then(() => getLocalStorage());
 };
 
