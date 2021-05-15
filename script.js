@@ -53,17 +53,9 @@ function render(json) {
   });
 }
 
-function listOfItems() {
-  return document.querySelectorAll('.cart__item');
-}
-
-async function emptyCart() {
-  const teste = await listOfItems();
-  try {
-    teste.forEach((item) => item.remove());
-  } catch (error) {
-    alert('erro ao limpar carrinho');
-  }
+function emptyCart() {
+  const listCart = document.querySelectorAll('.cart__item');
+  listCart.forEach((item) => item.remove());
 }
 
 function checkButtonEmptyCart() {
