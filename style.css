@@ -83,6 +83,10 @@
 }
 
 .cart {
+  background-color: wheat;
+  border: solid 1px black;
+  padding: 25px;
+  border-radius: 5px;
   display: flex;
   flex-basis: 30%;
   flex-flow: column wrap;
