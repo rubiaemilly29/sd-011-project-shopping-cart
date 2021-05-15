@@ -30,14 +30,14 @@ function createProductItemElement({ sku, name, image }) {
 const sumItemsPrices = () => {
 const sumPrice = document.querySelector('.total-price');
 const getLi = [...document.querySelectorAll('.cart__item')];
-const sumList = getLi.reduce((acc, curr) => acc + Number(curr.innerText.split('PRICE: $')[1]), 0);
+const sumList = getLi.reduce((acc, curr) => acc + Number(curr.innerText.split('PRICE: $')[1]), 0); // tudo após o number se tornará numero e ocorrerá a soma
 sumPrice.innerText = sumList; // atribui a soma desta no card
 };
 
 function cartItemClickListener(event, contador) { // declara pois ao remover um item do carrinho, ele também é removido
   localStorage.removeItem(`item ${contador}`); // função remove item do local storage para remover com o click
   event.target.remove();
-    sumItemsPrices();
+    sumItemsPrices(); // mais um evento de click
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }, contador) {
@@ -86,7 +86,22 @@ const getProduct = () => {
 })).then(() => addproductToCard()) // será carregada os items ao ser carregada a pagina, pois devido ao onload isso nao iria aparecer e daria erro
    .then(() => getLocalStorage());
 };
+// requisito 6 - criar botao que esvazie a ol inteira
+const deleteButton = () => {
+const getButton = document.querySelector('.empty-cart');
+getButton.addEventListener('click', () => {
+  document.querySelector(substituteOlClass).innerHTML = '';
+localStorage.clear();
+});
+};
+
+// requisito 7
+// const load = async () => {
+//   const api
+// }
 
 window.onload = () => {
+// load();
 getProduct(); // chama a função, assim ela é criada ao iniciar o site
+deleteButton();
 };
