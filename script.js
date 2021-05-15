@@ -29,9 +29,18 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return item.querySelector('span.item__sku').innerText;
 } */
 
+const sumPrices = () => {
+  const price = document.querySelector('.total-price');
+  console.log(price);
+  const getLi = [...document.querySelectorAll('.cart__item')];
+  const sumLi = getLi.reduce((acc, curr) => acc + Number(curr.innerText.split('PRICE: $')[1]), 0);
+  price.innerText = sumLi;
+  };
+
 function cartItemClickListener(event, contador) { 
   localStorage.removeItem(`item ${contador}`);
-  return event.target.remove();
+  event.target.remove();
+  return sumPrices();
 }
 
 function removeFinalizados() {
@@ -57,7 +66,8 @@ const setLocalStorage = () => {
     const storage = localStorage.getItem(`item ${index}`);
       fetch(`https://api.mercadolibre.com/items/${storage}`)
         .then((response) => response.json())
-        .then((elements) => getCart.appendChild(createCartItemElement(elements, index)));
+        .then((elements) => getCart.appendChild(createCartItemElement(elements, index)))
+        .then(() => sumPrices());
   }
 };
 
@@ -71,7 +81,8 @@ const addProductsToCart = () => {
       const contador = getCart.childElementCount;
       fetch(`https://api.mercadolibre.com/items/${id}`)
         .then((response) => response.json())
-        .then((elements) => getCart.appendChild(createCartItemElement(elements, contador)));
+        .then((elements) => getCart.appendChild(createCartItemElement(elements, contador)))
+        .then(() => sumPrices());
         localStorage.setItem(`item ${contador}`, id);
     });
   });
@@ -86,10 +97,8 @@ const myPromise = () => new Promise(() => {
 
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador', myObject)
     .then((response) => response.json())
-    .then((elements) => {
-      elements.results
-    .forEach((item) => getItems.appendChild(createProductItemElement(item)));
-    })
+    .then((elements) => elements.results
+    .forEach((item) => getItems.appendChild(createProductItemElement(item))))
     .then(() => addProductsToCart())
     .then(() => setLocalStorage());
   });
