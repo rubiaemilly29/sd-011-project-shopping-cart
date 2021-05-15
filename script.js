@@ -15,10 +15,10 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-const sumPrices = () => {
+/* const sumPrices = () => {
   const totalPrice = document.querySelector('.total-price');
 
-};
+}; */
 
 /* requisito 3 */
 
