@@ -1,3 +1,11 @@
+const recoverTotalSum = () => document.querySelector('.total-sum');
+const recoverCartItems = () => document.querySelector('.cart__items');
+
+function saveItems() {
+  localStorage.setItem('shoppingCart', recoverCartItems().innerHTML);
+  localStorage.setItem('totalSum', recoverTotalSum().innerHTML);
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -29,7 +37,13 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) { // para remover da lista
+  console.log(event);
   event.target.remove();
+  const currentPrice = event.target.innerText.split('$');
+  let total = Number(recoverTotalSum().innerText);
+  total -= Number(currentPrice[1]);
+  recoverTotalSum().innerText = Math.round(total * 100) / 100;
+  saveItems();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -56,6 +70,8 @@ function render(json) {
 function emptyCart() {
   const listCart = document.querySelectorAll('.cart__item');
   listCart.forEach((item) => item.remove());
+  recoverTotalSum().innerText = 0;
+  saveItems();
 }
 
 function checkButtonEmptyCart() {
@@ -63,7 +79,7 @@ function checkButtonEmptyCart() {
   butttonEmptyCart.addEventListener('click', emptyCart);
 }
 
-async function getItem(term) {
+async function getItemsFromAPI(term) {
   try {
     const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${term}#json`);
     const json = await response.json();
@@ -73,12 +89,14 @@ async function getItem(term) {
   }
 }
 
-function createSumPrice() {
-  const totalPrice = document.querySelector('.total-price');
-  totalPrice.appendChild(createCustomElement('span', 'total-sum', 0));
+async function createSumPrice(value) {
+  let total = Number(recoverTotalSum().innerText);
+  total += value;
+  recoverTotalSum().innerText = Math.round(total * 100) / 100;
 }
 
 async function addItemToCart(event) {
+  console.log((event.target).parentNode);
   const currentId = await getSkuFromProductItem((event.target).parentNode);
   try {
     const response = await fetch(`https://api.mercadolibre.com/items/${currentId}`);
@@ -89,23 +107,23 @@ async function addItemToCart(event) {
       salePrice: json.price,
     };
     const cartItem = createCartItemElement(objectItem);
-    const cartItems = document.querySelector('.cart__items');
-    cartItems.appendChild(cartItem);
-    // const totalSum = document.querySelector('.total-sum');
-    // totalSum.innerHTML += Number(json.price);
-    localStorage.setItem('shoppingCart', cartItems.innerHTML);
+    recoverCartItems().appendChild(cartItem);
+    createSumPrice(json.price);
+    saveItems();
   } catch (error) {
     alert('ao clicar botão de adicionar ao carrinho');
   }
 }
 
 function openShoppingCart() {
-  const savedFile = localStorage.getItem('shoppingCart');
-  document.querySelector('.cart__items').innerHTML = savedFile;
+  const savedShoppingCart = localStorage.getItem('shoppingCart');
+  const savedTotalSum = localStorage.getItem('totalSum');
+  recoverCartItems().innerHTML = savedShoppingCart;
+  recoverTotalSum().innerHTML = savedTotalSum;
 }
 
 async function createObjectButtons() {
-  await getItem('computador');
+  await getItemsFromAPI('computador');
   try {
     const objectButtonsAdd = document.querySelectorAll('.item__add');
     objectButtonsAdd.forEach((button) => button.addEventListener('click', addItemToCart));
@@ -117,6 +135,8 @@ async function createObjectButtons() {
 window.onload = function onload() { 
   createObjectButtons();
   checkButtonEmptyCart();
-  // createSumPrice();
   openShoppingCart();
 };
+
+// não apaga quando salvo no localstorage. Não foi criado dinamicamente
+// questão do preço total está confusa
