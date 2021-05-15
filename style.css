@@ -74,3 +74,29 @@
   font-size: 16pt;
   text-align: center;
 }
+
+.total {
+  background-color: rgb(111, 204, 111);
+  font-size: 14pt;
+  text-align: center;
+  box-shadow: 2px 4px 4px black;
+}
+
+.empty-cart {
+  background-color: rgb(111, 204, 111);
+  font-size: 14pt;
+  text-align: center;
+  box-shadow: 2px 4px 4px black;
+}
+
+.cart__title {
+  background-color: rgb(111, 204, 111);
+  text-align: center;
+  box-shadow: 2px 4px 4px black;
+ }
+
+.cart__items {
+  background-color: rgb(91, 250, 91);
+  font-size: 14pt;
+  box-shadow: 2px 4px 4px black;
+}
