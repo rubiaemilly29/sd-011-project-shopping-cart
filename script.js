@@ -24,21 +24,21 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
 
 // function cartItemClickListener(event) {
 //   // coloque seu código aqui
 // }
 
-// function createCartItemElement({ sku, name, salePrice }) {
-//   const li = document.createElement('li');
-//   li.className = 'cart__item';
-//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-//   li.addEventListener('click', cartItemClickListener);
-//   return li;
-// }
+function createCartItemElement({ sku, name, salePrice }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.addEventListener('click', cartItemClickListener);
+  return li;
+}
 
 const fetchProducts = async () => {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
@@ -49,9 +49,8 @@ const fetchProducts = async () => {
 
 const fetchItem = async (id) => {
   const response = await fetch(`https://api.mercadolibre.com/items/${id}`);
-  const json = await response.json();
-  const item = await json.res;
-  return item;
+  const product = await response.json();
+  return product;
 };
 
 const createProductList = async () => {
@@ -61,7 +60,24 @@ const createProductList = async () => {
     const item = createProductItemElement({ sku: id, name: title, image: thumbnail });
     items.appendChild(item);
   });
+  const buttons = document.querySelectorAll('button.item_add');
+  buttons.forEach(button =>  button.addEventListener('click', catchItem));
 };
+
+const catchItem = async event => {
+  const itemClick = event.target;
+  const itemID = getSkuFromProductItem(itemClick); //catch product id
+  const prodList = document.querySelector('ol.cart__items');
+  const prod = await fetchItem(itemID);
+  const item = createCartItemElement({ sku: prod.id, name: prod.title, salePrice: prod.price });
+  prodList.appendChild(item);
+};
+
+// const addCartItem = () => {
+//   const buttons = document.querySelectorAll('button.item_add');
+//   buttons.forEach(button =>  button.addEventListener('click', catchItem));
+// }; 
+
 
 window.onload = function onload() { 
   createProductList();
