@@ -5,10 +5,6 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
-function cartItemClickListener(event) {
-  event.target.parentNode.removeChild(event.target);
-}
-
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
@@ -16,7 +12,21 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
+
+const fetchItem = (itemId) => {
+  const url = `https://api.mercadolibre.com/items/${itemId}`;
+  return fetch(url, {})
+  .then((response) => response.json())
+  .then((data) => data)
+  .catch((error) => console.error(error));
+};
+
+const cartItemClickListener = ({ target }) => target.parentElement.removeChild(target);
+
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
@@ -24,56 +34,68 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-function handleButtonAdd(event) {
-  const sku = event.target.parentElement.querySelector('.item__sku').innerText;
-  fetch(`https://api.mercadolibre.com/items/${sku}`)
-  .then((response) => response.json())
-    .then((response) => {
-      const li = createCartItemElement({ sku: response.id,
-        name: response.title,
-        salePrice: response.price });
-      const cart = document.querySelector('.cart__items');
-      cart.appendChild(li);
-    });
-}
+const addItemToStorage = ({ id, title, price }) => {
+  const itemNew = { id, title, price };
+
+  const shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
+
+  if (shoppingCart) shoppingCart.push(itemNew);
+
+  localStorage.setItem(
+    'shoppingCart',
+    shoppingCart ? JSON.stringify(shoppingCart) : JSON.stringify([itemNew]),
+  );
+};
+
+const addItemToCart = async ({ target }) => {
+  const item = await fetchItem(getSkuFromProductItem(target.parentElement));
+
+  addItemToStorage(item);
+
+  document.querySelector('.cart__items').appendChild(createCartItemElement(item));
+};
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
 
+  const addItemButton = createCustomElement('button', 'item__add', 'Adcionar ao carrinho!');
+  addItemButton.addEventListener('click', addItemToCart);
+
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  const buttonElement = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
-  buttonElement.addEventListener('click', handleButtonAdd);
-  section.appendChild(buttonElement);
+  section.appendChild(addItemButton);
 
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
-const fetchItems = () => {
-  const options = {};
+const fetchComputer = () => {
   const url = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
-  return fetch(url, options)
+  return fetch(url, {})
     .then((response) => response.json())
     .then(({ results }) => results)
     .catch((error) => console.error(error));
 };
 
 const addItems = async () => {
-  const items = await fetchItems();
+  const items = await fetchComputer();
 
-  const containerItem = document.querySelector('section.items');
+  const itemsContainer = document.querySelector('.items');
+  items.forEach((item) => itemsContainer.appendChild(createProductItemElement(item)));
+};
 
-  items.forEach((item) => {
-    containerItem.appendChild(createProductItemElement(item));
-  });
+const storageLoad = () => {
+  const itemsStorage = JSON.parse(localStorage.getItem('shoppingCart'));
+
+  const container = document.querySelector('.cart__items');
+  
+  if (itemsStorage) {
+    itemsStorage.forEach((item) => container.appendChild(createCartItemElement(item))); 
+  }
 };
 
 window.onload = function onload() {
   addItems();
+  storageLoad();
 };
