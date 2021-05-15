@@ -1,3 +1,23 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'KoHo', sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  background-color: rgb(47, 193, 140);
+  color: rgb(65, 25, 127);
+  padding: 10px 0;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
 .top-bar {
   align-items: center;
   display: flex;
@@ -28,11 +48,11 @@
   flex-basis: 70%;
   flex-wrap: wrap;
   justify-content: center;
+  font-weight: 400;
 }
 
 .item {
-  border: 2px solid blue;
-  border-radius: 5px;
+  border: 1px solid black;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -56,11 +76,17 @@
 }
 
 .item .item__add {
-  background-color: green;
+  background-color: rgb(33, 134, 97);
+  color: white;
   border: 0;
   cursor: pointer;
   margin: 0;
   padding: 5px;
+  transition: 1s;
+}
+
+.item .item__add:hover {
+  background-color: rgb(0, 109, 251);
 }
 
 .cart {
@@ -73,4 +99,38 @@
   flex-basis: 1;
   font-size: 16pt;
   text-align: center;
+  margin-bottom: 15px;
+}
+
+.cart .cart__items {
+  border: 1px solid rgb(65, 25, 127);
+  list-style: none;
+}
+
+.cart .cart__item {
+  padding: 15px 0;
+}
+
+.empty-cart {
+  background-color: rgb(33, 134, 97);
+  color: white;
+  border: 0;
+  cursor: pointer;
+  margin: 0;
+  padding: 5px;
+  transition: 1s;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.empty-cart:hover {
+  background-color: rgb(0, 109, 251);
+  color: white;
+  font-weight: 600;
+}
+
+.total {
+  font-size: 18px;
+  font-weight: 500;
+  color: rgb(0, 109, 251);
 }
