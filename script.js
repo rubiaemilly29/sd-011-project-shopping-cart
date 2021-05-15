@@ -87,7 +87,15 @@ const list = () => {
     })).then(() => getItem());
 };
 
+const loadShop = async (computador) => {
+  const api = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${computador}`);
+  const data = await api.json();
+  document.querySelector('.loading').remove();
+  data.results.forEach((element) => createProductItemElement(element));
+};
+
 window.onload = function onload() {
+  loadShop();
   list();
   deleteCart();
 };
