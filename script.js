@@ -1,4 +1,6 @@
 const cartitems = '.cart__items';
+const totalprice = '.total-price';
+let priceSome = 0;
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -42,13 +44,11 @@ const loadApi = (search = 'computador') =>
 
 function cartItemClickListener(event) {
   const insertItem = document.querySelector(cartitems);
-  const pricePanel = document.querySelector('.total-price');
+  const pricePanel = document.querySelector(totalprice);
   const panelCalc = Number(pricePanel.innerText - event.target.ariaValueText);
   pricePanel.innerText = parseFloat(panelCalc.toFixed(2));
   insertItem.removeChild(event.target);
 }
-
-let priceSome = 0;
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
@@ -83,8 +83,10 @@ const loadEvents = () => {
   // Botão limpar o carrionho
   const btnClear = document.querySelector('.empty-cart');
   const insertItem = document.querySelector(cartitems);
+  const pricePanel = document.querySelector(totalprice);
   btnClear.addEventListener('click', () => {
     insertItem.innerHTML = '';
+    pricePanel.innerText = '0';
     localStorage.setItem('Save', insertItem.innerHTML);
   });
 };
@@ -92,6 +94,13 @@ const loadEvents = () => {
 const loadCart = () => {
   const insertItem = document.querySelector(cartitems);
   insertItem.innerHTML = localStorage.getItem('Save');
+  const listValues = document.querySelectorAll('.cart__item');
+  let resultValue = 0;
+  listValues.forEach((value) => {
+    resultValue += parseFloat(value.ariaValueText);
+  });
+  const pricePanel = document.querySelector(totalprice);
+  pricePanel.innerText = Number(resultValue.toFixed(2));
 };
 
 window.onload = function onload() {
