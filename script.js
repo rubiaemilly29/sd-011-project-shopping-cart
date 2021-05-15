@@ -28,15 +28,26 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+// Requisito 5
+function payment() {
+  const payout = document.querySelector('.total-price');
+  const listItems = [...document.querySelectorAll('.cart__item')];
+  payout.innerText = 0;
+  const sum = listItems.reduce((acc, value) => acc + Number(value.innerText.split('PRICE: $')[1]), 0);
+  payout.innerText = `Total a pagar: $${sum}`;
+};
+
+// Requisito 3
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+  event.target.remove();
+  payment();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', (event) => cartItemClickListener(event));
   return li;
 }
 
@@ -47,9 +58,9 @@ function listItems() {
   fetch(apiUrl)
   .then((r) => r.json())
   .then((r) => r.results.forEach((item) => {
-      const itemToFind = { sku: item.id, name: item.title, image: item.thumbnail };
-      document.querySelectorAll('.items')[0].appendChild(createProductItemElement(itemToFind));
-    })) .then(() => addProductToCart())
+    const itemToFind = { sku: item.id, name: item.title, image: item.thumbnail };
+    document.querySelectorAll('.items')[0].appendChild(createProductItemElement(itemToFind));
+  })) .then(() => addProductToCart())
   .catch((err)=>console.log(err));
 }
 
@@ -61,7 +72,8 @@ function addProductToCart() {
     const idItem = element.parentElement.firstChild.innerText;
     fetch(`https://api.mercadolibre.com/items/${idItem}`)
     .then((resp) => resp.json())
-    .then((dados)=> cartItems.appendChild(createCartItemElement(dados)));
+    .then((data) => cartItems.appendChild(createCartItemElement(data)))
+    .then(() => payment());
   }));
 }
 
