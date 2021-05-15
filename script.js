@@ -16,7 +16,8 @@ function createCustomElement(element, className, innerText) {
 
 // remove o item do carrinho de compras
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+  const eventTg = event.target;
+  eventTg.remove();
 }
 
 // adiciona o produto ao carrinho de compras
