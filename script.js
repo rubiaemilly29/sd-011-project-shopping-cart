@@ -24,9 +24,18 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
+
+const sumPrices = () => {
+  const totalPrice = document.querySelector('.total-price');
+  const getList = [...document.querySelectorAll('.cart__item')];
+  totalPrice.innerText = 0;
+  const sum = getList.reduce((accumulator, currentValue) =>
+  accumulator + Number(currentValue.innerText.split('PRICE: $')[1]), 0);
+ totalPrice.innerText = sum;
+};
 
 function cartItemClickListener(event) {
   event.target.remove();
@@ -70,14 +79,6 @@ const list = () => {
       section.appendChild(listObject);
     })).then(() => getItem());
 };
-
-const sumPrices = () => {
-  const totalPrice = document.querySelector('.total-price');
-  const getList = [...document.querySelectorAll('.cart__item')];
-  totalPrice.innerText = 0;
-  const sum = getList.reduce((accumulator, currentValue) => accumulator + Number(currentValue.innerText.split('PRICE: $')[1]),0);
-  totalPrice.innerText = sum;
-}
 
 window.onload = function onload() {
   list();
