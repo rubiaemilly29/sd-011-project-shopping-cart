@@ -70,7 +70,7 @@ function getProduct(obj = 'computador') {
           sku: itemLocal[0], 
           name: itemLocal[1], 
           price: itemLocal[2],
-        }
+        };
         createCartItemElement(a);
       }
     });
@@ -78,6 +78,5 @@ function getProduct(obj = 'computador') {
 }
 
 window.onload = function onload() { 
-  getProduct();;
-  
+  getProduct();
 };
