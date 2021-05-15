@@ -1,9 +1,17 @@
-
+const storageCart = localStorage;
 
 window.onload = async function onload() {
   ALL_PRODUCTS();
 
-}
+  // AFTER LOAD, CHECK AND CREATE SAVED ITENS IN LOCALSTORAGE
+  const cart = document.querySelector('.cart__items');
+  Object.entries(storageCart).forEach((item) => {
+    const id = item[0];
+    const title = JSON.parse(item[1]).title;
+    const price = JSON.parse(item[1]).price;
+    cart.appendChild(createCartItemElement({ id, title, price }));
+  });
+};
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -19,62 +27,68 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement(sku, name, image) {
+function createProductItemElement({ id, title, thumbnail }) {
   const section = document.createElement('section');
   section.className = 'item';
 
-  section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
+  section.appendChild(createCustomElement('span', 'item__sku', id));
+  section.appendChild(createCustomElement('span', 'item__title', title));
+  section.appendChild(createProductImageElement(thumbnail));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 function cartItemClickListener(event) {
-  let cart = document.querySelector('.cart__items');
+  const cart = document.querySelector('.cart__items');
   localStorage.removeItem(`${event.target.classList[1]}`);
-  cart.removeChild(event.target)
-  // console.log(event.target.classList[1])
+  cart.removeChild(event.target);
 }
 
-function createCartItemElement(sku, name, salePrice) {
+const TOTAL_IN_CART = sessionStorage.setItem('total', 0);
+function createCartItemElement({ id, title, price }) {
+  // getting total value of session storage
+  let totalValueInCart = Number(sessionStorage.getItem('total'))
+  // create object to stringify and save in storage
+  const itemToSaveInStore = {
+    title,
+    price,
+  };
   const li = document.createElement('li');
-  li.className = `cart__item ${sku}`;
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  localStorage.setItem(`${sku}`, `${name}`)
+  li.className = `cart__item ${id}`;
+  li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
+  localStorage.setItem(`${id}`, JSON.stringify(itemToSaveInStore));
+  sessionStorage.setItem('total', parseFloat(totalValueInCart + price).toFixed(2))
   return li;
 }
 
 async function addItemToCart(event) {
-  let cart = document.querySelector('.cart__items');
-
   const ITEM = event.path[1].children[0].innerText;
+  const cart = document.querySelector('.cart__items');
+
+
   const itemInfo = await fetch(`https://api.mercadolibre.com/items/${ITEM}`);
   const data = await itemInfo.json();
-  cart.appendChild(createCartItemElement(data.id, data.title, data.price));
+  const { id, title, price } = data;
+  cart.appendChild(createCartItemElement({ id, title, price }));
 }
 
 const ALL_PRODUCTS = async () => {
-  const productsContainer = document.querySelector('.items')
-
+  const productsContainer = document.querySelector('.items');
   const QUERY = 'computador';
   const data = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${QUERY}`);
   const allProducts = await data.json();
 
-  //create element HTML for each product
   allProducts.results.forEach((product) => {
     const section = document.createElement('section');
     section.className = 'item';
-    productsContainer.appendChild(
-      createProductItemElement(product.id, product.title, product.thumbnail)
-    );
-  })
+    productsContainer.appendChild(createProductItemElement({ id, title, thumbnail } = product));
+  });
   const addToCartButton = document.querySelectorAll('button.item__add');
-  addToCartButton.forEach((button) => button.addEventListener('click', addItemToCart))
-}
+  addToCartButton.forEach((button) => button.addEventListener('click', addItemToCart));
+};
