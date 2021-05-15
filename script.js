@@ -15,13 +15,34 @@ function createCustomElement(element, className, innerText) {
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
+
+// --------------------------------------------------------
+
+// REQUISITO 5
+// Consulta em https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/String/splitnpn
+
+const SumOfCart = () => {
+  const getPriceClass = document.querySelector('.total-price');
+  const li = document.querySelectorAll('li');
+  let sumOfItens = 0; 
+  li.forEach((item) => {
+    const brokeN = item.innerText.split('$');
+    sumOfItens += Number(brokeN[1]);
+  });
+  getPriceClass.innerText = sumOfItens;
+};
+
 // REQUISITO 3
 
 function cartItemClickListener(event) {
+  console.log(event.target);
+  // const ArrayOfItems = getCart();
+  // const idOfItem = event.target.id;
+  // const newArray = ArrayOfItems.filter((item) => item.sku !== idOfItem);
+  // saveItems(newArray);
   event.target.remove();
+  SumOfCart();
 }
-
-// --------------------------------------------------------
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
@@ -69,6 +90,7 @@ const fetchToCartItem = (event) => {
         };
         saveItems(cartItem);
         document.querySelector(getCartItems).appendChild(createCartItemElement(cartItem));
+        SumOfCart();
   });
 };
 
