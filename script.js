@@ -1,3 +1,5 @@
+const getCartItems = '.cart__items';
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -35,18 +37,14 @@ const SumOfCart = () => {
 // REQUISITO 3
 
 function cartItemClickListener(event) {
-  console.log(event.target);
-  // const ArrayOfItems = getCart();
-  // const idOfItem = event.target.id;
-  // const newArray = ArrayOfItems.filter((item) => item.sku !== idOfItem);
-  // saveItems(newArray);
-  event.target.remove();
+    event.target.remove();
   SumOfCart();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
+  li.id = sku;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
@@ -54,8 +52,6 @@ function createCartItemElement({ sku, name, salePrice }) {
 
 // REQUISITO 4
 // Consulta em https://www.blogson.com.br/carrinho-de-compras-com-localstorage-do-html-5/#:~:text=Gravando%20dados&text=Para%20gravar%20dados%20na%20localStorage,posi%C3%A7%C3%A3o%20do%20produto%20no%20carrinho.
-const getCartItems = '.cart__items';
-// document.querySelector(getCartItems);
 
 const getCart = () => {
   const saveCart = localStorage.getItem('savedCart');
