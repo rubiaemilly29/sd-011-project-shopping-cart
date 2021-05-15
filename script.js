@@ -67,6 +67,7 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+// Função para chamar funções quando a página carregar
 window.onload = function onload() {
   getApiML();
   addCartElement();
