@@ -1,3 +1,4 @@
+// Este projeto contou com o auxíio dos alunos da turma 11 (salas de estudo) - Islene, Alberto, Tales
 const classOl = '.cart__items';
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
