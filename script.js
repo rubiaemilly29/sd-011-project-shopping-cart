@@ -1,5 +1,3 @@
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -17,12 +15,12 @@ function createCustomElement(element, className, innerText) {
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
+  
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
+  
   return section;
 }
 
@@ -41,3 +39,20 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+// Requisito 1
+const apiUrl = "https://api.mercadolibre.com/sites/MLB/search?q=computador";
+
+function listItems() {
+  fetch(apiUrl)
+  .then((r) => r.json())
+  .then((r) => r.results.forEach((item) => {
+      const itemToFind = { sku: item.id, name: item.title, image: item.thumbnail };
+      document.querySelectorAll('.items')[0].appendChild(createProductItemElement(itemToFind));
+    }))
+  .catch((err)=>console.log(err));
+}
+
+window.onload = function onload() { 
+  listItems();
+};
