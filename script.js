@@ -39,18 +39,30 @@ function createProductItemElement({ id, title, thumbnail }) {
   return section;
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
 
 function cartItemClickListener(event) {
+  // HTML Element with total value
+  const total = document.querySelector('.total-price');
+  // selecting  local storage item by className(id)
+  let item = localStorage.getItem(event.target.classList[1])
+  item = JSON.parse(item).price;
+  let sessionStorageTotal = Number(sessionStorage.getItem('total'))
+
   const cart = document.querySelector('.cart__items');
   localStorage.removeItem(`${event.target.classList[1]}`);
+
+  const newTotal = (sessionStorageTotal - item)
+  sessionStorage.setItem('total', newTotal)
+  total.innerHTML = `Preço total: ${newTotal}`
   cart.removeChild(event.target);
 }
 
 const TOTAL_IN_CART = sessionStorage.setItem('total', 0);
 function createCartItemElement({ id, title, price }) {
+  const total = document.querySelector('.total-price');
   // getting total value of session storage
   let totalValueInCart = Number(sessionStorage.getItem('total'))
   // create object to stringify and save in storage
@@ -63,14 +75,14 @@ function createCartItemElement({ id, title, price }) {
   li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
   localStorage.setItem(`${id}`, JSON.stringify(itemToSaveInStore));
-  sessionStorage.setItem('total', parseFloat(totalValueInCart + price).toFixed(2))
+  sessionStorage.setItem('total', parseFloat(totalValueInCart + price).toFixed(2));
+  total.innerHTML = `Preço total: ${parseFloat(totalValueInCart + price).toFixed(2)}`;
   return li;
 }
 
 async function addItemToCart(event) {
   const ITEM = event.path[1].children[0].innerText;
   const cart = document.querySelector('.cart__items');
-
 
   const itemInfo = await fetch(`https://api.mercadolibre.com/items/${ITEM}`);
   const data = await itemInfo.json();
