@@ -1,10 +1,6 @@
 const URL_API = 'https://api.mercadolibre.com/sites/MLB/search';
 const URL_API_ITEM = 'https://api.mercadolibre.com/items/';
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -19,10 +15,14 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+function cartItemClickListener(event) {
+  const parent = document.querySelector('#main__cart__items');
+  return parent.removeChild(event.target);
+}
+
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const ol = document.querySelector('#main__cart__items');
   const li = document.createElement('li');
-
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   ol.appendChild(li);
@@ -31,14 +31,18 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   return li;
 }
 function createButton(itemSku) {
-  const button = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
- 
+  const button = createCustomElement(
+    'button',
+    'item__add',
+    'Adicionar ao carrinho!',
+  );
+
   button.addEventListener('click', () => {
     fetch(`${URL_API_ITEM}${itemSku.innerText}`)
       .then((response) => response.json())
       .then((responseJson) => createCartItemElement(responseJson));
   });
-  
+
   return button;
 }
 
@@ -46,7 +50,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const mainItems = document.querySelector('#main__items');
   const section = document.createElement('section');
   const itemSku = createCustomElement('span', 'item__sku', sku);
-  
+
   mainItems.appendChild(section);
 
   section.className = 'item';
@@ -54,7 +58,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createButton(itemSku));
-  
+
   return section;
 }
 
