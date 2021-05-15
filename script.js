@@ -1,3 +1,6 @@
+const totalPrice = document.querySelector('.total-price');
+console.log(totalPrice);
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -18,10 +21,10 @@ function getSkuFromProductItem(item) {
 
 // 3 - Remova o item do carrinho de compras ao clicar nele
 
-function cartItemClickListener(event, keepItems, count) {
+function cartItemClickListener(event, keepItems, count, price) {
   localStorage.removeItem(`items${count}`);
   keepItems.removeChild(event.target);
-  // event.target.remove();
+  totalPrice.innerHTML = parseFloat(Number(totalPrice.innerHTML) - Number(price));
 }
 
 // 4 - Carregue o carrinho de compras através do LocalStorage ao iniciar a página
@@ -35,8 +38,9 @@ function createCartItemElement({ sku, name, price }) {
   localStorage.setItem(`items${keepItems.childElementCount}`, `${sku}|${name}|${price}`);
   const count = keepItems.childElementCount;
   li.addEventListener('click', (event) => 
-    cartItemClickListener(event, keepItems, count));
+    cartItemClickListener(event, keepItems, count, price));
   ol.appendChild(li);
+  totalPrice.innerHTML = parseFloat(Number(totalPrice.innerHTML) + Number(price));
   return li;
 }
 
