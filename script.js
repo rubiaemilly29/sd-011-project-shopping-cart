@@ -6,7 +6,7 @@ function createProductImageElement(imageSource) {
 }
 
 function cartItemClickListener(event) {
-  event.target.parentNode.removeChild();
+  event.target.parentNode.removeChild(event.target);
 }
 
 function createCustomElement(element, className, innerText) {
