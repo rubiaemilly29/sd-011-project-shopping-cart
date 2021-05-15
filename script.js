@@ -53,6 +53,24 @@ function render(json) {
   });
 }
 
+function listOfItems() {
+  return document.querySelectorAll('.cart__item');
+}
+
+async function emptyCart() {
+  const teste = await listOfItems();
+  try {
+    teste.forEach((item) => item.remove());
+  } catch (error) {
+    alert('erro ao limpar carrinho');
+  }
+}
+
+function checkButtonEmptyCart() {
+  const butttonEmptyCart = document.querySelectorAll('.empty-cart')[0];
+  butttonEmptyCart.addEventListener('click', emptyCart);
+}
+
 async function getItem(term) {
   try {
     const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${term}#json`);
@@ -93,4 +111,5 @@ async function createObjectButtons() {
 
 window.onload = function onload() { 
   createObjectButtons();
+  checkButtonEmptyCart();
 };
