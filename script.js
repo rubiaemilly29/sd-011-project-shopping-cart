@@ -119,8 +119,14 @@ function openShoppingCart() {
   recoverTotalSum().innerHTML = savedTotalSum;
 }
 
+function showBody() {
+  document.querySelector('.loading').style.display = 'none';
+  document.querySelector('body').style.visibility = 'visible';
+}
+
 async function createObjectButtons() {
   await getItemsFromAPI('computador');
+  showBody();
   try {
     const objectButtonsAdd = document.querySelectorAll('.item__add');
     objectButtonsAdd.forEach((button) => button.addEventListener('click', addItemToCart));
@@ -129,6 +135,9 @@ async function createObjectButtons() {
   }
 }
 
+// https://blog.hellojs.org/create-a-very-basic-loading-screen-using-only-javascript-css-3cf099c48b19
+// https://www.geeksforgeeks.org/how-to-show-page-loading-div-until-the-page-has-finished-loading/
+
 window.onload = function onload() { 
   createObjectButtons();
   checkButtonEmptyCart();
@@ -136,5 +145,9 @@ window.onload = function onload() {
   createSumPrice();
 };
 
-// não apaga quando salvo no localstorage. Não foi criado dinamicamente
-// questão do preço total está confusa
+// Não apaga quando salvo no localstorage. Isso acontece porque não foi criado dinamicamente?
+// Questão do preço total está confusa (feito separando valor do cart__items). Qual melhor maneira?
+// Funções 'soma preço' e 'salvar no localstorage' foram colocadas no addItemToCart, emptyCart e cartItemClickListener. A lógia é mesmo essa? 
+// Verificar lógica das funções assíncronas.
+// Coloca esse mói de coisa no window.onload mesmo?
+// Linter reclamando de criar a mesma constante várias vezes. Mas considerando as funções assíncronas, daria certo criá-las uma vez no corpo principal do JS? Para parar de reclamar, fiz uma função que gera a constante.

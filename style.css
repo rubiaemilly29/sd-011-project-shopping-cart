@@ -1,3 +1,7 @@
+body {
+  visibility: hidden;
+}
+
 .top-bar {
   align-items: center;
   display: flex;
@@ -73,4 +77,11 @@
   flex-basis: 1;
   font-size: 16pt;
   text-align: center;
+}
+
+.loading {
+  border: 12px;
+  text-align: center;
+  visibility: visible;
+  /* height: 70px; */
 }
