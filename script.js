@@ -2,6 +2,7 @@ const cartItens = document.querySelector('.cart__items');
 let cartSave = [];
 const priceTotal = document.getElementById('price');
 let totalPrice = 0;
+const cartEMptyButton = document.querySelector('.empty-cart');
 
 function generateCartSavedItem(array) {
   const itemData = [];
@@ -93,11 +94,20 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+cartEMptyButton.addEventListener('click', () => {
+  if (cartItens.childNodes.length > 0) {
+    for (; cartItens.childNodes.length > 0;) {
+      cartItens.removeChild(cartItens.childNodes[0]);
+    }
+    priceTotal.innerText = `${totalPrice = 0}`;
+  }
+});
+
 const productAddToCart = () => {
   document.querySelector('.container').addEventListener(('click'), (event) => {
   const id = event.target;
   if (event.target.className === 'item__add') {
-    fetch(`https://api.mercadolibre.com/items/${id.parentNode.firstChild.innerText}`)
+    fetch(`https://api.mercadolibre.com/items/${getSkuFromProductItem(id.parentNode)}`)
       .then((response) => response.json())
         .then((response) => {
           const sku = response.id;
@@ -118,6 +128,8 @@ const createProduct = () => {
     .then((response) => response.json())
       .then((response) => response.results)
         .then((response) => {
+          const loading = document.querySelector('.loading');
+            document.querySelector('.items').removeChild(loading);
           response.forEach((dado) => {
             const sku = dado.id;
             const name = dado.title;
