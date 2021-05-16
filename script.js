@@ -102,6 +102,7 @@ async function fetchItems() {
 
   addCartButton();
   emptyCart();
+  document.querySelector('.loading').remove();
 }
 
 window.onload = function onload() {
