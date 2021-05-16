@@ -31,24 +31,18 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-// list.removeChild(event.target)
 function cartItemClickListener(event) {
-const cart = document.querySelector('.cart');
- cart.addEventListener('click', () => {
-  const list = document.querySelector('.cart__items');
-  list.removeChild(event.target);
-  console.log(list);
-  });
+  const productOnList = document.querySelector('.cart__items');
+  productOnList.removeChild(event.target);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-
   const productOnList = document.querySelector('.cart__items');
   productOnList.appendChild(li);
+  li.addEventListener('click', cartItemClickListener);
 }
 
 function getList() {
