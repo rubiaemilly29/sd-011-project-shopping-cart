@@ -35,7 +35,7 @@ function getSkuFromProductItem(item) {
 function cartItemClickListener(event) {
 const cart = document.querySelector('.cart');
  cart.addEventListener('click', () => {
-  let list = document.querySelector('.cart__items');
+  const list = document.querySelector('.cart__items');
   list.removeChild(event.target);
   console.log(list);
   });
