@@ -1,11 +1,21 @@
 window.onload = function onload() {
 };
 
-// function sendToStorage() {
+// localStorage.setItem();
+// localStorage.getItem();
+// localStorage.removeItem();
+const container = document.querySelector('.container');
+function startLoading() {
+  console.log('loading');
+  const loading = document.createElement('h3');
+  loading.className = 'loading';
+  loading.innerHTML = 'loading...';
+  container.appendChild(loading);
+}
 
-//   localStorage.setItem('ShoppingCart', ShoppingCart);  
-// }
-// (localStorage.getItem('ShoppingCart'));
+function endLoading() {
+  container.removeChild(container.lastChild);
+}
 
 const emptyButton = document.querySelector('.empty-cart');
 emptyButton.addEventListener('click', () => {
@@ -40,14 +50,14 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-function getItemFromML(event) {
+async function getItemFromML(event) {
   const id = event.target.parentElement.querySelector('.item__sku').innerText;
   const url = `https://api.mercadolibre.com/items/${id}`;
   const param = {
     method: 'GET',
     headers: { Accept: 'application/json' },
   };
-  fetch(url, param)
+  await fetch(url, param)
   .then((response) => response.json())
   .then((json) => {
     const getListClass = document.querySelector('.cart__items');
@@ -70,12 +80,13 @@ function createProductItemElement({ sku, name, image }) {
 }
 
 async function getObjects() {
+  startLoading();
   const url = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
   const param = {
     method: 'GET',
     headers: { Accept: 'application/json' },
   };
-  fetch(url, param)
+  await fetch(url, param)
   .then((response) => response.json())
   .then((json) => json.results)
   .then((json) => { 
@@ -84,9 +95,14 @@ async function getObjects() {
       const item = createProductItemElement({ sku: id, name: title, image: thumbnail });
       itemsSection.appendChild(item);
   });
-});
+})
+.then((() => endLoading()));
 }
 getObjects();
+
+// async function sumAll() {
+//   const totalDiv = document.querySelector('.total-price');
+// }
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
