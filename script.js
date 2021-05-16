@@ -1,4 +1,4 @@
-function totalMath(value, operator = '+') {
+async function totalMath(value, operator = '+') {
   const total = document.querySelector('.total-price');
   if (!value) {
     total.innerText = 'Preço Total: $0';
