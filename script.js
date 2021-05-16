@@ -1,5 +1,9 @@
+function getList() {
+  const listUpdate = document.querySelector('.cart__items');
+  return listUpdate;
+}
 async function saveLocalStorage() {
-  const cartItems = document.querySelector('.cart__items');
+  const cartItems = getList();
   const myList = cartItems.innerHTML;
   localStorage.setItem('app', myList);
 }
@@ -37,7 +41,7 @@ function cartItemClickListener() {
 
 function emptyCart() {
   const emptyButton = document.querySelector('.empty-cart');
-  const cartItems = document.querySelector('.cart__items');
+  const cartItems = getList();
 
   emptyButton.addEventListener('click', () => {
     cartItems.innerHTML = '';
@@ -49,7 +53,7 @@ function emptyCart() {
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
 
-  const cartItems = document.querySelector('.cart__items');
+  const cartItems = getList();
   cartItems.appendChild(li);
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
@@ -98,7 +102,7 @@ async function getApiML() {
 }
 
 async function loadLocalStorage() {
-  const cartItems = document.querySelector('.cart__items');
+  const cartItems = getList();
   const loadedList = localStorage.getItem('app');
   cartItems.innerHTML = loadedList;
 }
