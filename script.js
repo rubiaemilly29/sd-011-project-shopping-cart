@@ -14,8 +14,13 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+function cartItemClickListener(event) {
+  this.remove()
+}
+
 const randerCartItem = (li) => {
   const cartList = document.querySelector('.cart__items');
+  li.addEventListener('click',cartItemClickListener)
   cartList.appendChild(li);
 }
 
@@ -44,10 +49,6 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image, pric
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
-}
-
-function cartItemClickListener(event) {
-  // coloque seu código aqui
 }
 
 // Cria um item da lista do carrinho
