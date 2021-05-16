@@ -50,7 +50,18 @@ async function addCart(sku) {
   const item = await getJSON(`https://api.mercadolibre.com/items/${sku}`);
   const product = { sku: item.id, name: item.title, salePrice: item.price };
   const section = createCartItemElement(product);
+  section.addEventListener('click', () => {
+    localStorage.removeItem(sku);
+    section.remove();
+  });
   element.appendChild(section);
+  localStorage[sku] = sku;
+}
+
+function loadCart() {
+  Object.keys(localStorage).forEach((key) => {
+    addCart(key);
+  });
 }
 
 async function addItems(query) {
@@ -66,4 +77,5 @@ async function addItems(query) {
 
 window.onload = function onload() {
   addItems('computador');
+  loadCart();
 };
