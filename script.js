@@ -14,7 +14,6 @@ const saveCart = () => {
 };
 
 const reloadCart = () => {
-  console.log(JSON.parse(localStorage.cartItensSave));
   const cart = JSON.parse(localStorage.cartItensSave);
   [...cart].forEach((item) => {
     const li = document.createElement('li');
