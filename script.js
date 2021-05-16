@@ -1,3 +1,10 @@
+const carrinho = '.cart__items';
+
+function addLocal() {
+  const cart = document.querySelector(carrinho);
+  localStorage.setItem('cart', cart.innerHTML);
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -7,7 +14,8 @@ function createProductImageElement(imageSource) {
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
-  return event.target.remove();
+  (event.target).remove();
+  addLocal();
 }
 
 function createCustomElement(element, className, innerText) {
@@ -22,9 +30,16 @@ const buscarMl = async (idX) => {
   const resultado = await data.json();
   return resultado;
 };
+
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
+
+function createCart() {
+  const cart = document.querySelector(carrinho);
+  cart.innerHTML = localStorage.getItem('cart');
+  addLocal();
+}  
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
@@ -40,7 +55,8 @@ function createProductItemElement({ sku, name, image }) {
   const btn = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
     btn.addEventListener('click', async () => {
       const data = await buscarMl(getSkuFromProductItem(btn.parentNode));
-      document.querySelector('.cart__items').appendChild(createCartItemElement(data));
+      document.querySelector(carrinho).appendChild(createCartItemElement(data));
+      addLocal();
     });
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
@@ -61,7 +77,7 @@ const createHome = async () => {
     const datas = await dataMl();
     await datas.results.forEach(({ id, title, thumbnail }) => {
       const forAppend = createProductItemElement({ sku: id, name: title, image: thumbnail });
-      ol.appendChild(forAppend);
+      ol.appendChild(forAppend);     
     });
   } catch (error) {
     return error;
@@ -70,4 +86,5 @@ const createHome = async () => {
 
 window.onload = function onload() { 
   createHome();
+  createCart();
 };
