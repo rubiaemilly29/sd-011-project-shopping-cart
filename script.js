@@ -1,3 +1,5 @@
+const thecart = document.querySelector('.cart__items');
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -16,15 +18,20 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function cartItemClickListener(event) {
-  const local = event.target;
-  document.querySelector('.cart__items').removeChild(local);
-  localStorageItems()
+function updateTotalPrice() {
+
 }
 
 function localStorageItems() {
-  const textitem =  document.querySelector('.cart__items').innerHTML;
+  const textitem = thecart.innerHTML;
   localStorage.setItem('cart', textitem);
+}
+
+function cartItemClickListener(event) {
+  const local = event.target;
+  thecart.removeChild(local);
+  localStorageItems();
+  updateTotalPrice();
 }
 
 function createCartItemElement({ sku, name, price }) {
@@ -32,12 +39,19 @@ function createCartItemElement({ sku, name, price }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
   li.addEventListener('click', (event) => cartItemClickListener(event));
-  const cartList = document.querySelector('.cart__items');
+  const cartList = thecart;
   cartList.appendChild(li);
-  localStorageItems()
+  localStorageItems();
   return li;
-  
 }
+
+const removeCartItems = () => {
+  const cartItem = '.cart__items';
+  document.querySelector('.empty-cart').addEventListener('click', () => {
+    document.querySelector(cartItem).innerHTML = '';
+  });
+  localStorage.removeItem('cart');
+};
 
 function createProductItemElement({ sku, name, image, price }) {
   const section = document.createElement('section');
@@ -68,14 +82,12 @@ const productsList = () => {
 };
 
 function loadLocalStorage() {
-  const theLocalStorage = localStorage.getItem('cart')
-  const cartList = document.querySelector('.cart__items');
-  cartList.innerHTML = theLocalStorage;
-    
+  const theLocalStorage = localStorage.getItem('cart');
+  thecart.innerHTML = theLocalStorage;
 }
 
 window.onload = async () => {
   productsList();
   loadLocalStorage();
- 
+  removeCartItems();
 };
