@@ -92,8 +92,10 @@ const fetchProduct = () => {
 const clearCart = () => {
   const btnEmpty = document.querySelector('.empty-cart');
   btnEmpty.addEventListener('click', () => {
-    const getCart = document.querySelector(getOl);
-    getCart.innerHTML = '';
+    const getClearCart = document.querySelector(getOl);
+    const getClearPrice = document.querySelector('.total-price');
+    getClearCart.innerHTML = '';
+    getClearPrice.innerHTML = 0;
     localStorage.clear();
   });
 };
