@@ -14,14 +14,23 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function cartItemClickListener(event) {
-  this.remove()
-}
+function cartItemClickListener() {
+  this.remove();
+};
 
 const randerCartItem = (li) => {
   const cartList = document.querySelector('.cart__items');
-  li.addEventListener('click',cartItemClickListener)
+  li.addEventListener('click',cartItemClickListener);
   cartList.appendChild(li);
+};
+
+// Cria um item da lista do carrinho
+function createCartItemElement({ id: sku, title: name, price }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
+  li.addEventListener('click', cartItemClickListener);
+  return li;
 }
 
 const appendToCart = async (event) => {
@@ -31,10 +40,10 @@ console.log(itemID);
   const itemJson = await itemToAdd.json();
   const liToCart = createCartItemElement(itemJson);
   randerCartItem(liToCart);
-}
+};
 
 // Cria utilizando as funções anteriores um produto com discrição, imagem e o botão para adiciconar ao carrinho. Tudo em uma sessão e retorna ela
-function createProductItemElement({ id: sku, title: name, thumbnail: image, price }) {
+function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
   section.appendChild(createCustomElement('span', 'item__sku', sku));
@@ -51,21 +60,13 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-// Cria um item da lista do carrinho
-function createCartItemElement({ id: sku, title: name, price }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-}
 
 const fetchElement = () => {
-  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=computador`) 
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador') 
     .then((response) => response.json())
     .then((response) => response.results.forEach((element) => createProductItemElement(element)))
     .catch((err) => window.alert(err));
-}
+};
 
 window.onload = function onload() { 
   fetchElement();
