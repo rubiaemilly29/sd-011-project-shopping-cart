@@ -14,6 +14,7 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// Requisito 5: Somar total de todos os itens do carrinho de compras. Essa função será acionada a cada adição ou remoção no carrinho
 function countCartTotalPrice() {
   const totalPrice = document.querySelector('.total-price');
   const allListItems = document.querySelectorAll('li');
@@ -27,11 +28,13 @@ function countCartTotalPrice() {
   totalPrice.innerHTML = sumPrice;
 }
 
+// Requisito 4 (parte 1): Salvar o contúdo do carrinho de compras no localstorage. Obs: As partes precisaram ficar separadas porque são utilizadas em momentos diferentes.
 function saveCartOnStorage() {
   const cartList = document.querySelector(cartItemsOl).innerHTML;
   localStorage.setItem('savedCart', cartList);  
 }
 
+// Requisito 3: Remover o item do carrinho de compras ao clicar nele. A cada remoção o valor total do carrinho precisa ser atualizado.
 function cartItemClickListener(event) {
   event.target.remove();
   countCartTotalPrice();
@@ -55,6 +58,7 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+// Requisito 2: Adicionar o item clicado ao carrinho de compras. A cada item adicionado é preciso atualizar o localstorage e o valor total do carrinho
 async function addItemToCart(event) {
   const cartList = document.querySelector(cartItemsOl);
   const id = await getSkuFromProductItem(event.target.parentElement);
@@ -76,6 +80,7 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
+// Requisito 1: Acessar a API do mercado livre e criar a listagem de produtos na página
 function render() {
   const itemSection = document.querySelector('section .items');
 
@@ -93,6 +98,7 @@ function render() {
     });
 }
 
+// Requisito 4 (parte 2): Carregar o conteúdo do localstorage para a página.
 function loadStorageCartToHTML() {
   const storageCart = localStorage.getItem('savedCart');
   const cartList = document.querySelector(cartItemsOl);
@@ -100,6 +106,7 @@ function loadStorageCartToHTML() {
   cartList.addEventListener('click', cartItemClickListener);
 }
 
+// Requisito 6: Adicionar funcionalidade para limpar o carrinho de compras
 function clearCart() {
   localStorage.clear();
   loadStorageCartToHTML();
