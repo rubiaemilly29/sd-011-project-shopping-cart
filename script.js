@@ -64,18 +64,21 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image, pric
 
 // 1. Crie uma lista de produtos
 
-function chargePage() {
-  fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+const chargePage = async () => {
+  const load = document.querySelector('.loading');
+  const cart = document.querySelector('.cart');
+  await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((response) => response.json())
     .then((jsonBody) => jsonBody.results.forEach((value) => createProductItemElement(value)))
     .then(() => {
+      cart.removeChild(load);
       for (let index = 0; index < localStorage.length; index += 1) {
         const [sku, name, price] = (localStorage.getItem(`items${index}`).split('|'));
         const objItem = { sku, name, price };
         createCartItemElement(objItem);
       }
     });
-}
+};
 
 // 6 - Crie um botão para limpar carrinho de compras
 
