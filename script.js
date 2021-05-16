@@ -1,3 +1,9 @@
+async function saveLocalStorage() {
+  const cartItems = document.querySelector('.cart__items');
+  const myList = cartItems.innerHTML;
+  localStorage.setItem('app', myList);
+}
+
 const price = async () => {
   let sum = 0;
   document.querySelectorAll('li').forEach((element) => {
@@ -20,30 +26,36 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function cartItemClickListener(event) {
-  event.target.remove();
-  price();
+function cartItemClickListener() {
+  const cartItem = document.querySelectorAll('.cart__item');
+  cartItem.forEach((item) => item.addEventListener('click', (event) => {
+    event.target.remove();
+    price();
+    saveLocalStorage();
+  }));
 }
 
 function emptyCart() {
   const emptyButton = document.querySelector('.empty-cart');
   const cartItems = document.querySelector('.cart__items');
 
-  emptyButton.addEventListener('click', () => { 
-    cartItems.innerHTML = ''; 
+  emptyButton.addEventListener('click', () => {
+    cartItems.innerHTML = '';
     price();
-  });  
+    saveLocalStorage();
+  });
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
-  
+
   const cartItems = document.querySelector('.cart__items');
   cartItems.appendChild(li);
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('mouseover', cartItemClickListener);
   price();
+  saveLocalStorage();
   return li;
 }
 
@@ -85,14 +97,18 @@ async function getApiML() {
   document.querySelector('.loading').remove();
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
+async function loadLocalStorage() {
+  const cartItems = document.querySelector('.cart__items');
+  const loadedList = localStorage.getItem('app');
+  cartItems.innerHTML = loadedList;
 }
 
 // Função para chamar funções quando a página carregar
 window.onload = function onload() {
   getApiML();
   addCartElement();
+  loadLocalStorage();
+  cartItemClickListener();
   emptyCart();
   price();
 };
