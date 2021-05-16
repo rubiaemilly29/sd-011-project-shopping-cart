@@ -30,6 +30,7 @@ function getSkuFromProductItem(item) {
 
 function salvar() {
   const listItens = document.getElementsByClassName('cart__item');
+  // const listItens = document.getElementsByTagName('li');
   const vetorItens = [];
   for (let i = 0; i < listItens.length; i += 1) {
     vetorItens.push({ 
@@ -42,6 +43,11 @@ function salvar() {
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
+  // const idPrice = 'price-total';
+  // const showPrice = document.getElementById(idPrice);
+  // let valor = parseFloat(showPrice.innerHTML);
+  // valor -= event.target.value;
+  // showPrice.innerHTML = Math.round(valor * 100) / 100;
   event.target.remove();
   salvar();
 }
@@ -50,7 +56,12 @@ function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.value = parseFloat(salePrice).toFixed(2);
   li.addEventListener('click', cartItemClickListener);
+  // const showPrice = document.getElementById('price-total');
+  // let valor = parseFloat(showPrice.innerHTML);
+  // valor += salePrice;
+  // showPrice.innerHTML = Math.round(valor * 100) / 100;
   return li;
 }
 
@@ -115,4 +126,13 @@ function loadListSaved() {
 window.onload = function onload() { 
   exercise1();
   loadListSaved();
+  // atualizarCompraTotal();
+  const getButtonErase = document.getElementsByClassName('empty-cart')[0];
+  getButtonErase.addEventListener('click', () => {
+    const getListCart = document.getElementsByClassName('cart__item');
+    const tamanho = getListCart.length;
+    for (let i = tamanho - 1; i >= 0; i -= 1) {
+      getListCart[i].remove();
+    }
+  });
 };
