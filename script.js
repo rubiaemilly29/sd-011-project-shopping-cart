@@ -80,4 +80,4 @@ function createCartItemElement({ sku, name, salePrice }) {
 //     });
 // };
 
-// // Source: consulta ao repositório do Matheus Gaspar = https://github.com/tryber/sd-011-project-shopping-cart/pull/101/
+// Source: consulta ao repositório do Matheus Gaspar = https://github.com/tryber/sd-011-project-shopping-cart/pull/101/
