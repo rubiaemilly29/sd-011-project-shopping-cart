@@ -1,3 +1,24 @@
+function totalMath(value, operator = '+') {
+  const total = document.querySelector('.total-price');
+  if (!value) {
+    total.innerText = 'Preço Total: $0';
+    return true;
+  }
+
+  let price = total.innerHTML.match(/\d+/)[0];
+  price = parseFloat(price);
+
+  if (operator === '+') {
+    price += value;
+  } else if (operator === '-') {
+    price -= value;
+  }
+
+  const valueTotal = total.innerText
+  .replace(/[\d.]+/, price.toFixed(2));
+  total.innerText = valueTotal;
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -12,37 +33,38 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ sku, name, image }) {
-  const section = document.createElement('section');
-  section.className = 'item';
-
-  section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
-  return section;
-}
-
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
-
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', () => {
+    if (Object.keys(localStorage).length >= 2) {
+      totalMath(salePrice, '-');
+    } else {
+      totalMath();
+    }
+    localStorage.removeItem(sku);
+    li.remove();
+  });
   return li;
 }
 
+function loading(bool = true) {
+  const loadingElement = document.querySelector('.loading');
+  if (bool) {
+    loadingElement.removeAttribute('hidden');
+  } else {
+    loadingElement.setAttribute('hidden', true);
+  }
+}
+
 function getJSON(url, data = {}) {
+  loading();
   return fetch(url, data)
-  .then((response) => response.json());
+  .then((response) => {
+    loading(false);
+    return response.json();
+  });
 }
 
 async function addCart(sku) {
@@ -50,12 +72,30 @@ async function addCart(sku) {
   const item = await getJSON(`https://api.mercadolibre.com/items/${sku}`);
   const product = { sku: item.id, name: item.title, salePrice: item.price };
   const section = createCartItemElement(product);
-  section.addEventListener('click', () => {
-    localStorage.removeItem(sku);
-    section.remove();
-  });
+
+  totalMath(item.price);
   element.appendChild(section);
-  localStorage[sku] = sku;
+}
+
+function createProductItemElement({ sku, name, image }) {
+  const button = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
+  const section = document.createElement('section');
+  section.className = 'item';
+
+  section.appendChild(createCustomElement('span', 'item__sku', sku));
+  section.appendChild(createCustomElement('span', 'item__title', name));
+  section.appendChild(createProductImageElement(image));
+  button.addEventListener('click', () => {
+    if (!localStorage[sku]) {
+      localStorage[sku] = sku;
+      addCart(sku);
+    } else {
+      alert('Item já foi definido');
+    }
+  });
+  section.appendChild(button);
+
+  return section;
 }
 
 function loadCart() {
@@ -70,7 +110,6 @@ async function addItems(query) {
   results.forEach((result) => {
     const product = { sku: result.id, name: result.title, image: result.thumbnail };
     const section = createProductItemElement(product);
-    section.addEventListener('click', () => addCart(product.sku));
     element.appendChild(section);
   });
 }
@@ -78,4 +117,13 @@ async function addItems(query) {
 window.onload = function onload() {
   addItems('computador');
   loadCart();
+
+  const clearButton = document.querySelector('.empty-cart');
+  clearButton.addEventListener('click', () => {
+    localStorage.clear();
+    document.querySelectorAll('li').forEach((li) => {
+      li.remove();
+    });
+    totalMath();
+  });
 };
