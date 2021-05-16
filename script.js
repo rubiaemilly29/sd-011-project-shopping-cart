@@ -119,14 +119,8 @@ function openShoppingCart() {
   recoverTotalSum().innerHTML = savedTotalSum;
 }
 
-function showBody() {
-  document.querySelector('.loading').style.display = 'none';
-  document.querySelector('body').style.visibility = 'visible';
-}
-
 async function createObjectButtons() {
   await getItemsFromAPI('computador');
-  showBody();
   try {
     const objectButtonsAdd = document.querySelectorAll('.item__add');
     objectButtonsAdd.forEach((button) => button.addEventListener('click', addItemToCart));
@@ -135,15 +129,30 @@ async function createObjectButtons() {
   }
 }
 
+async function showBody() {
+  await createObjectButtons();
+  try {
+    document.querySelector('.loading').remove();
+    document.querySelector('body').style.visibility = 'visible';
+  } catch (error) {
+    alert('não deu certo o showBody');
+  }
+}
+
 // https://blog.hellojs.org/create-a-very-basic-loading-screen-using-only-javascript-css-3cf099c48b19
 // https://www.geeksforgeeks.org/how-to-show-page-loading-div-until-the-page-has-finished-loading/
 
 window.onload = function onload() { 
-  createObjectButtons();
+  showBody();
   checkButtonEmptyCart();
   openShoppingCart();
   createSumPrice();
 };
+
+// $(window).load(function() {
+//   document.querySelector('.loading').style.display = 'none';
+//   document.querySelector('body').style.display = 'inline';
+// }
 
 // Não apaga quando salvo no localstorage. Isso acontece porque não foi criado dinamicamente?
 // Questão do preço total está confusa (feito separando valor do cart__items). Qual melhor maneira?
