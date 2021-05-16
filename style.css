@@ -87,3 +87,7 @@
 .total-price {
   margin-left: 10px;
 }
+
+.loading {
+  display: hide;
+}
