@@ -62,7 +62,6 @@ function createCartItemElement({ sku, name, salePrice }) {
   valor += salePrice;
   showPrice.innerHTML = Math.round(valor * 100) / 100;
   objectCarts[`${sku}`] = salePrice;
-  console.log(showPrice.innerHTML);
   return li;
 }
 
