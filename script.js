@@ -1,5 +1,3 @@
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -41,3 +39,24 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+window.onload = function onload() { // executa função ao abrir página
+  const itemsSection = document.querySelector('section .items'); // referenciando a class items no HTML
+  const queryName = 'computador'; // termo de busca
+
+  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${queryName}`) // requisição a API do ML
+    .then((response) => response.json()) // a resposta retorna e é convertida em formato json
+    .then(({ results }) => { // no json o que eu quero acessar é o objeto results
+      results.forEach((product) => { // para cada item retornado do results, execute:
+        console.log(product); // imprime item no console
+        const component = createProductItemElement({ // renomeia os parâmetros da função de acordo com o requisitado
+          sku: product.id, // sku = id
+          name: product.title, // name = title
+          image: product.thumbnail, // image = thumbnail
+        });
+        itemsSection.appendChild(component); // utiliza as chaves de component para criar filhos na class items no HTML
+      });
+    });
+};
+
+// Source: consulta ao repositório do Matheus Gaspar = https://github.com/tryber/sd-011-project-shopping-cart/pull/101/
