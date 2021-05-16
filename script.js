@@ -1,11 +1,12 @@
+const change = '.cart__items';
 const loclStorage = () => {
-  const list = document.querySelector('.cart__items').innerHTML;
+  const list = document.querySelector(change).innerHTML;
   localStorage.list = list;
 };
 
 const loadLocalStorage = () => {
   if (localStorage.list) {
-    document.querySelector('.cart__items').innerHTML = localStorage.list;
+    document.querySelector(change).innerHTML = localStorage.list;
   }
 };
 
@@ -70,7 +71,7 @@ const addCart = (id) => {
     .then((response) => {
       const { title, price } = response;
       const li = createCartItemElement({ sku: id, name: title, salePrice: price });
-      const cartList = document.querySelector('.cart__items');
+      const cartList = document.querySelector(change);
       cartList.appendChild(li);
     })
     .finally(() => loclStorage());
