@@ -14,7 +14,7 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-// Requisito 5: Somar total de todos os itens do carrinho de compras. Essa função será acionada a cada adição ou remoção no carrinho
+// Requisito 5: Somar total de todos os itens do carrinho de compras. Essa função será acionada a cada adição ou remoção no carrinho.
 function countCartTotalPrice() {
   const totalPrice = document.querySelector('.total-price');
   const allListItems = document.querySelectorAll('li');
@@ -58,7 +58,7 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-// Requisito 2: Adicionar o item clicado ao carrinho de compras. A cada item adicionado o localstorage e o valor total do carrinho são atualizados
+// Requisito 2: Adicionar o item clicado ao carrinho de compras. A cada item adicionado o localstorage e o valor total do carrinho são atualizados.
 async function addItemToCart(event) {
   const cartList = document.querySelector(cartItemsOl);
   const id = await getSkuFromProductItem(event.target.parentElement);
@@ -122,7 +122,7 @@ function loadStorageCartToHTML() {
   cartList.addEventListener('click', cartItemClickListener);
 }
 
-// Requisito 6: Adicionar funcionalidade para limpar o carrinho de compras. Ao limpar o localstorage o conteúdo da página do valor total são atualizados.
+// Requisito 6: Adicionar funcionalidade para limpar o carrinho de compras. Ao limpar o localstorage, o conteúdo da página e do valor total são atualizados.
 function clearCart() {
   localStorage.clear();
   loadStorageCartToHTML();
