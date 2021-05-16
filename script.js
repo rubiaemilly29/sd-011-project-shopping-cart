@@ -46,6 +46,8 @@ function removerAllCart() {
   function removeAllCart2() {
     const button = document.querySelector('.empty-cart');
     button.addEventListener('click', removerAllCart);
+    totalPrice.innerText = '0';
+    localStorage.clear();
   }
 
 function saveCardListen() {
@@ -131,7 +133,7 @@ const loading = () => {
       removeLoading();
     });
     totalPrice(); 
-  };
+  }; 
 
 window.onload = async function onload() {
   loading();
