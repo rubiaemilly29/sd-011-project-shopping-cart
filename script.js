@@ -1,3 +1,16 @@
+// const loading = () => {
+//   const divLoading = document.querySelector('.foot-price');
+//   const elementLoading = document.createElement('div');
+//   elementLoading.className = 'loading';
+//   elementLoading.innerText = 'loading...';
+//   divLoading.appendChild(elementLoading);
+// };
+
+const clearLoading = () => {
+  const elementLoading = document.querySelector('.loading');
+  elementLoading.remove();
+};
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -22,10 +35,6 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
   return section;
-}
-
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
 }
 
 const sumPricesCart = () => {
@@ -62,8 +71,7 @@ const getItemForCart = (itemID) => {
     method: 'GET',
     headers: { Accept: 'application/json' },
   };
-
-  fetch(`https://api.mercadolibre.com/items/${itemID}`)
+  fetch(`https://api.mercadolibre.com/items/${itemID}`, myObjects)
   .then((response) => response.json())
   .then((json) => {
     const item = createCartItemElement({ sku: json.id, name: json.title, salePrice: json.price });
@@ -71,7 +79,7 @@ const getItemForCart = (itemID) => {
     localStorage.setItem(item.innerText, item.innerText);
     sumPricesCart();
   })
-  .catch((error) => 'erro no API');
+  .catch(() => 'erro no API');
 };
 
 const addButtonItem = () => {
@@ -87,14 +95,14 @@ const getItens = () => {
     method: 'GET',
     headers: { Accept: 'application/json' },
   };
-
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador', myObjects)
   .then((response) => response.json())
   .then((json) => json.results.forEach((item) => {
     const i = createProductItemElement({ sku: item.id, name: item.title, image: item.thumbnail });
     document.querySelector('.items').appendChild(i);
   }))
-  .catch((error) => 'erro no API');
+  .catch(() => 'erro no API');
+  setTimeout(() => clearLoading(), 3000);
 };
 
 const recoveryCartLocalStorage = () => {
@@ -112,7 +120,6 @@ const recoveryCartLocalStorage = () => {
 
 const deletAllItensCart = () => {
   const itemsCart = document.querySelectorAll('.cart__item');
-  console.log(itemsCart);
   itemsCart.forEach((item) => {
     localStorage.removeItem(item.innerText);
     item.remove();
