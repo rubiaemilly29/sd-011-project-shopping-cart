@@ -92,9 +92,10 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 const fetchProduct = async (query) => {
   const API_URL = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
   
-  fetch(API_URL, param)
+  await fetch(API_URL, param)
   .then((results) => results.json())
   .then((data) => data.results.forEach((element) => createProductItemElement(element)));
+  document.querySelector('.loading').remove();
 };
 
 const queryProduct = async () => fetchProduct('computador');
