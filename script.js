@@ -14,7 +14,7 @@ function createCustomElement(element, className, innerText) {
 
 const cartItens = '.cart__items';
 
-const sumProducts = () => {
+const sumProducts = async () => {
   const totalPrice = document.querySelector('.total-price');
 
   const productsLis = [...document.querySelectorAll('.cart__item')];
@@ -99,8 +99,10 @@ const fetchProduct = async (query) => {
 
 const queryProduct = async () => fetchProduct('computador');
 
-const clearCart = () => {
+const clearCart = async () => {
   document.getElementsByTagName('ol')[0].innerHTML = '';
+  localStorage.setItem('productsSave', '');
+  localStorage.setItem('productsSum', '');
   sumProducts();
 };
 
