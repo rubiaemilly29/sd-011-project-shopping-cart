@@ -1,9 +1,22 @@
 let totalPrice = 0;
+const round = (num, places) => {
+if (!(`${num}`).includes('e')) {
+return +(`${Math.round(`${num}e+${places}`)}e-${places}`);
+} 
+const arr = (`${num}`).split('e');
+let sig = '';
+if (+arr[1] + places > 0) {
+sig = '+';
+}
+
+return +(`${Math.round(`${+arr[0]}e${sig}${+arr[1] + places}`)}e-${places}`);
+};
+
 const addprice = async () => {
   document.querySelector('.total-price')
-  .innerText = totalPrice;
+  .innerText = round(totalPrice, 2);
   localStorage.removeItem('price');
-  localStorage.setItem('price', totalPrice); 
+  localStorage.setItem('price', round(totalPrice, 2)); 
 };
 
 function getSkuFromProductItem(item) {
@@ -84,6 +97,7 @@ const getMlComputers = (query) => {
   fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${query}`)
   .then((response) => response.json())
   .then((data) => {
+    document.querySelector('.loading').remove();
     data.results.forEach((product) => {
     const productProperties = { sku: product.id, name: product.title, image: product.thumbnail };
     sectionItens.appendChild(createProductItemElement(productProperties));
