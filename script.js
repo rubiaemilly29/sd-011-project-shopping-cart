@@ -16,7 +16,7 @@ function createCustomElement(element, className, innerText) {
 
 function cartItemClickListener() {
   this.remove()
-};
+}
 
 const randerCartItem = (li) => {
   const cartList = document.querySelector('.cart__items');
@@ -32,7 +32,6 @@ function createCartItemElement({ id: sku, title: name, price }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
-
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
