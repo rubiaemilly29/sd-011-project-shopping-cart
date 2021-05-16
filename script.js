@@ -17,19 +17,37 @@ function createCustomElement(element, className, innerText) {
 
 function cartItemClickListener(event) {
   const parent = document.querySelector('#main__cart__items');
+  // localStorage.removeItem(event.target);
   return parent.removeChild(event.target);
 }
 
+function createItemLocalStorage(sku, name, salePrice) {
+  const item = { id: sku, title: name, price: salePrice };
+  localStorage.setItem(sku, JSON.stringify(item));
+}
+
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
+  createItemLocalStorage(sku, name, salePrice);
   const ol = document.querySelector('#main__cart__items');
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   ol.appendChild(li);
   li.addEventListener('click', cartItemClickListener);
-
   return li;
 }
+
+function reloadCartFromLocalStorage() {
+  if (localStorage.length === 0) {
+    return;
+  }
+  for (let index = 0; index < localStorage.length; index += 1) {
+    const itemJson = localStorage.getItem(localStorage.key(index));
+    const item = JSON.parse(itemJson);
+    createCartItemElement(item);
+  }
+}
+
 function createButton(itemSku) {
   const button = createCustomElement(
     'button',
@@ -40,7 +58,9 @@ function createButton(itemSku) {
   button.addEventListener('click', () => {
     fetch(`${URL_API_ITEM}${itemSku.innerText}`)
       .then((response) => response.json())
-      .then((responseJson) => createCartItemElement(responseJson));
+      .then((responseJson) => {
+        createCartItemElement(responseJson);
+      });
   });
 
   return button;
@@ -70,6 +90,6 @@ window.onload = function onload() {
   fetch(`${URL_API}?q=computador`)
     .then((response) => response.json())
     .then((responseJson) => responseJson.results)
-    .then((results) =>
-      results.forEach((result) => createProductItemElement(result)));
+    .then((results) => results.forEach((result) => createProductItemElement(result)));
+  reloadCartFromLocalStorage();
 };
