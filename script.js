@@ -1,5 +1,6 @@
+// 5 - Some o valor total dos itens do carrinho de compras
+
 const totalPrice = document.querySelector('.total-price');
-console.log(totalPrice);
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -24,7 +25,7 @@ function getSkuFromProductItem(item) {
 function cartItemClickListener(event, keepItems, count, price) {
   localStorage.removeItem(`items${count}`);
   keepItems.removeChild(event.target);
-  totalPrice.innerHTML = parseFloat(Number(totalPrice.innerHTML) - Number(price));
+  totalPrice.innerText = parseFloat(Number(totalPrice.innerText) - Number(price)); // 5: Função para subtrair valores
 }
 
 // 4 - Carregue o carrinho de compras através do LocalStorage ao iniciar a página
@@ -34,13 +35,12 @@ function createCartItemElement({ sku, name, price }) {
   const ol = document.querySelector('.cart__items');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
-  const keepItems = document.querySelector('.cart__items');
-  localStorage.setItem(`items${keepItems.childElementCount}`, `${sku}|${name}|${price}`);
-  const count = keepItems.childElementCount;
+  localStorage.setItem(`items${ol.childElementCount}`, `${sku}|${name}|${price}`);
+  const count = ol.childElementCount;
   li.addEventListener('click', (event) => 
-    cartItemClickListener(event, keepItems, count, price));
+    cartItemClickListener(event, ol, count, price));
   ol.appendChild(li);
-  totalPrice.innerHTML = parseFloat(Number(totalPrice.innerHTML) + Number(price));
+  totalPrice.innerText = parseFloat(Number(totalPrice.innerText) + Number(price)); // 5: Função para somar valores
   return li;
 }
 
@@ -77,6 +77,18 @@ function chargePage() {
     });
 }
 
+// 6 - Crie um botão para limpar carrinho de compras
+
+const removeButton = () => {
+  const button = document.querySelector('.empty-cart');
+  button.addEventListener('click', () => {
+    document.querySelector('.cart__items').innerHTML = '';
+    localStorage.clear();
+    totalPrice.innerText = '0';
+    });
+};
+
 window.onload = function onload() {
   chargePage();
+  removeButton();
 };
