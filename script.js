@@ -85,6 +85,14 @@ function loadStorageCartToHTML() {
   cartList.addEventListener('click', cartItemClickListener);
 }
 
+function clearCart() {
+  localStorage.clear();
+  loadStorageCartToHTML();
+}
+
+const clearCartButton = document.querySelector('.empty-cart');
+clearCartButton.addEventListener('click', clearCart);
+
 window.onload = function onload() { 
  render();
  loadStorageCartToHTML();
