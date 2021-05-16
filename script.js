@@ -15,7 +15,7 @@ function createCustomElement(element, className, innerText) {
 }
 
 function cartItemClickListener() {
-  this.remove()
+  this.remove();
 }
 
 const randerCartItem = (li) => {
