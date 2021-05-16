@@ -53,16 +53,24 @@ const fetchAPI = (product = 'computador') => {
   .then((response) => response.json())
     .then((data) => data.results.forEach((item) => (
       createProductItemElement(item))))
-        // .then(() => addToCart())
-          .then(() => {
-            for (let index = 0; index < localStorage.length; index += 1) {
-              const [sku, name, price] = (localStorage.getItem(`item${index}`).split('|'));
-              const obj = { sku, name, price };
-              createCartItemElement(obj);
-            }
-          });
+        .then(() => {
+          for (let index = 0; index < localStorage.length; index += 1) {
+            const [sku, name, price] = (localStorage.getItem(`item${index}`).split('|'));
+            const obj = { sku, name, price };
+            createCartItemElement(obj);
+          }
+        });
 };
+
+function emptyCart() {
+  const clearBtn = document.querySelector('.empty-cart');
+  clearBtn.addEventListener('click', () => {
+    document.querySelector('.cart__items').innerHTML = '';
+    localStorage.clear();
+  });
+}
 
 window.onload = function onload() { 
   fetchAPI();
+  emptyCart();
 };
