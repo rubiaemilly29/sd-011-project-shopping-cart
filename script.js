@@ -15,6 +15,19 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+function setLocalStorage() {
+  setTimeout(() => {
+    const shoppingCartItems = cartItems().innerHTML;
+    localStorage.setItem('cartItems', shoppingCartItems);
+  }, 1000);
+}
+
+function recupereLocalStorage() {
+  if (localStorage.cartItems) {
+    cartItems().innerHTML = localStorage.cartItems;
+  }
+}
+
 function sumItemsCart() {
   setTimeout(() => {
     const listItems = document.querySelectorAll('.cart__item');
@@ -27,30 +40,23 @@ function sumItemsCart() {
   }, 500);
 }
 
-function cartItemClickListener(event) {
+function cartItemRemoveListening(event) {
   cartItems().removeChild(event.target);
   sumItemsCart();
+  setLocalStorage();
+}
+
+function cartItemListening() {
+  const allCartItems = document.querySelectorAll('.cart__item');
+  allCartItems.forEach((item) => item.addEventListener('click', cartItemRemoveListening));
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', cartItemRemoveListening);
   return li;
-}
-
-function setLocalStorage() {
-  setTimeout(() => {
-    const shoppingCartItems = cartItems().innerHTML;
-    localStorage.setItem('cartItems', shoppingCartItems);
-  }, 1000);
-}
-
-function recupereLocalStorage() {
-  if (localStorage.cartItems) {
-    cartItems().innerHTML = localStorage.cartItems;
-  }
 }
 
 function requestItemsFromAPI(event) {
@@ -129,5 +135,6 @@ window.onload = function onload() {
   getMercadoLivreItens();
   recupereLocalStorage();
   clearShoppingCart();
+  cartItemListening();
   sumItemsCart();
 };
