@@ -54,8 +54,8 @@ function createCartItemElement({ id, title, price }) {
   li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
   localStorage.setItem(`${id}`, JSON.stringify(itemToSaveInStore));
-  sessionStorage.setItem('total', parseFloat(totalValueInCart + price).toFixed(0));
-  totalInCart.innerHTML = `${parseFloat(totalValueInCart + price).toFixed(0)}`;
+  sessionStorage.setItem('total', parseFloat(totalValueInCart + price).toFixed(2));
+  totalInCart.innerHTML = `${parseFloat(totalValueInCart + price).toFixed(2)}`;
   return li;
 }
 
@@ -100,6 +100,7 @@ const ALL_PRODUCTS = async () => {
   const QUERY = 'computador';
   const data = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${QUERY}`);
   const allProducts = await data.json();
+  console.log(allProducts)
 
   allProducts.results.forEach((product) => {
     const { id, title, thumbnail } = product;
