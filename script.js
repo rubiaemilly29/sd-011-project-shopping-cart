@@ -50,11 +50,16 @@ function createCartItemElement({ sku, name, salePrice }) {
 }
 
 function loading(bool = true) {
-  const loadingElement = document.querySelector('.loading');
+  // <marquee class="loading">Loading...</marquee>
   if (bool) {
-    loadingElement.removeAttribute('hidden');
+    const element = document.querySelector('.cart');
+    const loadingElement = document.createElement('marquee');
+    loadingElement.innerText = 'Loading...';
+    loadingElement.className = 'loading';
+    element.insertBefore(loadingElement, element.firstChild);
   } else {
-    loadingElement.setAttribute('hidden', true);
+    const loadingElement = document.querySelector('.loading');
+    loadingElement.remove();
   }
 }
 
