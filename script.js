@@ -87,6 +87,8 @@ function exercise2() {
 }
 
 async function exercise1() {
+  const getLoad = document.getElementsByClassName('loading')[0];
+  getLoad.innerHTML = 'loading...';
   const term = 'computador';
   const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${term}`);
   const json = await response.json();
@@ -100,6 +102,7 @@ async function exercise1() {
     const productCreated = createProductItemElement(products);
     productsContainer.appendChild(productCreated);
   });
+  getLoad.remove();
   exercise2();
 }
 
