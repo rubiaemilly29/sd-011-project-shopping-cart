@@ -22,7 +22,7 @@ const sumProducts = async () => {
   const pruductsSum = productsLis.reduce((acc, cur) => (
     acc + Number(cur.innerText.split('PRICE: $')[1])), 0);
 
-  totalPrice.innerText = `O valor total da compra é de ${pruductsSum} reais`;
+  totalPrice.innerText = pruductsSum;
 
   localStorage.setItem('productsSum', totalPrice.innerHTML);
 };
