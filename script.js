@@ -54,8 +54,8 @@ function createCartItemElement({ id, title, price }) {
   li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
   localStorage.setItem(`${id}`, JSON.stringify(itemToSaveInStore));
-  sessionStorage.setItem('total', parseFloat(totalValueInCart + price).toFixed(2));
-  totalInCart.innerHTML = `${parseFloat(totalValueInCart + price).toFixed(2)}`;
+  sessionStorage.setItem('total', parseInt(totalValueInCart + price));
+  totalInCart.innerHTML = `${parseInt(totalValueInCart + price)}`;
   return li;
 }
 
