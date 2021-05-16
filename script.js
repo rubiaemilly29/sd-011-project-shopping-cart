@@ -1,15 +1,15 @@
-window.onload = function onload() { };
-
+window.onload = function onload() { 
+  fetchCart();
+};
 const fetchCart = () => {
- fetch("https://api.mercadolibre.com/sites/MLB/search?q=computador")
+ fetch("https://api.mercadolibre.com/sites/MLB/search?q=$computador")
   .then((response) => {
     response.json().then((data) => {
-      console.log(data)
-    })
-  })
-    
+      console.log(data.results)
+    });
+  }); 
 }
-fetchCart()
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
