@@ -22,7 +22,7 @@ const sumProducts = () => {
   const pruductsSum = productsLis.reduce((acc, cur) => (
     acc + Number(cur.innerText.split('PRICE: $')[1])), 0);
 
-  totalPrice.innerText = pruductsSum;
+  totalPrice.innerText = `O valor total da compra é de ${pruductsSum} reais`;
 
   localStorage.setItem('productsSum', totalPrice.innerHTML);
 };
@@ -69,7 +69,7 @@ function getSkuFromProductItem(item) {
 }
 
 const addProduct = async (event) => {
-  await fetchCart(getSkuFromProductItem(event.target.parentElement));
+  fetchCart(getSkuFromProductItem(event.target.parentElement));
   return sumProducts();
 };
 
@@ -98,6 +98,15 @@ const fetchProduct = async (query) => {
 };
 
 const queryProduct = async () => fetchProduct('computador');
+
+const clearCart = () => {
+  document.getElementsByTagName('ol')[0].innerHTML = '';
+  sumProducts();
+};
+
+const clearButton = document.getElementsByClassName('empty-cart')[0];
+
+clearButton.addEventListener('click', clearCart);
 
 window.onload = function onload() {
   queryProduct();
