@@ -1,18 +1,27 @@
-const olList = document.querySelector('.cart__items');
+function sumTotalPrices(price) {
+  const totalPriceStr = document.querySelector('.total-price');
+  let totalPrice = Number(totalPriceStr.innerText);
+  totalPrice += price;
+  totalPriceStr.innerText = totalPrice;
+}
+
+function saveLocalStorage() {
+  const userCart = document.querySelector('.cart');
+  localStorage.userCart = userCart.innerHTML;
+}
+
+function loadLocalStorage() {
+  const userCart = document.querySelector('.cart');
+  if (localStorage.userCart) {
+    userCart.innerHTML = localStorage.userCart;
+  }
+}
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
   img.src = imageSource;
   return img;
-}
-
-function addToSaveList() {
-  localStorage.savedList = olList.innerHTML;
-}
-
-function loadSavedList() {
-  olList.innerHTML = localStorage.savedList;
 }
 
 function createCustomElement(element, className, innerText) {
@@ -44,8 +53,11 @@ function cartItemClickListener(event) {
   cartArea.addEventListener(event, (e) => {
     const selectedItem = e.target;
     if (selectedItem.className === 'cart__item') {
+      const selecItemIT = selectedItem.innerText;
+      const price = Number(selecItemIT.substr(selecItemIT.indexOf('$') + 1));
+      sumTotalPrices(-(price));
       selectedItem.parentNode.removeChild(selectedItem);
-      addToSaveList();
+      saveLocalStorage();
     }
   });
 }
@@ -55,6 +67,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  sumTotalPrices(salePrice);
   return li;
 }
 
@@ -71,7 +84,7 @@ function addToCart() {
         const cartItems = document.querySelector('.cart__items');
         const objectItem = { sku: json.id, name: json.title, salePrice: json.price };
         cartItems.appendChild(createCartItemElement(objectItem));
-        addToSaveList();
+        saveLocalStorage();
         }))
       .catch((error) => console.log(error));
     }
@@ -97,7 +110,7 @@ function getItemsFromML() {
 }
 
 window.onload = function onload() {
-  loadSavedList();
+  loadLocalStorage();
   getItemsFromML();
   addToCart();
   cartItemClickListener('click');
