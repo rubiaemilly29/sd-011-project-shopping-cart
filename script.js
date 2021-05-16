@@ -12,12 +12,12 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function getSkuFromProductIem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductIem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+  event.target.parentNode.removeChild(event.target);
 }
 
 function createCartItemElement({ sku, name, price }) {
