@@ -1,3 +1,5 @@
+const objectCarts = {};
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -24,10 +26,6 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
 function salvar() {
   const listItens = document.getElementsByClassName('cart__item');
   // const listItens = document.getElementsByTagName('li');
@@ -43,11 +41,12 @@ function salvar() {
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
-  // const idPrice = 'price-total';
-  // const showPrice = document.getElementById(idPrice);
-  // let valor = parseFloat(showPrice.innerHTML);
-  // valor -= event.target.value;
-  // showPrice.innerHTML = Math.round(valor * 100) / 100;
+  const showPrice = document.getElementById('price');
+  let valorTotal = parseFloat(showPrice.innerHTML);
+  const valorItem = parseFloat(objectCarts[`${event.target.id}`]);
+  valorTotal -= valorItem;
+  showPrice.innerHTML = valorTotal;
+  delete objectCarts[`${event.target.id}`];
   event.target.remove();
   salvar();
 }
@@ -56,12 +55,14 @@ function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.value = parseFloat(salePrice).toFixed(2);
+  li.id = sku;
   li.addEventListener('click', cartItemClickListener);
-  // const showPrice = document.getElementById('price-total');
-  // let valor = parseFloat(showPrice.innerHTML);
-  // valor += salePrice;
-  // showPrice.innerHTML = Math.round(valor * 100) / 100;
+  const showPrice = document.getElementById('price');
+  let valor = parseFloat(showPrice.innerHTML);
+  valor += salePrice;
+  showPrice.innerHTML = Math.round(valor * 100) / 100;
+  objectCarts[`${sku}`] = salePrice;
+  console.log(showPrice.innerHTML);
   return li;
 }
 
