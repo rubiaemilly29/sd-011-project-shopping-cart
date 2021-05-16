@@ -1,24 +1,53 @@
 const cartItens = document.querySelector('.cart__items');
 let cartSave = [];
 
+function generateCartSavedItem(array) {
+  const itemData = [];
+  array.split(' | ').forEach((data) => {
+    itemData.push(data.split(': ')[1]);
+  });
+
+  const [itemSku, itemName, itemSalePrice] = itemData;
+  return {
+    itemSku,
+    itemName,
+    itemSalePrice,
+  };
+}
+
 const saveCart = () => {
   const cartItem = [...document.getElementsByClassName('cart__item')];
   cartSave = [];
   cartItem.forEach((item, index) => {
-    cartSave[index] = {
-      tagName: item.outerHTML,
-    };
+    cartSave[index] = generateCartSavedItem((item.innerHTML));
   });
   localStorage.cartItensSave = (JSON.stringify(cartSave));
-  console.log(JSON.stringify(cartSave));
 };
+
+function cartItemClickListener(event) {
+  if (event.target.className === 'cart__item') {
+    const item = event.target;
+    item.parentNode.removeChild(item);
+    saveCart();
+  }
+}
+
+function createCartItemElement({ sku, name, salePrice }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.addEventListener('click', cartItemClickListener);
+  return li;
+}
 
 const reloadCart = () => {
   const cart = JSON.parse(localStorage.cartItensSave);
   [...cart].forEach((item) => {
-    const li = document.createElement('li');
-    cartItens.appendChild(li);
-    li.outerHTML = item.tagName;
+    const sku = item.itemSku;
+    const name = item.itemName;
+    const salePrice = item.itemSalePrice;
+    const productCart = createCartItemElement({ sku, name, salePrice });
+    cartItens.appendChild(productCart);
   });
 };
 
@@ -50,22 +79,6 @@ function createProductItemElement({ sku, name, image }) {
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
-}
-
-function cartItemClickListener(event) {
-  if (event.target.className === 'cart__item') {
-    const item = event.target;
-    item.parentNode.removeChild(item);
-    saveCart();
-  }
-}
-
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
 }
 
 const productAddToCart = () => {
