@@ -1,3 +1,4 @@
+const ol = '.cart__items';
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -32,17 +33,20 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  const productOnList = document.querySelector('.cart__items');
+  const productOnList = document.querySelector(ol);
   productOnList.removeChild(event.target);
+  localStorage.setItem('products', productOnList.innerHTML);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  const productOnList = document.querySelector('.cart__items');
+  const productOnList = document.querySelector(ol);
   productOnList.appendChild(li);
   li.addEventListener('click', cartItemClickListener);
+
+  localStorage.setItem('products', productOnList.innerHTML);
 }
 
 function getList() {
@@ -61,6 +65,9 @@ function insertItens() {
     .then((response) => response.json())
     .then((j) => createCartItemElement({ sku: [j.id], name: [j.title], salePrice: [j.price] }))));
 }
+
 window.onload = function onload() { 
   getList().then(() => insertItens());
+  const productOnList = document.querySelector(ol);
+  productOnList.innerHTML = localStorage.getItem('products');
 };
