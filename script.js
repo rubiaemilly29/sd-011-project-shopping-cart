@@ -35,7 +35,7 @@ function cartItemClickListener(event) {
 
   const newTotal = parseFloat(sessionStorageTotal - item).toFixed(2);
   sessionStorage.setItem('total', newTotal);
-  total.innerHTML = `Preço total: $${newTotal}`;
+  total.innerHTML = `${newTotal}`;
   cartToRemoveChild.removeChild(event.target);
 }
 
@@ -55,7 +55,7 @@ function createCartItemElement({ id, title, price }) {
   li.addEventListener('click', cartItemClickListener);
   localStorage.setItem(`${id}`, JSON.stringify(itemToSaveInStore));
   sessionStorage.setItem('total', parseFloat(totalValueInCart + price).toFixed(2));
-  totalInCart.innerHTML = `Preço total: $${parseFloat(totalValueInCart + price).toFixed(2)}`;
+  totalInCart.innerHTML = `${parseFloat(totalValueInCart + price).toFixed(2)}`;
   return li;
 }
 
