@@ -100,7 +100,6 @@ const ALL_PRODUCTS = async () => {
   const QUERY = 'computador';
   const data = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${QUERY}`);
   const allProducts = await data.json();
-  console.log(allProducts)
 
   allProducts.results.forEach((product) => {
     const { id, title, thumbnail } = product;
