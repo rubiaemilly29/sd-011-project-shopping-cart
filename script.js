@@ -1,5 +1,3 @@
-
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -45,7 +43,7 @@ function createCartItemElement({ sku, name, salePrice }) {
 //
 
 const fetchApi = () => {
-  const url = `https://api.mercadolibre.com/sites/MLB/search?q=$computador`;
+  const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
   const headers = { headers: { Accept: 'application/json' } };
 
   fetch(url, headers)
