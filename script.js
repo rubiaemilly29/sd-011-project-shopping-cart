@@ -78,6 +78,7 @@ const productsList = () => {
         };
         document.querySelector('.items').appendChild(createProductItemElement(object));
       });
+      document.querySelector('.loading').remove();
     });
 };
 
