@@ -18,8 +18,11 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function updateTotalPrice() {
-
+let priceTotal = 0;
+function updateTotalPrice(money) {
+priceTotal += money;
+const allvalue = document.querySelector('.total-price');
+allvalue.innerText = `Valor: ${priceTotal}R$`;
 }
 
 function localStorageItems() {
@@ -42,6 +45,7 @@ function createCartItemElement({ sku, name, price }) {
   const cartList = thecart;
   cartList.appendChild(li);
   localStorageItems();
+  updateTotalPrice(price);
   return li;
 }
 
@@ -49,6 +53,8 @@ const removeCartItems = () => {
   const cartItem = '.cart__items';
   document.querySelector('.empty-cart').addEventListener('click', () => {
     document.querySelector(cartItem).innerHTML = '';
+    priceTotal = 0;
+    updateTotalPrice();
   });
   localStorage.removeItem('cart');
 };
@@ -66,7 +72,7 @@ function createProductItemElement({ sku, name, image, price }) {
 }
 
 const productsList = () => {
-  fetch('https://api.mercadolibre.com/sites/MLB/search?q=pc_gamer')
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=pc')
     .then((r) => r.json())
     .then((data) => {
      data.results.forEach((product) => {
