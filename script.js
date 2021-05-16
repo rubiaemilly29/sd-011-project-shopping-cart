@@ -1,3 +1,5 @@
+const carItems = '.cart__items';
+
 function somaCarts() {
   let totalPrice = 0;
   const allLi = document.querySelectorAll('.cart__item');
@@ -24,14 +26,14 @@ function createCustomElement(element, className, innerText) {
 }
 
 function cartItemClickListener(event) {
-  const myListCartItem = document.querySelector('.cart__items');
+  const myListCartItem = document.querySelector(carItems);
   myListCartItem.removeChild(event.target);
-  localStorage.setItem('carList', document.querySelector('.cart__items').innerHTML);
+  localStorage.setItem('carList', document.querySelector(carItems).innerHTML);
   somaCarts();
 }
 
 function createCartItemElement({ sku, name, price }) {
-  const myCart = document.querySelector('.cart__items');
+  const myCart = document.querySelector(carItems);
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
@@ -74,8 +76,7 @@ function createFeatch() {
 function clearCart() {
   const clearButton = document.querySelector('.empty-cart');
   clearButton.addEventListener('click', () => {
-    document.querySelector('.cart__items').innerHTML = '';
-    
+    document.querySelector(carItems).innerHTML = '';
     localStorage.removeItem('cartList');
     somaCarts();
   });
@@ -83,7 +84,7 @@ function clearCart() {
 
 window.onload = function onload() {
   createFeatch(); // Chamando a Função  
-  document.querySelector('.cart__items').innerHTML = localStorage.getItem('cartList');
+  document.querySelector(carItems).innerHTML = localStorage.getItem('cartList');
   clearCart();
   somaCarts();
  };
