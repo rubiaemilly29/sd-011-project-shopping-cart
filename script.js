@@ -14,10 +14,10 @@ function createCustomElement(element, className, innerText) {
 
 async function cartItemClickListener(event) {
   // coloque seu código aqui
+  event.target.remove();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
-  console.log(sku, name, salePrice);
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
@@ -28,17 +28,14 @@ function createCartItemElement({ sku, name, salePrice }) {
 async function fetchProduct(event) {
   const sku = event.path[1].querySelector('.item__sku').innerText;
   const itemUrl = `https://api.mercadolibre.com/items/${sku}`;
-  try {
-    const result = await fetch(itemUrl);
-    const data = await result.json();
-    const { id, title, price } = data;
-    const product = { sku: id, name: title, salePrice: price };
 
-    const list = document.querySelector('.cart__items');
-    list.appendChild(createCartItemElement(product));
-  } catch (error) {
-    throw new Error('Não foi possível encontrar o produto');
-  }
+  const result = await fetch(itemUrl);
+  const data = await result.json();
+  const { id, title, price } = data;
+  const product = { sku: id, name: title, salePrice: price };
+
+  const list = document.querySelector('.cart__items');
+  list.appendChild(createCartItemElement(product));
 }
 
 function createProductItemElement({ sku, name, image }) {
@@ -55,7 +52,7 @@ function createProductItemElement({ sku, name, image }) {
 
 function mapProducts(products) {
   const allProducts = products.map((results) => {
-    const { id, title, thumbnail, price } = results;
+    const { id, title, thumbnail } = results;
 
     const product = {
       sku: id,
@@ -82,15 +79,13 @@ async function fetchProductsList() {
 window.onload = async function onload() {
   try {
     const allProducts = await fetchProductsList();
-
     allProducts.forEach((product) => {
       const items = document.querySelector('.items');
       items.appendChild(createProductItemElement(product));
     });
+
     const addButton = document.querySelectorAll('.item__add');
-    addButton.forEach((button) => {
-      button.addEventListener('click', fetchProduct);
-    });
+    addButton.forEach((button) => button.addEventListener('click', fetchProduct));
   } catch (error) {
     throw new Error('Falha ao buscar produtos');
   }
