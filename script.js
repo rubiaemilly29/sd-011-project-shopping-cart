@@ -28,13 +28,13 @@ function countCartTotalPrice() {
   totalPrice.innerHTML = sumPrice;
 }
 
-// Requisito 4 (parte 1): Salvar o contúdo do carrinho de compras no localstorage. Obs: As partes precisaram ficar separadas porque são utilizadas em momentos diferentes.
+// Requisito 4 (parte 1): Salvar o conteúdo do carrinho de compras no localstorage. Obs: As partes precisaram ficar separadas porque são utilizadas em momentos diferentes.
 function saveCartOnStorage() {
   const cartList = document.querySelector(cartItemsOl).innerHTML;
   localStorage.setItem('savedCart', cartList);  
 }
 
-// Requisito 3: Remover o item do carrinho de compras ao clicar nele. A cada remoção o valor total do carrinho precisa ser atualizado.
+// Requisito 3: Remover o item do carrinho de compras ao clicar nele. A cada remoção o valor total é atualizado.
 function cartItemClickListener(event) {
   event.target.remove();
   countCartTotalPrice();
@@ -58,7 +58,7 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-// Requisito 2: Adicionar o item clicado ao carrinho de compras. A cada item adicionado é preciso atualizar o localstorage e o valor total do carrinho
+// Requisito 2: Adicionar o item clicado ao carrinho de compras. A cada item adicionado o localstorage e o valor total do carrinho são atualizados
 async function addItemToCart(event) {
   const cartList = document.querySelector(cartItemsOl);
   const id = await getSkuFromProductItem(event.target.parentElement);
@@ -80,9 +80,25 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-// Requisito 1: Acessar a API do mercado livre e criar a listagem de produtos na página
+// Requisito 7: Mostrar mensagem de carregamento durante a requisição à API.
+function showLoadingText() {
+  const container = document.querySelector('.container');
+  const loadingText = document.createElement('p');
+  loadingText.className = 'loading';
+  loadingText.innerText = 'loading...';
+  container.appendChild(loadingText);
+}
+
+function removeLoadingText() {
+  const loadingText = document.querySelector('.loading');
+  loadingText.remove();
+}
+
+// Requisito 1: Acessar a API do mercado livre e criar a listagem de produtos na página.
 function render() {
   const itemSection = document.querySelector('section .items');
+
+  showLoadingText();
 
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((response) => response.json())
@@ -95,7 +111,7 @@ function render() {
         });
         itemSection.appendChild(item);
       });
-    });
+    }).then(removeLoadingText);
 }
 
 // Requisito 4 (parte 2): Carregar o conteúdo do localstorage para a página.
@@ -106,7 +122,7 @@ function loadStorageCartToHTML() {
   cartList.addEventListener('click', cartItemClickListener);
 }
 
-// Requisito 6: Adicionar funcionalidade para limpar o carrinho de compras
+// Requisito 6: Adicionar funcionalidade para limpar o carrinho de compras. Ao limpar o localstorage o conteúdo da página do valor total são atualizados.
 function clearCart() {
   localStorage.clear();
   loadStorageCartToHTML();
