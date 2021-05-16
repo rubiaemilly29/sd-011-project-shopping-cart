@@ -13,7 +13,6 @@ function createCustomElement(element, className, innerText) {
 }
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
-  const mainSection = document.getElementsByClassName('item');
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -32,15 +31,11 @@ const apiFetch = () => {
   fetch(apiUrl, apiHeader).then((response) => response.json).then((json) => {
     console.log(json.results);
     const jsonResults = json.results;
-    const mainSection = document.getElementsByClassName('items');
+    const mainSection = document.querySelector('.items');
     jsonResults.forEach((cpu) => {
      mainSection.appendChild(createProductItemElement(cpu));
     });
   });
-};
-
-window.onload = function onload() {
-  apiFetch();
 };
 
 function getSkuFromProductItem(item) {
@@ -58,3 +53,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+window.onload = function onload() {
+  apiFetch();
+};
