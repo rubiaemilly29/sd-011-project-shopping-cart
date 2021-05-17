@@ -51,7 +51,7 @@ function createCartItemElement({ sku, name, salePrice }) {
 
 async function sumOfPrices(price) {
   const totalPrice = document.querySelector('.total-price');
-  let currentSum = Math.round((parseFloat(totalPrice.innerText) + price) * 100) / 100;
+  const currentSum = Math.round((parseFloat(totalPrice.innerText) + price) * 100) / 100;
   totalPrice.innerText = currentSum;
 }
 
