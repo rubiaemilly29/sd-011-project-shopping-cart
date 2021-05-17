@@ -1,4 +1,4 @@
-window.onload = function onload() { };
+let sectionItems;
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -41,3 +41,24 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=$maquiagem';
+
+function fetchSearch() {
+  const myObject = {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+  };
+
+  fetch(API_URL, myObject)
+    .then((response) => response.json())
+    .then((data) => data.results.forEach(({ id, title, thumbnail }) => {
+      sectionItems.append(createProductItemElement({ sku: id, name: title, image: thumbnail }));
+    }));
+}
+
+window.onload = function onload() {
+  sectionItems = document.querySelector('#items');
+
+  fetchSearch();
+};
