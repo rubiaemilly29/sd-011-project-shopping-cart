@@ -8,9 +8,9 @@ function createProductImageElement(imageSource) {
 }
 
 function createCustomElement(element, className, innerText) {
-  const e = document.createElement(element);
-  e.className = className;
-  e.innerText = innerText;
+  const elementE = document.createElement(element);
+  elementE.className = className;
+  elementE.innerText = innerText;
   return e;
 }
 
