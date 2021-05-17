@@ -1,5 +1,4 @@
-window.onload = function onload() { };
-
+// ############################### Funções Fornecidas #####################
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -41,3 +40,30 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+// ############################### Fim das Funções Fornecidas #####################
+
+async function getProductList(url) {
+  const productList = await fetch(url)
+  .then((result) => result.json())
+  .then((result) => (result.results));
+  return productList;
+}
+
+async function createItemSection() {
+  const itemsSection = document.querySelector('.items');
+  const productsList = (
+    await getProductList('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+  );
+  productsList.forEach((object) => {
+    const productResume = {
+      id: object.id,
+      name: object.title,
+      image: object.thumbnail,
+    };
+    itemsSection.appendChild(createProductItemElement(productResume));
+  });
+}
+
+window.onload = function onload() {
+  createItemSection();
+};
