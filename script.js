@@ -1,22 +1,13 @@
-async function totalMath(value, operator = '+') {
+async function calculeTotal() {
+  return Object.keys(localStorage)
+  .reduce((num, key) => num + parseFloat(localStorage[key]), 0);
+}
+
+async function totalSend() {
+  const result = (await calculeTotal()).toFixed(2);
   const total = document.querySelector('.total-price');
-  if (!value) {
-    total.innerText = 'Preço Total: $0';
-    return true;
-  }
-
-  let price = total.innerHTML.match(/\d+/)[0];
-  price = parseFloat(price);
-
-  if (operator === '+') {
-    price += value;
-  } else if (operator === '-') {
-    price -= value;
-  }
-
-  const valueTotal = total.innerText
-  .replace(/[\d.]+/, price.toFixed(2));
-  total.innerText = valueTotal;
+  const value = total.innerText.replace(/[\d.]+$/, result);
+  total.innerText = value;
 }
 
 function createProductImageElement(imageSource) {
@@ -37,20 +28,15 @@ function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', () => {
-    if (Object.keys(localStorage).length >= 2) {
-      totalMath(salePrice, '-');
-    } else {
-      totalMath();
-    }
+  li.onclick = () => {
     localStorage.removeItem(sku);
     li.remove();
-  });
+    totalSend();
+  };
   return li;
 }
 
 function loading(bool = true) {
-  // <marquee class="loading">Loading...</marquee>
   if (bool) {
     const element = document.querySelector('.cart');
     const loadingElement = document.createElement('marquee');
@@ -78,8 +64,9 @@ async function addCart(sku) {
   const product = { sku: item.id, name: item.title, salePrice: item.price };
   const section = createCartItemElement(product);
 
-  totalMath(item.price);
+  localStorage[sku] = item.price;
   element.appendChild(section);
+  totalSend();
 }
 
 function createProductItemElement({ sku, name, image }) {
@@ -90,45 +77,57 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  button.addEventListener('click', () => {
+  button.onclick = () => {
     if (!localStorage[sku]) {
-      localStorage[sku] = sku;
       addCart(sku);
     } else {
-      alert('Item já foi definido');
+      alert('Esse item já foi adicionado!');
     }
-  });
+  };
   section.appendChild(button);
 
   return section;
 }
 
-function loadCart() {
-  Object.keys(localStorage).forEach((key) => {
-    addCart(key);
+async function loadCart() {
+  const { results } = await getJSON('https://api.mercadolibre.com/sites/MLB/search?q=computador');
+  const element = document.querySelector('.cart__items');
+  Object.keys(localStorage).forEach((id) => {
+    results.forEach((result) => {
+      if (result.id === id) {
+        const product = { sku: result.id, name: result.title, salePrice: result.price };
+        const section = createCartItemElement(product);
+        element.appendChild(section);
+      }
+    });
   });
+  totalSend();
 }
 
 async function addItems(query) {
   const element = document.querySelector('.items');
   const { results } = await getJSON(`https://api.mercadolibre.com/sites/MLB/search?q=${query}`);
   results.forEach((result) => {
-    const product = { sku: result.id, name: result.title, image: result.thumbnail };
+    const product = {
+      sku: result.id,
+      name: result.title,
+      image: result.thumbnail,
+    };
     const section = createProductItemElement(product);
     element.appendChild(section);
   });
 }
 
-window.onload = function onload() {
+window.onload = () => {
   addItems('computador');
   loadCart();
 
   const clearButton = document.querySelector('.empty-cart');
-  clearButton.addEventListener('click', () => {
+  clearButton.onclick = () => {
     localStorage.clear();
     document.querySelectorAll('li').forEach((li) => {
       li.remove();
     });
-    totalMath();
-  });
+    totalSend();
+  };
 };
