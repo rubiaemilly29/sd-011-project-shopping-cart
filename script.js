@@ -1,4 +1,6 @@
-window.onload = function onload() {};
+window.onload = function onload() {
+  fetchItems();
+};
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -51,4 +53,3 @@ function fetchItems() {
     });
   });
 }
-fetchItems();
