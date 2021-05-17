@@ -13,7 +13,7 @@ function sumTotalPrice() {
 
 async function retornPromiseSum() {
   const soma = await sumTotalPrice;
-  document.querySelector(totalPriceString).innerText = soma();
+  document.querySelector(totalPriceString).innerText = await soma();
 }
 
 function saveCart() {
