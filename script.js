@@ -70,8 +70,8 @@ async function newCartItem(sku, cartItemsList, savedCartItems, save = true) {
         salePrice: json.price,
       };
       sumOfPrices(itemAtributtes.salePrice);
-      if (save !== false) savedCartItems.push(itemAtributtes.sku);
-      localStorage.cartItems = JSON.stringify(savedCartItems);
+      // if (save !== false) savedCartItems.push(itemAtributtes.sku);
+      // localStorage.cartItems = JSON.stringify(savedCartItems);
       const cartItem = createCartItemElement(itemAtributtes);
       cartItemsList.appendChild(cartItem);
     });
@@ -87,25 +87,25 @@ async function subtractionOfPrices(cartItem) {
 function removeCartItem(cartItem, cartItemsList, savedCartItems) {
   cartItemsList.removeChild(cartItem);
   const sku = cartItem.innerText.split(' ')[1];
-  savedCartItems.forEach((item, index) => {
+  // savedCartItems.forEach((item, index) => {
   let deletedItems = 0;
     if (item === sku && deletedItems === 0) {
       subtractionOfPrices(cartItem);
-      savedCartItems.splice(index, 1);
+      // savedCartItems.splice(index, 1);
       deletedItems += 1;
     }
   });
-  localStorage.cartItems = JSON.stringify(savedCartItems);
+  // localStorage.cartItems = JSON.stringify(savedCartItems);
 }
 
 function removeAllCartItems(cartItemsList) {
   totalPrice().innerText = 0;
-  localStorage.cartItems = JSON.stringify([]);
+  // localStorage.cartItems = JSON.stringify([]);
   while (cartItemsList.firstChild) cartItemsList.removeChild(cartItemsList.lastChild);
 }
 
 function cartItemClickListener(event, cartItemsList) {
-  const savedCartItems = JSON.parse(localStorage.getItem('cartItems'));
+  // const savedCartItems = JSON.parse(localStorage.getItem('cartItems'));
   if (event.target.className === 'item__add') {
     const sku = event.target.parentNode.firstChild.innerText;
     newCartItem(sku, cartItemsList, savedCartItems);
@@ -118,16 +118,16 @@ function cartItemClickListener(event, cartItemsList) {
   }
 }
 
-function recoverCart(cartItemsList) {
-  if (localStorage.getItem('cartItems') !== null) {
-    const savedCartItems = JSON.parse(localStorage.getItem('cartItems'));
-    savedCartItems.forEach((cartItem) => {
-      newCartItem(cartItem, cartItemsList, savedCartItems, false);
-    });
-  } else {
-    localStorage.setItem('cartItems', JSON.stringify([]));
-  }
-}
+// function recoverCart(cartItemsList) {
+//   if (localStorage.getItem('cartItems') !== null) {
+//     const savedCartItems = JSON.parse(localStorage.getItem('cartItems'));
+//     savedCartItems.forEach((cartItem) => {
+//       newCartItem(cartItem, cartItemsList, savedCartItems, false);
+//     });
+//   } else {
+//     localStorage.setItem('cartItems', JSON.stringify([]));
+//   }
+// }
 
 window.onload = function onload() {
   verifiedFetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
@@ -135,7 +135,7 @@ window.onload = function onload() {
   const cart = document.querySelector('.cart');
   const cartItemsList = document.querySelector('.cart__items');
   const items = [itemsSection, cart];
-  recoverCart(cartItemsList);
+  // recoverCart(cartItemsList);
   items.forEach((item) => {
     item.addEventListener('click', (event) => {
       cartItemClickListener(event, cartItemsList);
