@@ -78,3 +78,14 @@
 .cart__item span {
   display: none;
 }
+
+.loading {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.507);
+  color: white;
+  text-align: center;
+  padding: 50px;
+  font-size: 50px;
+}

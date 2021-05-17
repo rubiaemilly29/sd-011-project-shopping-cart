@@ -1,3 +1,4 @@
+const search = 'computador';
 let returnAPI = [];
 let cart;
 let listCart;
@@ -70,9 +71,12 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-function searchItems(search) {
-  const section = document.querySelector('.items');
-  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${search}`)
+function searchItems() {
+  return new Promise((resolve, reject) => {
+    if (search === undefined) return reject();
+    const api = fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${search}`);
+    resolve(api);
+  })
   .then((response) => response.json())
   .then((object) => { 
     if (object.error) {
@@ -80,11 +84,11 @@ function searchItems(search) {
     }
     object.results.forEach((value) => {
       const item = { sku: value.id, name: value.title, image: value.thumbnail };
-      section.appendChild(createProductItemElement(item));
+      document.querySelector('.items').appendChild(createProductItemElement(item));
     });
   })
   .catch((error) => {
-    window.alert(error);
+      window.alert(error);
   });
 }
 
@@ -138,9 +142,13 @@ const getValues = () => {
   }
 };
 
+const loading = async () => {
+  await searchItems();
+  document.querySelector('.loading').remove();
+};
+
 window.onload = function onload() {
-  const search = 'computador';
-  searchItems(search);
+  loading();
   addItemCart();
   cart = document.querySelector('.cart__items');
   listCart = document.querySelector('.cart__items');
