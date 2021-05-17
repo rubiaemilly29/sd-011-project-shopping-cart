@@ -1,19 +1,18 @@
-window.onload = function onload() {
-  fetchProducts();
-};
-const sectionFather = document.querySelector('#items');
-const fetchProducts = () => {
-  fetch("https://api.mercadolibre.com/sites/MLB/search?q=$computador")
-  .then((response) => response.json().then((data) => {
+window.onload = function onload() {};
+
+
+
+function fetchItems() {
+  fetch("https://api.mercadolibre.com/sites/MLB/search?q=computador")
+  .then((response) => response.json()).then((data) => {
     data.results.forEach((value) => {
-      let id = value.id;
-      let name = value.title;
-      let photo = value.thumbnail;
-      let item = createProductItemElement(id, name, photo)
-      sectionFather.appendChild(item);
-    });
-  }));
+      const item = createProductItemElement(value.id, value.title, value.thumbnail);
+      document.querySelector(".items").appendChild(item)
+    })
+  })
 }
+fetchItems();
+
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
