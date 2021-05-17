@@ -19,6 +19,11 @@ emptyButton.addEventListener('click', () => {
   return localStorage.clear();
 });
 
+// function sumCart() {
+//   const cartItemsText = getCartItems.innerText;
+//   cartItemsText.forEach((item) => item.split([])
+// }
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -35,6 +40,7 @@ function createCustomElement(element, className, innerText) {
 function cartItemClickListener(event) {
   const element = event.target;
   element.parentNode.removeChild(element);
+  localStorage.setItem('Element', getCartItems.innerHTML);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -98,6 +104,7 @@ function loadLocalStorage() {
   const itemsSelection = document.querySelectorAll('li');
   itemsSelection.forEach((li) => li.addEventListener('click', cartItemClickListener));
 }
+
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
