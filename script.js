@@ -51,8 +51,7 @@ function createCartItemElement({ sku, name, salePrice }) {
 
 async function sumOfPrices(price) {
   const totalPrice = document.querySelector('.total-price');
-  let currentSum = parseFloat(totalPrice.innerText) + price;
-  if (currentSum % 1 !== 0) currentSum = currentSum.toFixed(2);
+  let currentSum = Math.round((parseFloat(totalPrice.innerText) + price) * 100) / 100;
   totalPrice.innerText = currentSum;
 }
 
@@ -81,8 +80,7 @@ async function subtractionOfPrices(cartItem) {
   const totalPrice = document.querySelector('.total-price');
   let price = cartItem.innerText.split(' ');
   price = parseFloat(price[price.length - 1].slice(1));
-  let currentSub = (parseFloat(totalPrice.innerText) - price).toFixed(2);
-  if (currentSub % 1 === 0) currentSub = Math.floor(currentSub);
+  const currentSub = Math.round((parseFloat(totalPrice.innerText) - price) * 100) / 100;
   totalPrice.innerText = currentSub;
 }
 
