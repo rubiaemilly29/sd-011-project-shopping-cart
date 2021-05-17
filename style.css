@@ -89,5 +89,10 @@
 }
 
 .loading {
-  display: hide;
+  float: right;
+  width: 100px;
+  transition: 0.4s;
+  position: fixed;
+  top: 15px;
+  right: 10px;
 }
