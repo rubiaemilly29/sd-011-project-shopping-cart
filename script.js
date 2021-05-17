@@ -1,17 +1,7 @@
-const fetchApi = () => {
-  const url = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
-  const headers = { headers: { Accept: 'application/json' } };
-
-  fetch(url, headers)
-    .then((response) => response.json())
-    .then((json) => {
-      const jsonResults = json.results;
-      const html = document.querySelector('.items');
-      jsonResults.forEach(({ id, title, thumbnail, price }) => {
-        html.appendChild(createProductItemElement({ sku: id, name: title, image: thumbnail, salePrice: price}));
-      });
-  });
-};
+function cartItemClickListener(event) {
+  const eventTg = event.target;
+  eventTg.remove();
+}
 
 // adiciona o produto ao carrinho 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -41,6 +31,7 @@ function createCustomElement(element, className, innerText) {
 
 function createProductItemElement({ sku, name, image, salePrice }) {
   const section = document.createElement('section');
+  const html = document.querySelector('.items');
   section.className = 'item';
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
@@ -48,6 +39,7 @@ function createProductItemElement({ sku, name, image, salePrice }) {
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
     .addEventListener('click', () => createCartItemElement({ sku, name, salePrice }));
   
+  html.appendChild(section);
   return section;
 }
 
@@ -55,15 +47,21 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function cartItemClickListener(event) {
-  const eventTg = event.target;
-  eventTg.remove();
-}
-
-
-
 //
 
+const fetchApi = () => {
+  const url = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+  const headers = { headers: { Accept: 'application/json' } };
+
+  fetch(url, headers)
+    .then((response) => response.json())
+    .then((json) => {
+      const jsonResults = json.results;
+      jsonResults.forEach(({ id, title, thumbnail, price }) => {
+        createProductItemElement({ sku: id, name: title, image: thumbnail, salePrice: price });
+      });
+  });
+};
 
 window.onload = function onload() {
   fetchApi();
