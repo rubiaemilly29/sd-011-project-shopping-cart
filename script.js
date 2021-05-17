@@ -12,6 +12,27 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
+
+function cartItemClickListener(event) { // addcontador depois
+  // coloque seu código aqui
+  event.target.remove();
+}
+
+function createCartItemElement({ sku, name, price }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
+  const items = document.querySelector('.cart__items');
+  localStorage.setItem(`item${items.childElementCount}`, `${sku}|${name}|${price}`);
+  // const count = items.childElementCount;
+  items.appendChild(li);
+  li.addEventListener('click', (event) => cartItemClickListener(event));
+  return li;
+}
+
 function createProductItemElement({ id: sku, title: name, thumbnail: image, price }) {
   const items = document.querySelector('.items');
   const section = document.createElement('section');
@@ -28,29 +49,9 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image, pric
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
-function cartItemClickListener(event, contador) {
-  //coloque seu código aqui
-  event.target.remove();
-}
-
-function createCartItemElement({ sku, name, price }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
-  const items = document.querySelector('.cart__items');
-  localStorage.setItem(`item${items.childElementCount}`, `${sku}|${name}|${price}`);
-  const count = items.childElementCount;
-  items.appendChild(li);
-  li.addEventListener('click', (event) => cartItemClickListener(event, items, count));
-  return li;
-}
-
 function createProductList(term = 'computador') {
-  return fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${term}`,  { method: 'GET', 'Content-Type': 'application/json' })
+  return fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${term}`, 
+  { method: 'GET', 'Content-Type': 'application/json' })
   .then((result) => result.json())
   .then((products) =>
   products.results.forEach((selectedProduct) => {
