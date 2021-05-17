@@ -81,6 +81,7 @@ function getProduct(obj = 'computador') {
     .then((produtos) => produtos.results.forEach((produtosSelecionado) => {
       createProductItemElement(produtosSelecionado);
     })).then(() => {
+      document.querySelector('.loading').remove();
       for (let index = 0; index < localStorage.length; index += 1) {
         const itemLocal = localStorage.getItem(`item ${index}`).split('|');
         const a = {
