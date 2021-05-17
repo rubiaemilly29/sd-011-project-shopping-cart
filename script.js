@@ -17,6 +17,7 @@ const emptyButton = document.querySelector('.empty-cart');
 emptyButton.addEventListener('click', () => {
   const ShoppingCart = document.querySelector('.cart__items');
   ShoppingCart.querySelectorAll('*').forEach((node) => node.remove());
+  priceSection.innerHTML = '';
   return localStorage.clear();
 });
 
