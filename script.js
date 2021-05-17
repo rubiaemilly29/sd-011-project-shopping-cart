@@ -4,6 +4,14 @@ function updateVariables() {
   itemsList = document.querySelector('.cart__items');
 }
 
+function sumPrice() {
+  const priceArea = document.querySelector('.total-price');
+  const li = document.querySelectorAll('.cart__item');
+  const list = [...li];
+  const price = list.reduce((total, value) => total + Number(value.innerHTML.split('$')[1]), 0);
+  priceArea.innerHTML = price;
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -32,7 +40,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 
 function getProductItem() {
   const load = document.querySelector('.loading');
-  load.innerHTML = '<div>Loading...</div>';
+  load.innerHTML = 'Loading...';
 
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((r) => r.json())
@@ -56,6 +64,7 @@ function storeList() {
 function cartItemClickListener(event) {
   itemsList.removeChild(event.target);
   storeList();
+  sumPrice();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -74,6 +83,7 @@ function addItemToCart(event) {
       .then((json) => {
         itemsList.appendChild(createCartItemElement(json));
         storeList();
+        sumPrice();
       });
   }
 }
@@ -88,7 +98,9 @@ function getList() {
 
 function deleteStorageList() {
   const li = document.querySelectorAll('.cart__item');
-  li.forEach((item) => item.addEventListener('click', cartItemClickListener));
+  if (itemsList !== '') {
+    li.forEach((item) => item.addEventListener('click', cartItemClickListener));
+  }
 }
 
 function clearCart() {
@@ -96,15 +108,17 @@ function clearCart() {
   button.addEventListener('click', () => {
     itemsList.innerHTML = '';
     storeList();
+    sumPrice();
   });
 }
 
 window.onload = function onload() {
   getProductItem();
-  const items = document.querySelector('.items');
-  items.addEventListener('click', addItemToCart);
   getList();
   deleteStorageList();
   updateVariables();
   clearCart();
+  const items = document.querySelector('.items');
+  items.addEventListener('click', addItemToCart);
+  sumPrice();
 };
