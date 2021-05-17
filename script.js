@@ -19,7 +19,7 @@ const totalPriceString = '.total-price';
 function createElementLoading() {
   const loading = document.createElement('div');
   loading.className = 'loading';
-  loading.innerText = 'Carregando';
+  loading.innerText = 'loading...';
   document.querySelector('.items').appendChild(loading);
 }
 
