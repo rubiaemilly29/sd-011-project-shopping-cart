@@ -1,13 +1,13 @@
-let itemsList;
-function upVariables() {
-  itemsList = document.querySelector('.cart__items');
-}
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
   img.src = imageSource;
   return img;
+}
+
+let itemsList;
+function updateVar() {
+  itemsList = document.querySelector('.cart__items');
 }
 
 function createCustomElement(element, className, innerText) {
@@ -44,14 +44,13 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function storeLoader() {
-  localStorage.storeStorage = itemsList.innerHtml;
+function listStore() {
+  window.localStorage.myList = itemsList.innerHTML;
 }
 
 function cartItemClickListener(event) {
-  // const itemsList = document.querySelector('.cart__items');
   itemsList.removeChild(event.target);
-  storeLoader();
+  listStore();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -68,23 +67,22 @@ function addProductToCart(event) {
     fetch(`https://api.mercadolibre.com/items/${itemID}`)
       .then((response) => response.json())
       .then((json) => {
-        // const itemsList = document.querySelector('.cart__items');
         itemsList.appendChild(createCartItemElement(json));
-        storeLoader();
+        listStore();
       });
   }
 }
 
-function loadList() {
-  const listCart = document.querySelector('.cart__item');
-  const { list } = window.localStorage;
+function getListCart() {
+  const list = document.querySelector('.cart__items');
+  const { myList } = window.localStorage;
 
-  if (!list) listCart.innerHTML = '';
-  else listCart.innerHTML = list;
+  if (!myList) list.innerHTML = '';
+  else list.innerHTML = myList;
 }
 
-function deleteLoadList() {
-  const li = document.querySelector('.cart__item');
+function removeList() {
+  const li = document.querySelectorAll('.cart__item');
   li.forEach((item) => item.addEventListener('click', cartItemClickListener));
 }
 
@@ -92,7 +90,7 @@ window.onload = function onload() {
   productML();
   const items = document.querySelector('.items');
   items.addEventListener('click', addProductToCart);
-  loadList();
-  deleteLoadList();
-  upVariables();
+  getListCart();
+  removeList();
+  updateVar();
 };
