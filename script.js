@@ -87,10 +87,10 @@ function removeList() {
 }
 
 function emptyCart() {
-  const btn = document.querySelector('.empty-cart')
+  const btn = document.querySelector('.empty-cart');
   btn.addEventListener('click', () => {
     itemsList.innerHTML = '';
-    listStore()
+    listStore();
   });
 }
 
