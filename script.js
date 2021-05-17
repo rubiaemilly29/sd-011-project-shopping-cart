@@ -90,6 +90,9 @@ const fetchItens = () => {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
 .then((response) => response.json())
 .then((jsonBody) => {
+  const loading = document.querySelector('.loading');
+  const items = document.querySelector('.items');
+  items.removeChild(loading);
  const productContainer = document.querySelector('.items');
  jsonBody.results.forEach((product) => {
    const productDetails = {
