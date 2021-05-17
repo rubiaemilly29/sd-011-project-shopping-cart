@@ -32,8 +32,27 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+let price = 0;
+function increasePrice(singlePrice) {
+  const priceHTML = document.querySelector('.total-price');
+  price += parseFloat(singlePrice);
+  // https://stackoverflow.com/questions/3612744/remove-insignificant-trailing-zeros-from-a-number tirado desse link para conversão do ultímo zero restante
+  priceHTML.innerText = `${price.toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')}`;
+}
+
+function decreasePrice(singlePrice) {
+  const priceHTML = document.querySelector('.total-price');
+  price -= parseFloat(singlePrice);
+  // https://stackoverflow.com/questions/3612744/remove-insignificant-trailing-zeros-from-a-number tirado desse link para conversão do ultímo zero restante
+  priceHTML.innerText = `${price.toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')}`;
+}
+
 function cartItemClickListener(event) {
   const productOnList = document.querySelector(ol);
+  const text = event.target.innerText;
+  const index = text.indexOf('$');
+  const priceCredit = parseFloat(text.substring(index + 1));
+  decreasePrice(priceCredit);
   productOnList.removeChild(event.target);
   localStorage.setItem('products', productOnList.innerHTML);
 }
@@ -45,6 +64,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   const productOnList = document.querySelector(ol);
   productOnList.appendChild(li);
   li.addEventListener('click', cartItemClickListener);
+  increasePrice(salePrice);
 
   localStorage.setItem('products', productOnList.innerHTML);
 }
