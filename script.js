@@ -1,3 +1,14 @@
+function toggleLoadingElement(isLoading) {
+  if (!isLoading) {
+    document.querySelector('.loading').remove();
+    return;
+  }
+  const loadingText = document.createElement('h2');
+  loadingText.innerHTML = 'Loading...';
+  loadingText.className = 'loading';
+  document.querySelector('body').appendChild(loadingText);
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -78,6 +89,7 @@ async function fetchProductsList() {
   const data = await response.json();
   const products = await data.results;
 
+  toggleLoadingElement(false);
   return mapProducts(products);
 }
 
@@ -101,6 +113,7 @@ function clearShoppingCart() {
 }
 
 window.onload = async function onload() {
+  toggleLoadingElement(true);
   getStorage();
 
   try {
