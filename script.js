@@ -11,11 +11,15 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
+const cart = '.cart__items';
 
 // Requisito 3 - Depois de receber o click, o item do carrinho é retirado
 function cartItemClickListener(event) {
   const clickedItem = event.target;
   clickedItem.remove();
+  // LOCAL STORAGE - atualizar
+  localStorage.setItem('wishList', document.querySelector(cart).innerHTML);
+  // LOCAL STORAGE - atualizar
 }
 
 // Requisito 2 - Cria o item no carrinho com o sku, nome e preço
@@ -24,8 +28,12 @@ function createCartItemElement({ sku, name, price }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
   // Requisito 2 - Criação do item no Carrinho
-  const shoppingCartItens = document.querySelector('.cart__items');
+  const shoppingCartItens = document.querySelector(cart);
   shoppingCartItens.appendChild(li);
+  // Local Storage - atualizar
+  localStorage.setItem('wishList', document.querySelector(cart).innerHTML);
+  // Local Storage - atualizar
+  
   // Requisito 3 - Espera receber o click para tirar da lista do carrinho
   li.addEventListener('click', cartItemClickListener);
   return li;
@@ -40,22 +48,47 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image, pric
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
   // Colocar o AddEventListener para criar o item no carrinho com os atributos pedidos  
-  .addEventListener('click', () => createCartItemElement({ sku, name, price }));
-  return section;
+    .addEventListener('click', () => createCartItemElement({ sku, name, price }));
+    return section;
 }
 
 // function getSkuFromProductItem(item) {
 //  return item.querySelector('span.item__sku').innerText;
 // }
 
-// Requisito 1 - Puxar a lista por API e criar item dentro da section
+function textLoading() {
+  const loading = document.createElement('p');
+  loading.className = 'loading';
+  loading.innerText = 'Loading...';
+  const container = document.querySelector('.container');
+  container.appendChild(loading);
+}
+
+function removetextLoading() {
+  const container = document.querySelector('.container');
+  const loading = document.querySelector('.loading');
+  container.removeChild(loading);
+}
+
+function cleartheShoppingCart() {
+  const cleanTheShoppingCart = document.querySelector('.empty-cart');
+  cleanTheShoppingCart.addEventListener('click', () => {
+    const ShoppingCart = document.querySelector(cart);
+    ShoppingCart.innerHTML = '';
+    localStorage.removeItem('wishList');
+  });
+}
+
+function LoadTheStorage() {
+  document.querySelector(cart).innerHTML = localStorage.getItem('wishList');
+}
+
 const fetchTheAPI = () => (
   new Promise((resolve, reject) => {
     fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador')
       .then((response) => {
         response.json()
         .then((data) => {
-          console.log(data);
           const productList = data.results;
           productList.forEach((product) => {
             const sectionItens = document.querySelector('.items');
@@ -70,21 +103,11 @@ const fetchTheAPI = () => (
 );
 
 window.onload = function onload() { 
-  const loading = document.createElement('p');
-  loading.className = 'loading';
-  loading.innerText = 'Loading...';
-  const container = document.querySelector('.container');
-  container.appendChild(loading);
-  // Requisito 1 - Carregar items
+  textLoading();
+  LoadTheStorage();
   fetchTheAPI()
-  // Requisito 7 - Dentro do onload para garantir que a função será executada após o DOM ser carregado
-  .then(() => {
-    // Deletar item
-    container.removeChild(loading);
-    const cleanTheShoppingCart = document.querySelector('.empty-cart');
-    cleanTheShoppingCart.addEventListener('click', () => {
-    const ShoppingCart = document.querySelector('.cart__items');
-    ShoppingCart.innerHTML = '';
+    .then(() => {
+      removetextLoading();
+      cleartheShoppingCart();
     });
-  });
 };
