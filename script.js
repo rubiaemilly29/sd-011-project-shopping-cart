@@ -63,7 +63,7 @@ function showLoading() {
   document.querySelectorAll('.cart')[0].appendChild(loadingDiv);
 }
 
-function rmvLoading() {
+function removeLoading() {
   const loadingElement = document.querySelectorAll('.loading')[0];
   loadingElement.remove();
 }
@@ -77,7 +77,7 @@ async function createCards() {
         document.querySelectorAll('.items')[0].appendChild(createProductItemElement(itemToFind));
       });
     })
-    .then(() => rmvLoading());
+    .then(() => removeLoading());
 }
 
 function getItemPerId(itemId) {
