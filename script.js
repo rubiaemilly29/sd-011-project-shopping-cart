@@ -87,6 +87,14 @@ function deleteStorageList() {
   li.forEach((item) => item.addEventListener('click', cartItemClickListener));
 }
 
+function clearCart() {
+  const button = document.querySelector('.empty-cart');
+  button.addEventListener('click', () => {
+    itemsList.innerHTML = '';
+    storeList();
+  });
+}
+
 window.onload = function onload() {
   getProductItem();
   const items = document.querySelector('.items');
@@ -94,4 +102,5 @@ window.onload = function onload() {
   getList();
   deleteStorageList();
   updateVariables();
+  clearCart();
 };
