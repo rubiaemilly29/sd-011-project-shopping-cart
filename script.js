@@ -1,17 +1,27 @@
 const cartItems = '.cart__items';
 
-function createProductImageElement(imageSource) {
-  const img = document.createElement('img');
-  img.className = 'item__image';
-  img.src = imageSource;
-  return img;
-}
-
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
   e.innerText = innerText;
   return e;
+}
+
+function loading() {
+  const loadingElement = createCustomElement('div', 'loading', 'loading');
+  document.querySelectorAll('.cart')[0].appendChild(loadingElement);
+}
+
+function loaded() {
+  const loadingElement = document.querySelectorAll('.loading')[0];
+  loadingElement.remove();
+}
+
+function createProductImageElement(imageSource) {
+  const img = document.createElement('img');
+  img.className = 'item__image';
+  img.src = imageSource;
+  return img;
 }
 
 function createProductItemElement({ sku, name, image }) {
@@ -35,6 +45,7 @@ function fetchProducts() {
 }
 
 async function showTheProducts() {
+  loading();
   await fetchProducts()
   .then((products) => {
     products.forEach((item) => {
@@ -42,7 +53,8 @@ async function showTheProducts() {
       document.getElementsByClassName('items')[0]
       .appendChild(createProductItemElement(itemFinded));
     });
-  });
+  })
+  .then(() => loaded());
 }
 
 function getSkuFromProductItem(item) {
