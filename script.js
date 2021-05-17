@@ -15,16 +15,21 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-/* const sumPrices = () => {
+const sumPrices = () => {
   const totalPrice = document.querySelector('.total-price');
-
-}; */
+  const lis = [...document.querySelectorAll('.cart__item')];
+  console.log(lis);
+  totalPrice.innerText = 0;
+  const somaLis = lis.reduce((acc, curr) => acc + Number(curr.innerText.split('PRICE: $')[1]), 0);
+  totalPrice.innerText = somaLis;
+  }; 
 
 /* requisito 3 */
 
 function cartItemClickListener(event, contador) {
   localStorage.removeItem(`item ${contador}`);
   event.target.remove();
+  sumPrices();
 }
 
 function createCartItemElement({ sku, name, price }) {
@@ -34,6 +39,7 @@ function createCartItemElement({ sku, name, price }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
   ol.appendChild(li);
+  sumPrices();
   li.addEventListener('click', (event) => cartItemClickListener(event, contador));
   localStorage.setItem(`item ${contador}`, `${sku}|${name}|${price}`);
 }
