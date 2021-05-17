@@ -42,6 +42,11 @@ const appendToCart = async (event) => {
   // console.log(event.target)
   const itemToAdd = await fetch(`https://api.mercadolibre.com/items/${itemID}`);
   const itemJson = await itemToAdd.json();
+  const { price } = itemJson;
+  const totalPrice = document.querySelector('span.total-price');
+  // console.log(totalPrice);
+  // -------------------------Falta fazer o aredondamento correto e tbm retirar o valor quando o item for excluido. --------------
+  totalPrice.innerText = Number(totalPrice.innerText) + price;
   createCartItemElement(itemJson);
 };
 
