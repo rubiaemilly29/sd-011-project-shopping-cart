@@ -3,7 +3,7 @@ const itemsSection = () => document.querySelector('.items');
 const fetchParameter = () => ({
     method: 'GET',
     'Content-Type': 'application/json',
-  });
+});
 
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
@@ -64,11 +64,11 @@ function newCartItem(sku, cartItemsList, savedCartItems) {
         name: data.title,
         salePrice: data.price,
       };
-      sumOfPrices(itemAtributtes.salePrice);
-      savedCartItems.push(itemAtributtes.sku);
-      localStorage.cartItems = JSON.stringify(savedCartItems);
       const cartItem = createCartItemElement(itemAtributtes);
       cartItemsList.appendChild(cartItem);
+      savedCartItems.push(itemAtributtes.sku);
+      localStorage.cartItems = JSON.stringify(savedCartItems);
+      sumOfPrices(itemAtributtes.salePrice);
     });
 }
 
