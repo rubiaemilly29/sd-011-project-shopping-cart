@@ -1,27 +1,15 @@
-window.onload = function onload() { };
-
-// requisito 1 - Você deve criar uma listagem de produtos que devem ser consultados através da API do Mercado Livre.
-function getProductList(query) {
-  // const param = { method: 'GET' , headers: { Accept: 'application/json' } };
-  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${query}`)
-    .then((response) => response.json())
-    .then((itemsFound) => console.log(itemsFound.results));
+function createCustomElement(element, className, innerText) {
+  const e = document.createElement(element);
+  e.className = className;
+  e.innerText = innerText;
+  return e;
 }
-// A busca deve ser obrigatóriamente o termo "computador".
-getProductList('computador');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
   img.src = imageSource;
   return img;
-}
-
-function createCustomElement(element, className, innerText) {
-  const e = document.createElement(element);
-  e.className = className;
-  e.innerText = innerText;
-  return e;
 }
 
 function createProductItemElement({ sku, name, image }) {
@@ -51,3 +39,30 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+// requisito 1 - Você deve criar uma listagem de produtos que devem ser consultados através da API do Mercado Livre.
+// const param = { method: 'GET' , headers: { Accept: 'application/json' } };
+function getProductList(query) {
+  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${query}`)
+    .then((response) => response.json())
+    .then((data) => {
+      data.results.forEach((item) => {
+        console.log(item);
+        const itemElement = createProductItemElement({ 
+          sku: item.id,
+          name: item.title,
+          image: item.thumbnail });
+        document.querySelector('.items').appendChild(itemElement);
+      });
+    })
+    .then(() => {
+      const buttons = document.querySelectorAll('.item');
+      buttons.addEventListener('click', () => {
+        console.log('oi');
+      });
+    });
+}
+
+window.onload = function onload() {
+  getProductList('computador');
+};
