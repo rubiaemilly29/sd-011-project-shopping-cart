@@ -8,29 +8,29 @@ function createProductImageElement(imageSource) {
 
 // Cria uma tag conforme passada no primeiro paraemtro com uma classe no segundo e seu conteudo no terceiro
 function createCustomElement(element, className, innerText) {
-  const e = document.createElement(element);
-  e.className = className;
-  e.innerText = innerText;
-  return e;
+  const newTag = document.createElement(element);
+  newTag.className = className;
+  newTag.innerText = innerText;
+  return newTag;
 }
 
+// ex 3 - Remove item do carrinho ao clicar
+const olclass = 'ol.cart__items';
 function cartItemClickListener() {
   this.remove();
+  const cartList = document.querySelector(olclass);
+  localStorage.setItem('olCart', cartList.innerHTML);
 }
 
-const randerCartItem = (li) => {
-  const cartList = document.querySelector('.cart__items');
-  li.addEventListener('click', cartItemClickListener);
-  cartList.appendChild(li);
-};
-
-// Cria um item da lista do carrinho
+// Cria um item da lista do carrinho e configura
 function createCartItemElement({ id: sku, title: name, price }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
-  return li;
+  const cartListt = document.querySelector(olclass);
+  cartListt.appendChild(li);
+  localStorage.setItem('olCart', cartListt.innerHTML);
 }
 
 function getSkuFromProductItem(item) {
@@ -39,11 +39,10 @@ function getSkuFromProductItem(item) {
 
 const appendToCart = async (event) => {
   const itemID = getSkuFromProductItem(event.target.parentElement);
-console.log(itemID);
+  // console.log(event.target)
   const itemToAdd = await fetch(`https://api.mercadolibre.com/items/${itemID}`);
   const itemJson = await itemToAdd.json();
-  const liToCart = createCartItemElement(itemJson);
-  randerCartItem(liToCart);
+  createCartItemElement(itemJson);
 };
 
 // Cria utilizando as funções anteriores um produto com discrição, imagem e o botão para adiciconar ao carrinho. Tudo em uma sessão e retorna ela
@@ -54,7 +53,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
-    .addEventListener('click', appendToCart);
+  .addEventListener('click', appendToCart);
 
   const sectionItems = document.querySelector('.items');
   sectionItems.appendChild(section);
@@ -67,6 +66,16 @@ const fetchElement = () => {
     .catch((err) => window.alert(err));
 };
 
+// Para chegar nessa solução fiz a leitura da PR do aluno Bruno Duarte t11 e revisitei o projeto ToDo list. 
+const loadLocalStorage = () => {
+  const storage = localStorage.getItem('olCart');
+  const olList = document.querySelector(olclass);
+  olList.innerHTML = storage;
+  const liItem = document.querySelectorAll('li.cart__item');
+  liItem.forEach((li) => li.addEventListener('click', cartItemClickListener));
+};
+
 window.onload = function onload() { 
   fetchElement();
+  loadLocalStorage();
 };
