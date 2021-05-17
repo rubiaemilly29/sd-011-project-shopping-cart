@@ -15,10 +15,22 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+function removeAllChildNodes() {
+  const button = document.querySelector('.empty-cart');
+  const ol = document.querySelector('.cart__items');
+  const totalPrice = document.querySelector('.total-price');
+  button.addEventListener('click', () => {
+    ol.innerHTML = '';
+    localStorage.clear();
+    totalPrice.innerText = '0';
+  });
+}
+
+/* requisito 5 */
+
 const sumPrices = () => {
   const totalPrice = document.querySelector('.total-price');
   const lis = [...document.querySelectorAll('.cart__item')];
-  console.log(lis);
   totalPrice.innerText = 0;
   const somaLis = lis.reduce((acc, curr) => acc + Number(curr.innerText.split('PRICE: $')[1]), 0);
   totalPrice.innerText = somaLis;
@@ -84,4 +96,5 @@ function getProduct(obj = 'computador') {
 
 window.onload = function onload() { 
   getProduct();
+  removeAllChildNodes();
 };
