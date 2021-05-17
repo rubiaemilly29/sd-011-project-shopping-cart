@@ -2,6 +2,15 @@ const cartItems = '.cart__items';
 const totalPriceString = '.total-price';
 let totalPrice = 0;
 
+function sumTotalPrice() {
+  totalPrice = 0;
+  document.querySelectorAll('.cart__item').forEach((value, index) => { 
+    const number = parseInt(value.innerText.split('|')[2].replace(/[^0-9]/g, ''), 10);
+    totalPrice += number;
+  });
+  return `Total: R$ ${totalPrice}`;
+}
+
 function saveCart() {
   localStorage.savedCart = document.querySelector(cartItems).innerHTML;
 }
@@ -82,15 +91,6 @@ function fetchItemToCart(id) {
     saveCart();
     document.querySelector(totalPriceString).innerText = sumTotalPrice();
   });
-}
-
-function sumTotalPrice() {
-  totalPrice = 0;
-  document.querySelectorAll('.cart__item').forEach((value, index) => { 
-    const number = parseInt(value.innerText.split('|')[2].replace(/[^0-9]/g, ''));
-    totalPrice += number;
-  });
-  return `Total: R$ ${totalPrice}`;
 }
 
 window.onload = function onload() {
