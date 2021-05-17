@@ -1,5 +1,6 @@
-const getListClass = document.querySelector('.cart__items');
+const getCartItems = document.querySelector('.cart__items');
 const container = document.querySelector('.container');
+
 function startLoading() {
   const loading = document.createElement('h3');
   loading.className = 'loading';
@@ -14,7 +15,7 @@ function endLoading() {
 const emptyButton = document.querySelector('.empty-cart');
 emptyButton.addEventListener('click', () => {
   const ShoppingCart = document.querySelector('.cart__items');
-  ShoppingCart.querySelectorAll('*').forEach((n) => n.remove());
+  ShoppingCart.querySelectorAll('*').forEach((node) => node.remove());
   return localStorage.clear();
 });
 
@@ -57,8 +58,8 @@ async function getItemFromML(event) {
     const newElement = createCartItemElement({ sku: json.id, 
       name: json.title,
       salePrice: json.price });
-      getListClass.appendChild(newElement);
-      localStorage.setItem('Element', getListClass.innerHTML);
+      getCartItems.appendChild(newElement);
+      localStorage.setItem('Element', getCartItems.innerHTML);
     });
 }
 
@@ -73,9 +74,9 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-async function getObjects() {
+async function retrieveQuerryFromML(querry) {
   startLoading();
-  const url = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+  const url = `https://api.mercadolibre.com/sites/MLB/search?q=${querry}`;
   const param = {
     method: 'GET',
     headers: { Accept: 'application/json' },
@@ -93,7 +94,7 @@ async function getObjects() {
 .then((() => endLoading()));
 }
 function loadLocalStorage() {
-  getListClass.innerHTML = localStorage.getItem('Element');
+  getCartItems.innerHTML = localStorage.getItem('Element');
   const itemsSelection = document.querySelectorAll('li');
   itemsSelection.forEach((li) => li.addEventListener('click', cartItemClickListener));
 }
@@ -101,6 +102,6 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 window.onload = function onload() {
-  getObjects();
+  retrieveQuerryFromML('computador');
   loadLocalStorage();
 };
