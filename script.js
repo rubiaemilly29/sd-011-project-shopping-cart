@@ -86,6 +86,14 @@ function removeList() {
   li.forEach((item) => item.addEventListener('click', cartItemClickListener));
 }
 
+function emptyCart() {
+  const btn = document.querySelector('.empty-cart')
+  btn.addEventListener('click', () => {
+    itemsList.innerHTML = '';
+    listStore()
+  });
+}
+
 window.onload = function onload() {
   productML();
   const items = document.querySelector('.items');
@@ -93,4 +101,5 @@ window.onload = function onload() {
   getListCart();
   removeList();
   updateVar();
+  emptyCart();
 };
