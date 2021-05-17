@@ -59,16 +59,16 @@ function fetchItemToCart(id) {
     console.log(data);
     const liCart = createCartItemElement(data.id, data.title, data.price);
     document.querySelector('.cart__items').appendChild(liCart);
-  })
+  });
 }
 
 window.onload = function onload() {
   fetchItems();
-  document.querySelector('.items').addEventListener('click',(event) => {
+  document.querySelector('.items').addEventListener('click', (event) => {
     if (event.target.className === 'item__add') {
       const itemEvent = event.target.parentNode.firstChild.innerText;
       console.log(itemEvent);
-      fetchItemToCart(itemEvent)
+      fetchItemToCart(itemEvent);
     }
   });
 };
