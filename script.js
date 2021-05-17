@@ -26,9 +26,9 @@ function updateTotalPrice() {
     const valor = lista[index].innerHTML.split('$')[1];
     sum += Number(valor);
   }
-  let total = sum.toFixed(2);
+  const total = sum.toFixed(2);
   const totalPrice = document.querySelector('.total-price');
-  totalPrice.innerHTML = `Valor: ${total}R$`
+  totalPrice.innerHTML = `Valor: ${total}R$`;
 }
 
 function localStorageItems() {
@@ -51,7 +51,7 @@ function createCartItemElement({ sku, name, price }) {
   const cartList = thecart;
   cartList.appendChild(li);
   localStorageItems();
-  updateTotalPrice(price);
+  updateTotalPrice();
   return li;
 }
 
