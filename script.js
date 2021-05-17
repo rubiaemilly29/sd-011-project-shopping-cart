@@ -1,4 +1,4 @@
-const cartItems = '.cart__items'
+const cartItems = '.cart__items';
 // const cartItems = document.getElementsByClassName('cart__items');
 
 function saveCart() {
@@ -68,7 +68,7 @@ function fetchItemToCart(id) {
   .then((response) => response.json())
   .then((data) => {
     const liCart = createCartItemElement(data.id, data.title, data.price);
-    document.querySelector('.cart__items').appendChild(liCart);
+    document.querySelector(cartItems).appendChild(liCart);
     saveCart();
   });
 }
