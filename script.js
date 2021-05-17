@@ -1,7 +1,4 @@
 const getListClass = document.querySelector('.cart__items');
-// localStorage.setItem();
-// localStorage.getItem();
-// localStorage.removeItem();
 const container = document.querySelector('.container');
 function startLoading() {
   const loading = document.createElement('h3');
