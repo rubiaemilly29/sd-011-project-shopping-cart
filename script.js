@@ -57,9 +57,9 @@ async function showTheProducts() {
   .then(() => loaded());
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 const totalPrice = '.total-price';
 function cartItemClickListener(value) {
@@ -74,15 +74,15 @@ function cartItemClickListener(value) {
   localStorage.totalPrice = document.querySelectorAll(totalPrice)[0].innerText;
 }
 
-async function createCards() {
-  await fetchProducts()
-    .then((results) => {
-      results.forEach((item) => {
-        const itemToFind = { sku: item.id, name: item.title, image: item.thumbnail };
-        document.querySelectorAll('.items')[0].appendChild(createProductItemElement(itemToFind));
-      });
-    });
-}
+// async function createCards() {
+//   await fetchProducts()
+//     .then((results) => {
+//       results.forEach((item) => {
+//         const itemToFind = { sku: item.id, name: item.title, image: item.thumbnail };
+//         document.querySelectorAll('.items')[0].appendChild(createProductItemElement(itemToFind));
+//       });
+//     });
+// }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
