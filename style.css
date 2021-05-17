@@ -1,3 +1,6 @@
+*{
+  background-color: rgb(231, 235, 15);
+}
 .top-bar {
   align-items: center;
   display: flex;
