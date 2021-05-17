@@ -49,7 +49,7 @@ const getApiList = () => {
   const param = { method: 'GET', headers: { Accept: 'application/json' } };
     fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador', param)
       .then((response) => response.json())
-      .then((json) => (json.results).forEach(({ id, title, thumbnail }) => {
+      .then((json) => json.results.forEach(({ id, title, thumbnail }) => {
         const productContainer = document.querySelector('.items');
         const productDetails = createProductItemElement({
         sku: id,
