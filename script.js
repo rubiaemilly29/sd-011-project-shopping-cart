@@ -37,11 +37,9 @@ function createProductItemElement({ sku, name, image }) {
 }
 
 function fetchProducts() {
-  return new Promise((resolve) => {
-    fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+  return fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((response) => response.json())
-    .then((json) => resolve(json.results));
-  });
+    .then((json) => json.results);
 }
 
 async function showTheProducts() {
