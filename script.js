@@ -1,6 +1,6 @@
 const cartItems = '.cart__items';
 const totalPriceString = '.total-price';
-let totalPrice = 0;
+// let totalPrice = 0;
 
 //  function sumTotalPrice() {
 //   totalPrice = 0;
@@ -17,7 +17,7 @@ let totalPrice = 0;
 // }
 
 function createElementLoading() {
-  let loading = document.createElement('div');
+  const loading = document.createElement('div');
   loading.className = 'loading';
   loading.innerText = 'Carregando';
   document.querySelector('.items').appendChild(loading);
