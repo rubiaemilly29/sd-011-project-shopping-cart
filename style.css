@@ -1,7 +1,25 @@
 body {
-  background-color: purple;
-
+  background-color: navy;
+  text-align: justify;
+  color: gold;
+  font-family: monospace;
+  text-emphasis: bold;
+  text-shadow: 1px 1px firebrick;
 }
+
+.empty-cart {
+  background-color: black;
+  justify-self: center;
+}
+
+.empty-cart:hover {
+  background-color: gold;
+}
+
+.price-section {
+  color: white;
+}
+
 .top-bar {
   align-items: center;
   display: flex;
@@ -32,11 +50,12 @@ body {
   flex-basis: 70%;
   flex-wrap: wrap;
   justify-content: center;
+  background-color: black;
 }
 
 .item {
-  border: 2px solid blue;
-  border-radius: 5px;
+  border: 2px solid gold;
+  border-radius: 0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -60,11 +79,15 @@ body {
 }
 
 .item .item__add {
-  background-color: green;
+  background-color: firebrick;
   border: 0;
   cursor: pointer;
   margin: 0;
   padding: 5px;
+}
+
+.item .item__add:hover {
+  background-color: black;
 }
 
 .cart {
