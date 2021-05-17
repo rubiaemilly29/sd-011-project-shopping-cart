@@ -49,10 +49,11 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+const totalPrice = () => document.querySelector('.total-price');
+
 async function sumOfPrices(price) {
-  const totalPrice = document.querySelector('.total-price');
-  const currentSum = Math.round((parseFloat(totalPrice.innerText) + price) * 100) / 100;
-  totalPrice.innerText = currentSum;
+  const currentSum = Math.round((parseFloat(totalPrice().innerText) + price) * 100) / 100;
+  totalPrice().innerText = currentSum;
 }
 
 async function newCartItem(sku, cartItemsList, savedCartItems, save = true) {
@@ -77,11 +78,10 @@ async function newCartItem(sku, cartItemsList, savedCartItems, save = true) {
 }
 
 async function subtractionOfPrices(cartItem) {
-  const totalPrice = document.querySelector('.total-price');
   let price = cartItem.innerText.split(' ');
   price = parseFloat(price[price.length - 1].slice(1));
-  const currentSub = Math.round((parseFloat(totalPrice.innerText) - price) * 100) / 100;
-  totalPrice.innerText = currentSub;
+  const currentSub = Math.round((parseFloat(totalPrice().innerText) - price) * 100) / 100;
+  totalPrice().innerText = currentSub;
 }
 
 function removeCartItem(cartItem, cartItemsList, savedCartItems) {
@@ -98,6 +98,12 @@ function removeCartItem(cartItem, cartItemsList, savedCartItems) {
   localStorage.cartItems = JSON.stringify(savedCartItems);
 }
 
+function removeAllCartItems(cartItemsList) {
+  totalPrice().innerText = 0;
+  localStorage.cartItems = JSON.stringify([]);
+  while (cartItemsList.firstChild) cartItemsList.removeChild(cartItemsList.lastChild);
+}
+
 function cartItemClickListener(event, cartItemsList) {
   const savedCartItems = JSON.parse(localStorage.getItem('cartItems'));
   if (event.target.className === 'item__add') {
@@ -106,6 +112,9 @@ function cartItemClickListener(event, cartItemsList) {
   }
   if (event.target.className === 'cart__item') {
     removeCartItem(event.target, cartItemsList, savedCartItems);
+  }
+  if (event.target.className === 'empty-cart') {
+    removeAllCartItems(cartItemsList);
   }
 }
 
@@ -123,8 +132,9 @@ function recoverCart(cartItemsList) {
 window.onload = function onload() {
   verifiedFetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const itemsSection = document.querySelector('.items');
+  const cart = document.querySelector('.cart');
   const cartItemsList = document.querySelector('.cart__items');
-  const items = [itemsSection, cartItemsList];
+  const items = [itemsSection, cart];
   recoverCart(cartItemsList);
   items.forEach((item) => {
     item.addEventListener('click', (event) => {
