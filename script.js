@@ -71,7 +71,7 @@ const addItemsCart = () => {
 const removeAll = () => {
   const btnRm = document.querySelector('.empty-cart');
   btnRm.addEventListener('click', () => {
-    const prices = document.querySelector('.total-price')
+    const prices = document.querySelector('.total-price');
     const itemsDone = document.querySelector('.cart__items');
     itemsDone.innerHTML = '';
     prices.innerText = '';
