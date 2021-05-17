@@ -1,5 +1,3 @@
-// const { result } = require("cypress/types/lodash");
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -30,15 +28,24 @@ function createProductItemElement({ sku, name, image }) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
-// function cartItemClickListener(event) {
-//   // coloque seu código aqui
-// }
+const soma = () => {
+  const totalPrice = document.querySelector('.total-price');
+  const li = [...document.querySelectorAll('.cart__item')];
+  totalPrice.innerText = 0;
+  const sumLi = li.reduce((acc, curr) => acc + Number(curr.innerText.split('PRICE: $')[1]), 0);
+  totalPrice.innerText = sumLi;
+  };
+
+function cartItemClickListener(event) {
+  event.target.remove();
+  soma();
+} 
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', (event) => cartItemClickListener(event));
   return li;
 }
 
@@ -49,7 +56,8 @@ const getItem = () => {
     const id = element.parentElement.firstChild.innerText;
     fetch(`https://api.mercadolibre.com/items/${id}`)
       .then((resposta) => resposta.json())
-      .then((dados) => elementoPai.appendChild(createCartItemElement(dados)));
+      .then((dados) => elementoPai.appendChild(createCartItemElement(dados)))
+      .then(() => soma());
   }));
 };
 
@@ -68,6 +76,22 @@ const listaDeProdutos = () => {
         section.appendChild(objList);
       })).then(() => getItem());
 };
+
+const limparCarrinho = () => {
+  const botaoLimpar = document.querySelector('.empty-cart');
+  botaoLimpar.addEventListener('click', () => {
+    document.querySelector('.cart__items').innerHTML = '';
+  });
+};
+
+const load = async (computador) => {
+  const api = await (await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${computador}`));
+  await api.json();
+  document.querySelector('.loading').remove();
+};
+
 window.onload = function onload() { 
+  load();
   listaDeProdutos();
+  limparCarrinho();
 };
