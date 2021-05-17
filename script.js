@@ -67,7 +67,7 @@ async function getCartItens() {
   const consultLink = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const json = await consultLink.json();
   const { results } = await json;
-  
+  document.querySelector('.loading').remove();
   results.forEach((element) => createProductItemElement(element));
 }
 
