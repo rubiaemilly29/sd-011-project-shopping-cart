@@ -1,3 +1,5 @@
+const items = document.querySelector('.items');
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -52,4 +54,9 @@ function fetchItems() {
 
 window.onload = function onload() {
   fetchItems();
+  document.querySelector('.items').addEventListener('click',(event) => {
+    if (event.target.className === 'item__add') {
+      console.log(event.target.parentNode.firstChild.innerText);
+    };
+  });
 };
