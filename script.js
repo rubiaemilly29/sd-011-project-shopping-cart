@@ -3,6 +3,7 @@
 const urlcomp = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
 const param = { method: 'GET', headers: { Accept: 'application/json' } }; 
 const cartList = document.querySelector('.cart__items');
+const cartItem = cartList.childNodes;
 // =======================================================================>
 // passado a imagem por parametro cria o elemento img e retorna a imagem com a classe item__image
 function createProductImageElement(imageSource) {
@@ -51,12 +52,34 @@ function loading() {
   }
 }
 // =======================================================================>
+async function saveLocalCart() {
+  const array = [];
+  const liItems = document.querySelectorAll('.cart__item');
+  if (liItems !== null) {
+    liItems.forEach((item) => array.push(`|||${item.innerHTML}`));
+  }
+  localStorage.setItem('saveCart', array);
+}
+
+function loadLocalCart() {
+  const arrayItems = localStorage.getItem('saveCart');
+  if (arrayItems) {
+    arrayItems.split(',|||').forEach((item) => {
+      let result = '';
+      result = item.replaceAll('|||', '');
+      const li = document.createElement('li');
+      li.className = 'cart__item';
+      li.innerText = result;
+      cartList.appendChild(li);
+    });
+  }
+}
+// =======================================================================>
 // soma os preços dos itens quando o são adicionados , removidos e quando o carrinho é esvaziado
 async function sumCartPrices() {
   let price = 0;
   let result = 0;
   let numPrice;
-  const cartItem = document.querySelectorAll('.cart__item');
   cartItem.forEach((item) => {
     [, price] = item.innerText.split('$');
     numPrice = Number(price);
@@ -68,9 +91,9 @@ async function sumCartPrices() {
 // =======================================================================>
 // Ao clicar no botao ja criado esvaziar carrinho remove todos os elemento com o forEach da ol cart
 function emptyCart() {
-  const cartItem = document.querySelectorAll('.cart__item');
-  cartItem.forEach((item) => item.remove());
+  Array.from(cartItem).forEach((item) => item.remove());
   sumCartPrices();
+  saveLocalCart();
 }
 const buttonEmptyCart = document.querySelector('.empty-cart');
 buttonEmptyCart.addEventListener('click', emptyCart);
@@ -80,6 +103,7 @@ buttonEmptyCart.addEventListener('click', emptyCart);
 function cartItemClickListener(event) {
   event.target.remove();
   sumCartPrices();
+  saveLocalCart();
 }
 // =======================================================================>
 // cria uma um item da lista onde serão armazenados uma string contendo o sku(id) o nome() e o preço(price) do produto dentro
@@ -121,6 +145,7 @@ async function addElementToCart(event) {
   const { title: name, price: salePrice } = fetchResult;
   cartList.appendChild(createCartItemElement({ sku: id, name, salePrice }));
   await sumCartPrices();
+  await saveLocalCart();
 }
 // função que adiciona um evento ao botao para incluir o item ao carrinho
 function clickButtonAddCart() {
@@ -131,6 +156,7 @@ function clickButtonAddCart() {
   // usando o querySelectorAll na classe.item__add temos como retorno um node list onde a HOF forEach que somente percorre arrays consegue percorrer a node List
 }
 // =======================================================================>
+
 // usando a url como e outro parametro escpecificativos essa função busca em uma api os 50 primeiros items de um determinado produto e retorna seus dados.
 function getProductList() {
   loading();
@@ -145,6 +171,7 @@ function getProductList() {
 // =======================================================================>
 window.onload = function onload() { 
   getProductList();
+  loadLocalCart();
 };
 
 // REQUISITO 4 -> função que Carregue o carrinho de compras através do **LocalStorage** ao iniciar a página
