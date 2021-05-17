@@ -1,4 +1,6 @@
 const ol = '.cart__items';
+const totalPrice = '.total-price';
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -34,14 +36,14 @@ function getSkuFromProductItem(item) {
 
 let price = 0;
 function increasePrice(singlePrice) {
-  const priceHTML = document.querySelector('.total-price');
+  const priceHTML = document.querySelector(totalPrice);
   price += parseFloat(singlePrice);
   // https://stackoverflow.com/questions/3612744/remove-insignificant-trailing-zeros-from-a-number tirado desse link para conversão do ultímo zero restante
   priceHTML.innerText = `${price.toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')}`;
 }
 
 function decreasePrice(singlePrice) {
-  const priceHTML = document.querySelector('.total-price');
+  const priceHTML = document.querySelector(totalPrice);
   price -= parseFloat(singlePrice);
   // https://stackoverflow.com/questions/3612744/remove-insignificant-trailing-zeros-from-a-number tirado desse link para conversão do ultímo zero restante
   priceHTML.innerText = `${price.toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')}`;
@@ -86,8 +88,22 @@ function insertItens() {
     .then((j) => createCartItemElement({ sku: [j.id], name: [j.title], salePrice: [j.price] }))));
 }
 
+function eraseCart() {
+  const eraseButton = document.querySelector('.empty-cart');
+  const priceHTML = document.querySelector(totalPrice);
+  eraseButton.addEventListener('click', function () {
+  const cartList = document.querySelector(ol);
+  const allItems = document.querySelectorAll('.cart__item');
+  allItems.forEach((item) => cartList.removeChild(item));
+  localStorage.clear();
+  price = 0;
+  priceHTML.innerText = price;
+  });
+}
+
 window.onload = function onload() { 
   getList().then(() => insertItens());
   const productOnList = document.querySelector(ol);
   productOnList.innerHTML = localStorage.getItem('products');
+  eraseCart();
 };
