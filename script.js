@@ -1,4 +1,5 @@
 const cartItems = '.cart__items';
+const totalPrice = document.querySelector('.total-price');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -25,7 +26,11 @@ function createCartItemElement({ sku, name, price }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
-  getClass.appendChild(li);
+  getClass.appendChild(li).addEventListener('click', () => {
+    totalPrice.innerText = parseFloat(Number(totalPrice.innerText) - price);
+  });
+  totalPrice.innerText = parseFloat(Number(totalPrice.innerText) + price);
+  console.log(totalPrice);
   return li;
 }
 
