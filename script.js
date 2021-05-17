@@ -70,7 +70,15 @@ function emptyCart() {
   });
 }
 
+const load = async (computer) => { 
+  const api = await
+  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${computer}`);
+  const data = await api.json();
+  document.querySelector('.loading').remove();  
+};
+
 window.onload = function onload() { 
   fetchAPI();
   emptyCart();
+  load();
 };
