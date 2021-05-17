@@ -1,4 +1,5 @@
 window.onload = function onload() { };
+const cartItens = document.querySelector('.cart__items');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -29,10 +30,28 @@ function createProductItemElement({ sku, name, image }) {
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
+if (localStorage.list !== undefined) {
+  const oldList = window.localStorage.getItem('list').split('§');
+  console.log(oldList);
+  oldList.forEach((value) => {
+    const newCartItem = document.createElement('li');
+    if (value !== '') {
+      newCartItem.className = 'onCart__item';
+      newCartItem.innerText = `${value}`;
+      cartItens.appendChild(newCartItem);
+    }
+  });
+}
+let newArrayCartItem = '';
 
 function cartItemClickListener(event) {
   const toRemove = event.target;
   event.target.parentElement.removeChild(toRemove);
+  newArrayCartItem = '';
+  for (let index = 0; index < cartItens.children.length; index += 1) {
+    newArrayCartItem += `${cartItens.children[index].innerText}§`;
+    localStorage.setItem('list', newArrayCartItem);
+  }
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -63,7 +82,7 @@ function fetchMercadoLivre() {
   });
 }
 fetchMercadoLivre();
-const cartItens = document.querySelector('.cart__items');
+
 function addItemToList() {
   listOfItems.addEventListener('click', (event) => {
     if (event.target.className === 'item__add') {
@@ -71,10 +90,12 @@ function addItemToList() {
       fetch(`https://api.mercadolibre.com/items/${sku}`)
         .then((response) => response.json())
         .then((body) => {
-          const newCarItem = document.createElement('li');
-          newCarItem.className = 'onCart__item';
-          newCarItem.innerText = `SKU: ${body.id} | NAME: ${body.title} | PRICE: $${body.price}`;
-          cartItens.appendChild(newCarItem);
+          const newCartItem = document.createElement('li');
+          newCartItem.className = 'onCart__item';
+          newCartItem.innerText = `SKU: ${body.id} | NAME: ${body.title} | PRICE: $${body.price}`;
+          cartItens.appendChild(newCartItem);
+          newArrayCartItem += `${newCartItem.innerText}§`;
+          localStorage.setItem('list', newArrayCartItem);
         });
     }
   });
