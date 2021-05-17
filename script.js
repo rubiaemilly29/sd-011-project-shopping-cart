@@ -1,3 +1,4 @@
+
 function handleRequestQuery(itemQuery) {
   const url = `https://api.mercadolibre.com/sites/MLB/search?q=${itemQuery}`;
 
@@ -29,7 +30,6 @@ function getStorage() {
   return newStorage;
 }
 
-console.log(getStorage());
 
 function saveStorage(newStorage) {
   localStorage.setItem('shoppingCart', JSON.stringify(newStorage));
@@ -37,10 +37,18 @@ function saveStorage(newStorage) {
 
 function addItemToLocalStorage(newItem) {
   const curStorage = getStorage();
-
+  
   curStorage.push(newItem);
 
   saveStorage(curStorage);
+}
+
+function removeItemLocalStorage(id) {
+  const curStorage = getStorage();
+
+  const newArray = curStorage.filter((item) => item.sku !== id);
+  
+  saveStorage(newArray);
 }
 
 function getSkuFromProductItem(item) {
@@ -58,16 +66,15 @@ async function handleAddItemCart(e) {
   const id = getSkuFromProductItem(e.target.parentElement);
   handleRequestItemById(id)
   .then(({id, title, price}) => {
-    addItemToLocalStorage({id, title, price});
+    addItemToLocalStorage({sku: id, name: title, salePrice: price});
     return createCartItemElement({sku: id, name: title, salePrice: price});
   })
   .then((cartElement) => document.querySelector('.cart__items').appendChild(cartElement));
 }
 
-function cartItemClickListener(event) {
-  const e = event.target;
-
-  e.remove();
+function cartItemClickListener(e) {
+  e.target.remove();
+  removeItemLocalStorage(e.target.id);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -75,6 +82,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.className = 'cart__item';
   li.id = sku;
   li.dataset.price = salePrice;
+  console.log(li.id);
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
@@ -103,8 +111,13 @@ function createProductItemElement({ sku, name, image }) {
   
 }
 
+function loadStorage() {
+  const cartArray = getStorage();
+  console.log(cartArray);
 
-
+  cartArray.forEach(({sku, name, salePrice}) => document.querySelector('.cart__items')
+  .appendChild(createCartItemElement({sku, name, salePrice})));
+}
 
 window.onload = async function onload() {
   const listItems = await handleRequestQuery('computador')
@@ -112,4 +125,5 @@ window.onload = async function onload() {
     document.querySelector('.items')
     .appendChild(createProductItemElement({sku: id, name: title, image: thumbnail }));
   })
+  loadStorage();
 }
