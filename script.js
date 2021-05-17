@@ -64,9 +64,9 @@ async function apiOnload() {
   });
 } 
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 function cartItemClickListener(event) {
   const olCart = document.querySelector(cartItens);
