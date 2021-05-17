@@ -1,5 +1,3 @@
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -14,7 +12,7 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ sku, name, image }) {
+function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -26,18 +24,48 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
+function getProductItem() {
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+    .then((r) => r.json())
+    .then((json) => {
+      json.results.forEach((result) => {
+        const sectionItems = document.querySelector('.items');
+        sectionItems.appendChild(createProductItemElement(result));
+      });
+    });
+}
+
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui 
+  const itemsList = document.querySelector('.cart__items');
+  itemsList.removeChild(event.target);
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+function addItemToCart(event) {
+  if (event.target.className === 'item__add') {
+    const itemID = getSkuFromProductItem(event.target.parentNode);
+    fetch(`https://api.mercadolibre.com/items/${itemID}`)
+      .then((r) => r.json())
+      .then((json) => {
+        const itemsList = document.querySelector('.cart__items');
+        itemsList.appendChild(createCartItemElement(json));
+      });
+  }
+}
+
+window.onload = function onload() {
+  getProductItem();
+  const items = document.querySelector('.items');
+  items.addEventListener('click', addItemToCart);
+};
