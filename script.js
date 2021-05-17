@@ -18,7 +18,7 @@ function createCustomElement(element, className, innerText) {
 
 function cartItemClickListener(event) { // addcontador depois
   // coloque seu código aqui
-  document.querySelector('.loading').remove();
+  // document.querySelector('.loading').remove();
   event.target.remove();
 }
 
@@ -70,8 +70,9 @@ function createProductList(term = 'computador') {
 
 function clearCart() {
   const clearButtom = document.querySelector('.empty-cart');
+
   clearButtom.addEventListener('click', () => {
-    document.querySelector('.cart__items').innerHTML = '';
+    document.querySelector('.cart__items').innerHTML = '';    
     localStorage.clear();
   });
 }
