@@ -55,7 +55,7 @@ function sumOfPrices(price) {
   totalPrice().innerText = currentSum;
 }
 
-function newCartItem(sku, cartItemsList, savedCartItems, save = true) {
+function newCartItem(sku, cartItemsList/* , savedCartItems, save = true */) {
   fetch(`https://api.mercadolibre.com/items/${sku}`, fetchParameter())
     .then((result) => result.json())
     .then((data) => {
@@ -65,8 +65,8 @@ function newCartItem(sku, cartItemsList, savedCartItems, save = true) {
         salePrice: data.price,
       };
       sumOfPrices(itemAtributtes.salePrice);
-      if (save !== false) savedCartItems.push(itemAtributtes.sku);
-      localStorage.cartItems = JSON.stringify(savedCartItems);
+      // if (save !== false) savedCartItems.push(itemAtributtes.sku);
+      // localStorage.cartItems = JSON.stringify(savedCartItems);
       const cartItem = createCartItemElement(itemAtributtes);
       cartItemsList.appendChild(cartItem);
     });
@@ -77,38 +77,38 @@ function subtractionOfPrices(price) {
   totalPrice().innerText = currentSub;
 }
 
-function removeCartItem(sku, cartItemsList, savedCartItems) {
+function removeCartItem(sku/* , savedCartItems */) {
   fetch(`https://api.mercadolibre.com/items/${sku}`, fetchParameter())
     .then((result) => result.json())
     .then((data) => {
       const { price } = data;
       subtractionOfPrices(price);
-      savedCartItems.forEach((item, index) => {
-        let deletedItems = 0;
-        if (item === sku && deletedItems === 0) {
-          savedCartItems.splice(index, 1);
-          deletedItems += 1;
-        }
-      });
-      localStorage.cartItems = JSON.stringify(savedCartItems);
+      // savedCartItems.forEach((item, index) => {
+      //   let deletedItems = 0;
+      //   if (item === sku && deletedItems === 0) {
+      //     savedCartItems.splice(index, 1);
+      //     deletedItems += 1;
+      //   }
+      // });
+      // localStorage.cartItems = JSON.stringify(savedCartItems);
     });
 }
 
 function removeAllCartItems(cartItemsList) {
   totalPrice().innerText = 0;
-  localStorage.cartItems = JSON.stringify([]);
+  // localStorage.cartItems = JSON.stringify([]);
   while (cartItemsList.firstChild) cartItemsList.removeChild(cartItemsList.lastChild);
 }
 
 function cartItemClickListener(event, cartItemsList) {
-  const savedCartItems = JSON.parse(localStorage.getItem('cartItems'));
+  // const savedCartItems = JSON.parse(localStorage.getItem('cartItems'));
   if (event.target.className === 'item__add') {
     const sku = event.target.parentNode.firstChild.innerText;
-    newCartItem(sku, cartItemsList, savedCartItems);
+    newCartItem(sku, cartItemsList/* , savedCartItems */);
   }
   if (event.target.className === 'cart__item') {
     const sku = event.target.innerText.split(' ')[1];
-    removeCartItem(sku, cartItemsList, savedCartItems);
+    removeCartItem(sku/* , savedCartItems */);
     cartItemsList.removeChild(event.target);
   }
   if (event.target.className === 'empty-cart') {
@@ -116,16 +116,16 @@ function cartItemClickListener(event, cartItemsList) {
   }
 }
 
-function recoverCart(cartItemsList) {
-  if (localStorage.getItem('cartItems') !== null) {
-    const savedCartItems = JSON.parse(localStorage.getItem('cartItems'));
-    savedCartItems.forEach((cartItem) => {
-      newCartItem(cartItem, cartItemsList, savedCartItems, false);
-    });
-  } else {
-    localStorage.setItem('cartItems', JSON.stringify([]));
-  }
-}
+// function recoverCart(cartItemsList) {
+//   if (localStorage.getItem('cartItems') !== null) {
+//     const savedCartItems = JSON.parse(localStorage.getItem('cartItems'));
+//     savedCartItems.forEach((cartItem) => {
+//       newCartItem(cartItem, cartItemsList, savedCartItems, false);
+//     });
+//   } else {
+//     localStorage.setItem('cartItems', JSON.stringify([]));
+//   }
+// }
 
 window.onload = function onload() {
   search('computador').then(() => {
@@ -134,7 +134,7 @@ window.onload = function onload() {
   const cart = document.querySelector('.cart');
   const cartItemsList = document.querySelector('.cart__items');
   const items = [itemsSection(), cart];
-  recoverCart(cartItemsList);
+  // recoverCart(cartItemsList);
   items.forEach((item) => {
     item.addEventListener('click', (event) => {
       cartItemClickListener(event, cartItemsList);
