@@ -49,8 +49,8 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-function sumOfPrices(price) {
-  const totalPrice = document.querySelector('.total-price span');
+async function sumOfPrices(price) {
+  const totalPrice = document.querySelector('.total-price');
   let currentSum = parseFloat(totalPrice.innerText) + price;
   if (currentSum % 1 !== 0) currentSum = currentSum.toFixed(2);
   totalPrice.innerText = currentSum;
@@ -77,8 +77,8 @@ async function newCartItem(sku, cartItemsList, savedCartItems, save = true) {
     });
 }
 
-function subtractionOfPrices(cartItem) {
-  const totalPrice = document.querySelector('.total-price span');
+async function subtractionOfPrices(cartItem) {
+  const totalPrice = document.querySelector('.total-price');
   let price = cartItem.innerText.split(' ');
   price = parseFloat(price[price.length - 1].slice(1));
   let currentSub = (parseFloat(totalPrice.innerText) - price).toFixed(2);
