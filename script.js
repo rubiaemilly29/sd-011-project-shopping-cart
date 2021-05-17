@@ -1,9 +1,8 @@
 async function totalSend() {
   const result = Object.keys(localStorage)
-  .reduce((num, key) => num + parseFloat(localStorage[key]), 0)
-  .toFixed();
+  .reduce((num, key) => num + parseFloat(localStorage[key]), 0);
   const total = document.querySelector('.total-price');
-  const value = total.innerText.replace(/[\d.]+$/, result);
+  const value = total.innerText.replace(/[\d.]+$/, Math.round(result * 100) / 100);
   total.innerText = value;
 }
 
