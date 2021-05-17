@@ -95,7 +95,7 @@ const fetchProducts = async () => {
   }
 };
 
-const retriveLocalStorage = () => {
+const retrieveLocalStorage = () => {
   const cartContainer = document.querySelector(itemsList);
   const savedCart = localStorage.getItem('retrieveCart');
   cartContainer.innerHTML = savedCart;
@@ -127,6 +127,6 @@ const whileLoadPromise = async () => {
 
 window.onload = function onload() {
   whileLoadPromise();
-  retriveLocalStorage();
+  retrieveLocalStorage();
   emptyCart();
 };
