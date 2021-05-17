@@ -94,6 +94,12 @@ function getStorage() {
   });
 }
 
+function clearShoppingCart() {
+  const cartItems = document.querySelectorAll('.cart__item');
+  cartItems.forEach((item) => item.parentNode.removeChild(item));
+  localStorage.clear();
+}
+
 window.onload = async function onload() {
   getStorage();
 
@@ -106,6 +112,9 @@ window.onload = async function onload() {
 
     const addButton = document.querySelectorAll('.item__add');
     addButton.forEach((button) => button.addEventListener('click', fetchProduct));
+
+    const clearAllButton = document.querySelector('.empty-cart');
+    clearAllButton.addEventListener('click', clearShoppingCart);
   } catch (error) {
     throw new Error('Falha ao buscar produtos');
   }
