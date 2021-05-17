@@ -11,7 +11,7 @@ function createCustomElement(element, className, innerText) {
   const elementE = document.createElement(element);
   elementE.className = className;
   elementE.innerText = innerText;
-  return e;
+  return elementE;
 }
 
 function cartItemClickListener(event, createLi, count, price) {
