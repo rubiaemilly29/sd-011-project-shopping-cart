@@ -26,9 +26,8 @@ function updateTotalPrice() {
     const valor = lista[index].innerHTML.split('$')[1];
     sum += Number(valor);
   }
-  const total = sum.toFixed(2);
   const totalPrice = document.querySelector('.total-price');
-  totalPrice.innerHTML = `Valor: ${total}R$`;
+  totalPrice.innerHTML = sum;
 }
 
 function localStorageItems() {
