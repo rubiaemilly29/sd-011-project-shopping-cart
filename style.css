@@ -41,6 +41,9 @@
   width: 200px;
 }
 
+.item:hover {
+  box-shadow: 1px 0.5px 2px 2px #a0a0a0;
+}
 .item .item__sku {
   display: none;
 }

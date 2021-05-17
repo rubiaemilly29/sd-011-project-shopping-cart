@@ -1,18 +1,28 @@
 const cartItens = '.cart__items';
+const cartItem = '.cart__item';
+
+function clearCart() {
+  const btnClearItens = document.querySelector('.empty-cart');
+  const spanCartValue = document.querySelector('.total-price');
+  btnClearItens.addEventListener('click', async () => {
+    const liItens = document.querySelectorAll(cartItem);
+    liItens.forEach((li) => li.remove());
+    spanCartValue.innerHTML = '<h3>R$00.00</h3>';
+    localStorage.clear();
+  });
+}
 
 async function sumValues() {
-  const itensCart = document.querySelectorAll('.cart__item');
+  const itensCart = document.querySelectorAll(cartItem);
   const spanValor = document.querySelector('.total-price');
   let sum = 0;
   if (itensCart.length === 0) spanValor.innerHTML = '<h3>R$00.00</h3>';
   itensCart.forEach((item) => {
-    console.log(sum);
     const prodValor = parseFloat(item.innerText.split('$')[1]);
     prodValor.toFixed(2);
     sum.toFixed(2);
     sum += prodValor;
     spanValor.innerHTML = `<h3>${sum}</h3>`;
-    console.log(sum);
   });
 }
 
@@ -84,8 +94,8 @@ function eventAddCart() {
       olCart.appendChild(li);
       localStorage.setItem('carrinho', olCart.innerHTML);
       sumValues();
-      }
-    });
+    }
+  });
 }
 
 window.onload = function onload() {
@@ -94,11 +104,12 @@ window.onload = function onload() {
   if (localStorage.carrinho) {
     const olCart = document.querySelector(cartItens);
     olCart.innerHTML = localStorage.getItem('carrinho');
-    const itemCart = document.querySelectorAll('.cart__item');
+    const itemCart = document.querySelectorAll(cartItem);
     console.log(itemCart);
     itemCart.forEach((item) => {
       item.addEventListener('click', cartItemClickListener);
       sumValues();
     });
   }
+  clearCart();
 };
