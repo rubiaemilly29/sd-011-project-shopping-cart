@@ -50,11 +50,14 @@ function createCartItemElement({ sku, name, salePrice }) {
 }
 
 function loadingSite() {
-  document.querySelector('.loading').innerHTML = 'loading...';
+  const creatDivLoad = document.createElement('div');
+  creatDivLoad.className = 'loading';
+  creatDivLoad.innerHTML = 'loading...';
+  document.querySelector('body').appendChild(creatDivLoad);
 }
 
 function siteloaded() {
-  document.querySelector('.loading').innerHTML = '';
+  document.querySelector('.loading').remove();
 }
 
 function addProductOnShoppingCart(query) {
