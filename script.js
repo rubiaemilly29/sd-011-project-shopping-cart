@@ -24,19 +24,7 @@ const calculatingTotalPrice = () => {
 
   const calculatedTotalPrice = document.querySelector('.total-price');
   calculatedTotalPrice.innerHTML = calculatePrice; 
-}; 
-
-function createProductItemElement({ id, title, thumbnail }) {
-  const section = document.createElement('section');
-  section.className = 'item';
-  
-  section.appendChild(createCustomElement('span', 'item__sku', id));
-  section.appendChild(createCustomElement('span', 'item__title', title));
-  section.appendChild(createProductImageElement(thumbnail));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-  
-  return section;
-}
+};
 
 function cartItemClickListener(event, count) {
   const clickLocation = event.target;
