@@ -53,6 +53,8 @@ const addItemsCart = () => {
       fetch(`https://api.mercadolibre.com/items/${id}`)
       .then((res) => res.json())
       .then((data) => getList.appendChild(createCartItemElement(data)));
+      const count = getList.childElementCount;
+      localStorage.setItem(`item ${count}`, id);
     });
   });
 };
@@ -62,6 +64,15 @@ const myApiPricipal = () => {
     .then((res) => res.json())
     .then((data) => data.results.forEach((product) => createProductItemElement(product)))
     .then(() => addItemsCart())
+    .then(() => {
+      const cart = document.querySelector('.cart__items');
+      for (let i = 0; i < localStorage.length; i += 1) {
+        const getStorege = localStorage.getItem(`item ${i}`);
+        fetch(`https://api.mercadolibre.com/items/${getStorege}`)
+        .then((res) => res.json())
+        .then((data) => cart.appendChild(createCartItemElement(data)));
+      }
+    })
     .catch((error) => console.log(error));
 };
 
