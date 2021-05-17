@@ -2,7 +2,7 @@ const cartItems = '.cart__items';
 const totalPriceString = '.total-price';
 let totalPrice = 0;
 
-function sumTotalPrice() {
+async function sumTotalPrice() {
   totalPrice = 0;
   document.querySelectorAll('.cart__item').forEach((value, index) => { 
     const number = parseInt(value.innerText.split('|')[2].replace(/[^0-9]/g, ''), 10);
