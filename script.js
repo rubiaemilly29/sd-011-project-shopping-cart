@@ -1,11 +1,3 @@
-// const loading = () => {
-//   const divLoading = document.querySelector('.foot-price');
-//   const elementLoading = document.createElement('div');
-//   elementLoading.className = 'loading';
-//   elementLoading.innerText = 'loading...';
-//   divLoading.appendChild(elementLoading);
-// };
-
 const clearLoading = () => {
   const elementLoading = document.querySelector('.loading');
   elementLoading.remove();
