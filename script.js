@@ -49,6 +49,13 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+function sumOfPrices(price) {
+  const totalPrice = document.querySelector('.total-price p span');
+  let currentSum = parseFloat(totalPrice.innerText) + price;
+  if (currentSum % 1 !== 0) currentSum = currentSum.toFixed(2);
+  totalPrice.innerText = currentSum;
+}
+
 async function newCartItem(sku, cartItemsList, savedCartItems, save = true) {
   const fetchParameter = {
     method: 'GET',
@@ -62,11 +69,21 @@ async function newCartItem(sku, cartItemsList, savedCartItems, save = true) {
         name: json.title,
         salePrice: json.price,
       };
+      sumOfPrices(itemAtributtes.salePrice);
       if (save !== false) savedCartItems.push(itemAtributtes.sku);
       localStorage.cartItems = JSON.stringify(savedCartItems);
       const cartItem = createCartItemElement(itemAtributtes);
       cartItemsList.appendChild(cartItem);
     });
+}
+
+function subtractionOfPrices(cartItem) {
+  const totalPrice = document.querySelector('.total-price p span');
+  let price = cartItem.innerText.split(' ');
+  price = parseFloat(price[price.length - 1].slice(1));
+  let currentSub = (parseFloat(totalPrice.innerText) - price).toFixed(2);
+  if (currentSub % 1 === 0) currentSub = Math.floor(currentSub);
+  totalPrice.innerText = currentSub;
 }
 
 function removeCartItem(cartItem, cartItemsList, savedCartItems) {
@@ -75,6 +92,7 @@ function removeCartItem(cartItem, cartItemsList, savedCartItems) {
   savedCartItems.forEach((item, index) => {
   let deletedItems = 0;
     if (item === sku && deletedItems === 0) {
+      subtractionOfPrices(cartItem);
       savedCartItems.splice(index, 1);
       deletedItems += 1;
     }
