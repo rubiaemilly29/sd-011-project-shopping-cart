@@ -1,7 +1,7 @@
 async function totalSend() {
   const result = Object.keys(localStorage)
   .reduce((num, key) => num + parseFloat(localStorage[key]), 0)
-  .toFixed(2);
+  .toFixed();
   const total = document.querySelector('.total-price');
   const value = total.innerText.replace(/[\d.]+$/, result);
   total.innerText = value;
