@@ -28,8 +28,11 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function cartItemClickListener() { // deleção do parâmetro da funçãp
+function cartItemClickListener(e) { // remover item do carrinho
+  e.target.remove();
 }
+
+// Source: consulta ao repositório do Matheus Gaspar = https://github.com/tryber/sd-011-project-shopping-cart/pull/101/// Source: consulta ao repositório do Matheus Gaspar = https://github.com/tryber/sd-011-project-shopping-cart/pull/101/
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
