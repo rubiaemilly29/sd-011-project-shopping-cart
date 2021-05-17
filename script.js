@@ -2,13 +2,18 @@ const cartItems = '.cart__items';
 const totalPriceString = '.total-price';
 let totalPrice = 0;
 
-async function sumTotalPrice() {
+function sumTotalPrice() {
   totalPrice = 0;
-  document.querySelectorAll('.cart__item').forEach((value, index) => { 
+  const valores = document.querySelectorAll('.cart__item').forEach((value, index) => { 
     const number = parseInt(value.innerText.split('|')[2].replace(/[^0-9]/g, ''), 10);
     totalPrice += number;
-  });
+  })
   return `Total: R$ ${totalPrice}`;
+}
+
+async function retornPromiseSum() {
+  const soma = await sumTotalPrice;
+  document.querySelector(totalPriceString).innerText = soma();
 }
 
 function saveCart() {
@@ -26,7 +31,7 @@ function removeAllItems() {
     value.remove();
   });
   saveCart();
-  document.querySelector(totalPriceString).innerText = sumTotalPrice();
+  retornPromiseSum()
 } 
 
 function createProductImageElement(imageSource) {
@@ -62,7 +67,7 @@ function getSkuFromProductItem(item) {
 function cartItemClickListener(event) {
   event.target.remove();
   saveCart();
-  document.querySelector(totalPriceString).innerText = sumTotalPrice();
+  document.querySelector(totalPriceString).innerText =  sumTotalPrice();
 }
 
 function createCartItemElement(sku, name, salePrice) {
@@ -89,7 +94,7 @@ function fetchItemToCart(id) {
     const liCart = createCartItemElement(data.id, data.title, data.price);
     document.querySelector(cartItems).appendChild(liCart);
     saveCart();
-    document.querySelector(totalPriceString).innerText = sumTotalPrice();
+    retornPromiseSum()
   });
 }
 
@@ -104,5 +109,5 @@ window.onload = function onload() {
   });
   document.querySelector('.empty-cart').addEventListener('click', removeAllItems);
   document.querySelector(cartItems).addEventListener('click', cartItemClickListener);
-  document.querySelector(totalPriceString).innerText = sumTotalPrice();
+  retornPromiseSum()
 };
