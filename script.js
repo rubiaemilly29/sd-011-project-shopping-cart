@@ -66,6 +66,15 @@ function createProductList(term = 'computador') {
   });
 }
 
+function clearCart() {
+  const clearButtom = document.querySelector('.empty-cart');
+  clearButtom.addEventListener('click', () => {
+    document.querySelector('.cart__items').innerHTML = '';
+    localStorage.clear();
+  });
+}
+
 window.onload = function onload() {
   createProductList();
+  clearCart();
 };
