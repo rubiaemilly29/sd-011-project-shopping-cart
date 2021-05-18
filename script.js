@@ -40,6 +40,13 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+function localSave() {
+  const olList = document.querySelector('ol');
+  const itemForSave = olList.lastChild.innerText;
+  const count = Object.keys(localStorage).length;
+  localStorage.setItem(`cart${count}`, itemForSave);
+}
+
 function getListItem() {
   const cart = document.querySelector('.cart__items');
   const buttons = document.querySelectorAll('.item');
@@ -54,8 +61,8 @@ function getListItem() {
       const itemCart = createCartItemElement(cartItem);
       cart.appendChild(itemCart);
     })
-    .then(() => localSave())
-    })
+    .then(() => localSave());
+    });
   });
 }
 
@@ -74,24 +81,16 @@ function siteList() {
       productBlock.appendChild(products);
     });
   })
-  .then(() => getListItem())
+  .then(() => getListItem());
 }
 
-function localSave () {
-  const olList = document.querySelector('ol');
-  const itemForSave = olList.lastChild.innerText;
-  const count = Object.keys(localStorage).length;
-  localStorage.setItem(`cart${count}`, itemForSave);
-}
-
-function clearButton () {
+function clearButton() {
   const olList = document.querySelector('ol');
   const clear = document.querySelector('.empty-cart');
   clear.addEventListener('click', () => {
-    olList.innerHTML = ''
-  })
+    olList.innerHTML = '';
+  });
 }
-
 
 window.onload = function onload() {
   siteList();
