@@ -45,6 +45,9 @@
   display: none;
 }
 
+.item .item-price {
+}
+
 .item .item__title {
   flex-grow: 1;
   padding: 10px;

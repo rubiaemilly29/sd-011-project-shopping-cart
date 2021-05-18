@@ -45,6 +45,10 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+function getPriceFromProductItem(item) {
+  return item.querySelector('span.item__price').innerText;
+}
+
 function createCustomElement(element, className, innerText, event) {
   const e = document.createElement(element);
   e.className = className;
@@ -69,24 +73,35 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+function addToCart(list, price) {
+  const cartList = document.querySelector('.cart__items');
+  const recipiente = document.querySelector('span.total-price');
+  const atual = document.querySelector('span.total-price').innerText;
+
+  cartList.appendChild(list);
+  const priceUpdate = parseFloat(getPriceFromProductItem(price));
+  recipiente.innerText = priceUpdate + parseFloat(atual);
+}
+
 function adItem(event) {
   const ev = getSkuFromProductItem(event.target.parentElement);
-  const cartList = document.querySelector('.cart__items');
-    fetchID(ev)
+  const value = event.target.parentElement;
+  fetchID(ev)
     .then(({ id, title, price }) => {
       addItem({ sku: id, name: title, salePrice: price });
       return createCartItemElement({ sku: id, name: title, salePrice: price });
     })
-    .then((list) => cartList.appendChild(list))
+    .then((list) => addToCart(list, value))
     .catch((e) => console.error(e));
 }
-
-function createProductItemElement({ sku, name, image }) {
+  
+function createProductItemElement({ sku, name, image, price }) {
   const section = document.createElement('section');
   section.className = 'item';
 
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
+  section.appendChild(createCustomElement('span', 'item__price', price));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!', adItem));
   return section;
@@ -104,12 +119,8 @@ function loadStorage() {
 window.onload = async () => {
   const items = document.querySelector('.items');
   const list = await fetchComputer();
-  list.forEach(({ id, title, thumbnail }) => {
-    const listedItens = createProductItemElement({
-      sku: id,
-      name: title,
-      image: thumbnail,
-    });
+  list.forEach(({ id, title, thumbnail, price }) => { 
+    const listedItens = createProductItemElement({ sku: id, name: title, image: thumbnail, price });
     items.appendChild(listedItens);
   });
   this.cartList = document.querySelector('.cart_items');
