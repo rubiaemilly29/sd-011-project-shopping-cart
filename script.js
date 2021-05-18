@@ -24,9 +24,9 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 function cartItemClickListener(event) {
   event.target.remove();
@@ -46,6 +46,10 @@ function localSave() {
   const count = Object.keys(localStorage).length;
   localStorage.setItem(`cart${count}`, itemForSave);
 }
+
+// function getLocal() {
+
+// }
 
 function getListItem() {
   const cart = document.querySelector('.cart__items');
