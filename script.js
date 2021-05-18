@@ -1,5 +1,6 @@
 const cart = document.querySelector('.cart__items');
 const totalPrice = document.querySelector('.total-price');
+const cartt = document.querySelector('.cart');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -53,6 +54,7 @@ function getProductList() {
       });
     })
     .then(() => {
+      cartt.removeChild(document.querySelector('.loading'));
       for (let index = 0; index < localStorage.length; index += 1) {
         const [id, title, price] = localStorage.getItem(`Produto${index}`).split('|');
         const resultado = { id, title, price };
