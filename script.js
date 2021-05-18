@@ -25,14 +25,14 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-// ############################### Fim das Funções Fornecidas #####################
-
 function getSkuFromProductItem(item) { // função auxiliar fornecida
   return item.querySelector('span.item__sku').innerText;
 }
 
 function cartItemClickListener(event) {
- // seu código aqui
+  const toRemove = event.target;
+  console.log(toRemove);
+  toRemove.remove();
 }
 
 function createCartItemElement({ sku, name, salePrice }) { // função auxiliar fornecida
