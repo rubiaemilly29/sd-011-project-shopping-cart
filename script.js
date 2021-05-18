@@ -1,3 +1,5 @@
+const cartElementClass = 'cart__items';
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -28,8 +30,21 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+function saveCartToLocalStorage() {
+  const cartElement = document.querySelector(`.${cartElementClass}`);
+  localStorage.setItem('cart-items', cartElement.innerHTML);
+}
+
 function cartItemClickListener(e) { // remover item do carrinho
   e.target.remove();
+  saveCartToLocalStorage();
+}
+
+function loadCartFromLocalStorage() {
+  const cartElement = document.querySelector(`.${cartElementClass}`);
+  cartElement.innerHTML = localStorage.getItem('cart-items');
+  document.querySelectorAll('.cart__item')
+    .forEach((element) => element.addEventListener('click', cartItemClickListener));
 }
 
 // Source: consulta ao repositório do Matheus Gaspar = https://github.com/tryber/sd-011-project-shopping-cart/pull/101/// Source: consulta ao repositório do Matheus Gaspar = https://github.com/tryber/sd-011-project-shopping-cart/pull/101/
@@ -46,12 +61,14 @@ function createCartItemElement({ sku, name, salePrice }) {
     const sku = getSkuFromProductItem(e.target.parentElement);
     const response = await fetch(`https://api.mercadolibre.com/items/${sku}`);
     const { title, price } = await response.json();
+    const cartElement = document.querySelector('.cart__items');
     const cartItemElement = createCartItemElement({ sku, name: title, salePrice: price });
-    document.querySelector('.cart__items').appendChild(cartItemElement);
+    cartElement.appendChild(cartItemElement);
+    saveCartToLocalStorage();
   }
-  window.onload = async function onload() {
+  async function loadProducts(queryName) {
     const itemsSection = document.querySelector('section .items'); // referenciando a class items no HTML
-    const queryName = 'computador'; // termo de busca
+    // const queryName = 'computador'; // termo de busca
     const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${queryName}`); // acessando a API assincronamente através do await e do fetch
     const { results } = await response.json(); // do obj results, espera-se uma resposta no formato json
     results.forEach((product) => { // para cada item obtido do results, execute
@@ -62,6 +79,12 @@ function createCartItemElement({ sku, name, salePrice }) {
       });
       itemsSection.appendChild(component); // component torna-se filho de itemsSection, o qual referencia a class items
     });
+  }
+  
+  window.onload = async function onload() {
+    loadCartFromLocalStorage();
+    await loadProducts('computador');
+
     const addButtons = document.querySelectorAll('.item__add'); // código para adicionar produtos ao carrinho através do DOM
     addButtons.forEach((element) => element.addEventListener('click', addItemToCart)); // dispara o evento através de um click para adicionar o item ao carrinho
   };
