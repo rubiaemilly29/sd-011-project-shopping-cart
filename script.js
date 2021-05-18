@@ -22,7 +22,9 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image, pric
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
   .addEventListener('click', () => {
+    // eslint-disable-next-line no-use-before-define
     createCartItemElement({ sku, name, price });
+    // eslint-disable-next-line sonarjs/no-duplicate-string
     localStorage.setItem('carrinho', document.querySelector('.cart__items').innerHTML);
   });
   itens.appendChild(section);
