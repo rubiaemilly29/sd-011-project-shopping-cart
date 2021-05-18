@@ -14,12 +14,22 @@ function createCustomElement(element, className, innerText) {
   return newTag;
 }
 
+// ex 05 - Soma valor total
+const sumProducts = () => {
+  const liItems = [...document.querySelectorAll('li.cart__item')];
+  const price = liItems.reduce((acc, li) => Number(li.innerText.split('$')[1]) + acc, 0);
+  const totalPrice = document.querySelector('span.total-price');
+  totalPrice.innerText = price;
+};
+
 // ex 3 - Remove item do carrinho ao clicar
 const olclass = 'ol.cart__items';
+
 function cartItemClickListener() {
   this.remove();
   const cartList = document.querySelector(olclass);
   localStorage.setItem('olCart', cartList.innerHTML);
+  sumProducts();
 }
 
 // Cria um item da lista do carrinho e configura
@@ -39,15 +49,10 @@ function getSkuFromProductItem(item) {
 
 const appendToCart = async (event) => {
   const itemID = getSkuFromProductItem(event.target.parentElement);
-  // console.log(event.target)
   const itemToAdd = await fetch(`https://api.mercadolibre.com/items/${itemID}`);
   const itemJson = await itemToAdd.json();
-  const { price } = itemJson;
-  const totalPrice = document.querySelector('span.total-price');
-  // console.log(totalPrice);
-  // -------------------------Falta fazer o aredondamento correto e tbm retirar o valor quando o item for excluido. --------------
-  totalPrice.innerText = Number(totalPrice.innerText) + price;
   createCartItemElement(itemJson);
+  sumProducts();
 };
 
 // Cria utilizando as funções anteriores um produto com discrição, imagem e o botão para adiciconar ao carrinho. Tudo em uma sessão e retorna ela
@@ -83,4 +88,5 @@ const loadLocalStorage = () => {
 window.onload = function onload() { 
   fetchElement();
   loadLocalStorage();
+  sumProducts();
 };
