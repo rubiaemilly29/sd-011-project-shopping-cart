@@ -45,10 +45,6 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function getPriceFromProductItem(item) {
-  return item.querySelector('span.item__price').innerText;
-}
-
 function createCustomElement(element, className, innerText, event) {
   const e = document.createElement(element);
   e.className = className;
@@ -59,40 +55,43 @@ function createCustomElement(element, className, innerText, event) {
   return e;
 }
 
+function sumTotal(value) {
+  const totalPriceElement = document.querySelector('span.total-price');
+  let sum = parseFloat(totalPriceElement.innerText);
+  sum += parseFloat(value);
+  totalPriceElement.innerText = Math.round(sum * 100) / 100;
+}
+
 function cartItemClickListener(event) {
   removeItemStorage(event.target.id);
   event.target.remove();
+  sumTotal(event.target.dataset.price * -1);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.id = sku;
+  li.dataset.price = salePrice;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
-function addToCart(list, price) {
+function addToCart(list) {
   const cartList = document.querySelector('.cart__items');
-  const recipiente = document.querySelector('span.total-price');
-  const atual = document.querySelector('span.total-price').innerText;
-
   cartList.appendChild(list);
-  const priceUpdate = parseFloat(getPriceFromProductItem(price));
-  const sum = priceUpdate + parseFloat(atual);
-  recipiente.innerText = Math.round(sum * 100) / 100;
+  sumTotal(list.dataset.price);
 }
 
 function adItem(event) {
   const ev = getSkuFromProductItem(event.target.parentElement);
-  const value = event.target.parentElement;
   fetchID(ev)
     .then(({ id, title, price }) => {
       addItem({ sku: id, name: title, salePrice: price });
       return createCartItemElement({ sku: id, name: title, salePrice: price });
     })
-    .then((list) => addToCart(list, value))
+    .then((list) => addToCart(list))
     .catch((e) => console.error(e));
 }
   
@@ -108,12 +107,10 @@ function createProductItemElement({ sku, name, image, price }) {
   return section;
 }
 
-function loadStorage() {
+async function loadStorage() {
   const cartArray = getLocalStorage();
-  const cartList = document.querySelector('.cart__items');
-
   cartArray.forEach(({ sku, name, salePrice }) => { 
-  cartList.appendChild(createCartItemElement({ sku, name, salePrice })); 
+  addToCart(createCartItemElement({ sku, name, salePrice })); 
 });
 }
 
@@ -124,6 +121,5 @@ window.onload = async () => {
     const listedItens = createProductItemElement({ sku: id, name: title, image: thumbnail, price });
     items.appendChild(listedItens);
   });
-  this.cartList = document.querySelector('.cart_items');
   loadStorage();
 };
