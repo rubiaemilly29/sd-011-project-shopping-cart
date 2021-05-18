@@ -13,7 +13,7 @@ function createCustomElement(element, className, innerText) {
 }
 
 function createProductItemElement({ sku, name, image }) {
-  const items = document.querySelector('.items')
+  const items = document.querySelector('.items');
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -47,7 +47,7 @@ function simplifyProduct(computers) {
     sku: computers.id,
     name: computers.title,
     image: computers.thumbnail,
-  }
+  };
 }
 
 const searchProductsOnApi = () => {
