@@ -31,9 +31,9 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image, pric
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 function cartItemClickListener(event) {
   // eslint-disable-next-line sonarjs/no-duplicate-string
@@ -78,5 +78,3 @@ window.onload = function onload() {
   showItens();
   verificaLocalStorage();
 };
-
-console.log(document.querySelector('.cart__items'));
