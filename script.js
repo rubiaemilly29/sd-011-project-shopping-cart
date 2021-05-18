@@ -10,9 +10,6 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
 
 function createTotal() {
   const liPrice = document.querySelectorAll('.cart__item');
@@ -68,22 +65,23 @@ function createProductItemElement({ sku, name, image, price }) {
 }
 
 function getMercadoLibre() {
+  const loading = document.createElement('span');
+  loading.className = 'loading';
+  loading.innerText = 'Loading...';
+  const container = document.querySelector('.container');
+  container.appendChild(loading);
   const promise = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
   const sectionItems = document.querySelector('.items');
-  fetch(promise) 
-  .then((response) => response.json())
-  .then((data) => {
-    data.results.forEach(({ id, title, thumbnail, price }) => {
-    sectionItems
-  .appendChild(createProductItemElement({ sku: id, name: title, image: thumbnail, price }));
-    });
-  })
+  fetch(promise).then((response) => response.json())
+  .then((data) => data.results.forEach(({ id, title, thumbnail, price }) => sectionItems
+  .appendChild(createProductItemElement({ sku: id, name: title, image: thumbnail, price }))))
   .then(() => {
     for (let index = 0; index < localStorage.length; index += 1) {
       const [sku, name, price] = localStorage.getItem(`item${index}`).split('|');
       const saveInLocalStorage = { sku, name, price };
       createCartItemElement(saveInLocalStorage);
     }
+    container.removeChild(loading);
   });
 }
 
