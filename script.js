@@ -21,8 +21,10 @@ function createCartItemElement({ sku, name, price }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
-  const olItems = document.querySelector('.cart__items');
-  olItems.appendChild(li);
+  const items = document.querySelector('.cart__items');
+  localStorage.setItem(`item${items.childElementCount}`, `${sku}|${name}|${price}`);
+  const count = items.childElementCount;
+  items.appendChild(li);
   return li;
 }
 
