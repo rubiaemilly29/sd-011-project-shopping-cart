@@ -80,7 +80,8 @@ function addToCart(list, price) {
 
   cartList.appendChild(list);
   const priceUpdate = parseFloat(getPriceFromProductItem(price));
-  recipiente.innerText = priceUpdate + parseFloat(atual);
+  const sum = priceUpdate + parseFloat(atual);
+  recipiente.innerText = Math.round(sum * 100) / 100;
 }
 
 function adItem(event) {
