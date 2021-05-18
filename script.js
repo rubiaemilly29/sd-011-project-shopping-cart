@@ -1,12 +1,25 @@
 const cartItemContainer = document.querySelector('.cart__items');
 
+function toggleLoadingText(visible) {
+  if (visible) {
+    const loadingElement = document.createElement('h3');
+    loadingElement.className = 'loading';
+    loadingElement.innerText = 'loading...';
+    cartItemContainer.appendChild(loadingElement);
+    this.loadingElement = loadingElement;
+  } else {
+    loadingElement.remove();
+  }
+}
+
 function handleRequestQuery(itemQuery) {
   const url = `https://api.mercadolibre.com/sites/MLB/search?q=${itemQuery}`;
-
+  toggleLoadingText(true);
   return new Promise((resolve, reject) => {
     fetch(url)
     .then((response) => response.json())
     .then((json) => {
+      toggleLoadingText(false);
       resolve(json.results);
     })
     .catch((e) => reject(e));
@@ -15,11 +28,14 @@ function handleRequestQuery(itemQuery) {
 
 function handleRequestItemById(id) {
   const url = `https://api.mercadolibre.com/items/${id}`;
-
+  toggleLoadingText(true);
   return new Promise((resolve, reject) => {
     fetch(url)
     .then((response) => response.json())
-    .then((json) => resolve(json))
+    .then((json) => {
+      toggleLoadingText(false);
+      resolve(json)
+    })
     .catch((e) => reject(e));
   })
 }
