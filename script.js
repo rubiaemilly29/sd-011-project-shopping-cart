@@ -105,8 +105,16 @@ const createHome = async () => {
     return error;
   }
 };
+function cleanCart(){
+  document.querySelector('button.empty-cart').addEventListener('click',() => {
+  document.querySelector('section.cart ol').innerText = '';
+  document.querySelector('span.total-price').innerText = 0;
+  localStorage.removeItem('cart');
+  });
+}
 // quando iniciar 
 window.onload = function onload() { 
   createHome();
   createCart();
+  cleanCart();
 };
