@@ -1,5 +1,15 @@
 const lintTeAmo = '.cart__items';
 const totalPrice = document.querySelector('.total-price');
+const button = document.querySelector('.empty-cart');
+
+const removeButton = () => {
+  button.addEventListener('click', () => {
+    const liCartItem = document.querySelectorAll('li');
+    liCartItem.forEach((li) => li.remove());
+    totalPrice.innerHTML = '00.00';
+    localStorage.clear();
+  });
+};
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -29,9 +39,9 @@ function createCartItemElement({ sku, name, price: salePrice }) {
   cartItems.appendChild(li);
   li.addEventListener('click', cartItemClickListener);
   cartItems.appendChild(li).addEventListener('click', () => {
-    totalPrice.innerText = (parseFloat(Number(totalPrice.innerText) - salePrice).toFixed(2));
+    totalPrice.innerText = (parseFloat(Number(totalPrice.innerText) - salePrice));
   });
-  totalPrice.innerText = (parseFloat(Number(totalPrice.innerText) + salePrice).toFixed(2));
+  totalPrice.innerText = (parseFloat(Number(totalPrice.innerText) + salePrice));
   localStorage.setItem('carrinho', cartItems.innerHTML);
   return li;
 }
@@ -81,4 +91,5 @@ const verificaLocalStorage = () => {
 window.onload = function onload() { 
   showItens();
   verificaLocalStorage();
+  removeButton();
 };
