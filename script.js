@@ -101,6 +101,7 @@ function addCartItemsListener() {
   cartItems.addEventListener('click', (e) => {
     if (e.target.className === 'cart__item') {
       e.target.remove();
+      updatePrices();
     }
   });
 }
