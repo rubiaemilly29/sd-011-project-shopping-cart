@@ -97,11 +97,11 @@ function addEmptyButtonListener() {
 }
 
 function addCartItemsListener() {
-  const cartItems = document.querySelectorAll('.cart__item');
-  cartItems.forEach((item) => {
-    item.addEventListener('click', (e) => {
+  const cartItems = document.querySelector(cartClassName);
+  cartItems.addEventListener('click', (e) => {
+    if (e.target.className === 'cart__item') {
       e.target.remove();
-    });
+    }
   });
 }
 
