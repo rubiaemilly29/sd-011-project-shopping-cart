@@ -44,32 +44,22 @@ async function createProductItemElement(sku, name, image) { // Modificado aqui. 
 
 // Meu códido aqui ABAIXO também:
 
-async function getProductList (productType) { // Criei essa função como PROMISE
+async function getProductList(productType) { // Criei essa função como PROMISE
   if (productType === 'computador') {
     const param = { headers: { Accept: 'application/json' } };
     return fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${productType}`, param) // Obtenção de dados da API
-   .then((r) => {
-      // ((r) => {
-      r.json()
+   .then((r) => { 
+     r.json()
       .then((resolve) => { // Resposta da APi já transforamda em JSON
         const produto = document.querySelector('.container .items');
-        resolve.results.forEach(async (element) => { // Filtra para percorrer apenas o array de objetos que são cada produto
-
-          const dados = { // Filtro para obteção de somente os dados que se quer passar, de cada produto, para a função createProduvtItemElement()
-            id: element.id,
-            title: element.title,
-            thumbnail: element.thumbnail,
-          };
-          const item = await createProductItemElement(dados.id, dados.title, dados.thumbnail);
-          console.log(`Aqui embaixo o que a funcao retorna:`);
-          console.log(item);
+        resolve.results.forEach(async (element) => { // Filtra para percorrer apenas o array de objetos que são cada produto.
+          const item = await createProductItemElement(element.id, element.title, element.thumbnail);
           produto.appendChild(item);
         });          
-      }) // >> Fim do segundo THEN        
-    }) // >> Fim do primeiro THEN  
-  
+      }); // >> Fim do segundo THEN        
+    }); // >> Fim do primeiro THEN  
   }
-  throw new Error ('Pequisa só com a palavra "computador"');
+  throw new Error('Pequisa só com a palavra "computador"');
 }
 
 // :Meu códido aqui ACIMA também:
