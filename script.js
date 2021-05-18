@@ -1,17 +1,19 @@
-function cartItemClickListener(event) {
+function cartItemClickListener(price, event) {
   const eventTg = event.target;
   eventTg.remove();
+  localStorage.setItem('keyName', cartOL.innerHTML);
 }
 
 // adiciona o produto ao carrinho 
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ sku, name, price }) {
   const li = document.createElement('li');
   const cartOL = document.querySelector('.cart__items');
   li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: ${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
+  li.addEventListener('click', (event) => cartItemClickListener(price, event));
 
   cartOL.appendChild(li);
+  localStorage.setItem('keyName', cartOL.innerHTML);
   return li;
 }
 
@@ -28,8 +30,8 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
-
-function createProductItemElement({ sku, name, image, salePrice }) {
+// exibe os computadores
+function createProductItemElement({ sku, name, image, price }) {
   const section = document.createElement('section');
   const html = document.querySelector('.items');
   section.className = 'item';
@@ -37,7 +39,7 @@ function createProductItemElement({ sku, name, image, salePrice }) {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
-    .addEventListener('click', () => createCartItemElement({ sku, name, salePrice }));
+    .addEventListener('click', () => createCartItemElement({ sku, name, price }));
   
   html.appendChild(section);
   return section;
@@ -58,11 +60,19 @@ const fetchApi = () => {
     .then((json) => {
       const jsonResults = json.results;
       jsonResults.forEach(({ id, title, thumbnail, price }) => {
-        createProductItemElement({ sku: id, name: title, image: thumbnail, salePrice: price });
+        createProductItemElement({ sku: id, name: title, image: thumbnail, price });
       });
   });
 };
 
+function getItem() {
+  const local = localStorage.getItem('keyName');
+  const cartOL = document.querySelector('.cart__items');
+  cartOL.innerHTML = local;
+
+}
+
 window.onload = function onload() {
   fetchApi();
+  getItem();
 };
