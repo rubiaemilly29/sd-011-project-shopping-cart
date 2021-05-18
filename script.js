@@ -1,4 +1,5 @@
 const lintTeAmo = '.cart__items';
+const totalPrice = document.querySelector('.total-price');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -27,6 +28,10 @@ function createCartItemElement({ sku, name, price: salePrice }) {
   const cartItems = document.querySelector(lintTeAmo);
   cartItems.appendChild(li);
   li.addEventListener('click', cartItemClickListener);
+  cartItems.appendChild(li).addEventListener('click', () => {
+    totalPrice.innerText = (parseFloat(Number(totalPrice.innerText) - salePrice).toFixed(2));
+  });
+  totalPrice.innerText = (parseFloat(Number(totalPrice.innerText) + salePrice).toFixed(2));
   localStorage.setItem('carrinho', cartItems.innerHTML);
   return li;
 }
