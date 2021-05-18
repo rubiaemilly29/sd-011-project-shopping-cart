@@ -91,6 +91,7 @@ function addEmptyButtonListener() {
   emptyCartButton.addEventListener('click', () => {
     const cartList = document.querySelector(cartClassName);
     cartList.innerHTML = null;
+    updatePrices();
     saveToLocalStorage();
   });
 }
@@ -109,4 +110,5 @@ window.onload = function onload() {
   loadFromLocalStorage();
   addEmptyButtonListener();
   addCartItemsListener();
+  updatePrices();
 };
