@@ -1,3 +1,4 @@
+const cartItemContainer = document.querySelector('.cart__items');
 
 function handleRequestQuery(itemQuery) {
   const url = `https://api.mercadolibre.com/sites/MLB/search?q=${itemQuery}`;
@@ -62,6 +63,15 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
+function totalPrice(price) {
+  const valorTotal = document.querySelector('.total-price');
+  let sum = parseFloat(valorTotal.innerText)
+  console.log(valorTotal.innerText)
+  sum += parseFloat(price);
+  valorTotal.innerText = Math.round(sum * 100) / 100;
+}
+
+
 async function handleAddItemCart(e) {
   const id = getSkuFromProductItem(e.target.parentElement);
   handleRequestItemById(id)
@@ -69,13 +79,25 @@ async function handleAddItemCart(e) {
     addItemToLocalStorage({sku: id, name: title, salePrice: price});
     return createCartItemElement({sku: id, name: title, salePrice: price});
   })
-  .then((cartElement) => document.querySelector('.cart__items').appendChild(cartElement));
+  .then((cartElement) => cartItemContainer.appendChild(cartElement))
+  .then((cartElement) => totalPrice(cartElement.dataset.price))
+  .catch((e) => console.error(e));
 }
 
 function cartItemClickListener(e) {
   e.target.remove();
+  totalPrice(e.target.dataset.price * -1);
   removeItemLocalStorage(e.target.id);
 }
+
+document.querySelector('.empty-cart')
+.addEventListener('click', () => {
+  while (cartItemContainer.lastChild) {
+    cartItemContainer.lastChild.remove();
+    document.querySelector('.total-price').innerHTML = 0;
+    localStorage.removeItem('shoppingCart');
+  }
+})
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
@@ -115,7 +137,7 @@ function loadStorage() {
   const cartArray = getStorage();
   console.log(cartArray);
 
-  cartArray.forEach(({sku, name, salePrice}) => document.querySelector('.cart__items')
+  cartArray.forEach(({sku, name, salePrice}) => cartItemContainer
   .appendChild(createCartItemElement({sku, name, salePrice})));
 }
 
@@ -125,5 +147,6 @@ window.onload = async function onload() {
     document.querySelector('.items')
     .appendChild(createProductItemElement({sku: id, name: title, image: thumbnail }));
   })
+
   loadStorage();
 }
