@@ -1,4 +1,5 @@
 const cart = document.querySelector('.cart__items');
+const totalPrice = document.querySelector('.total-price');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -26,8 +27,9 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
-function cartItemClickListener(event) {
+function cartItemClickListener(event, price) {
   cart.removeChild(event.target);
+  totalPrice.innerText = parseFloat(Number(totalPrice.innerText) - price);
 }
 
 function createCartItemElement({ id: sku, title: name, price }) {
@@ -35,7 +37,9 @@ function createCartItemElement({ id: sku, title: name, price }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
   localStorage.setItem(`Produto${cart.childElementCount}`, `${sku}|${name}|${price}`);
-  li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', (event) => cartItemClickListener(event, price));
+  totalPrice.innerText = parseFloat(Number(totalPrice.innerText) + price);
+  console.log(totalPrice);
   return li;
 }
 
