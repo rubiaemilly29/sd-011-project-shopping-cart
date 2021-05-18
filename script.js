@@ -1,5 +1,7 @@
 const cartElementClass = 'cart__items';
 
+let cartData = [];
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -31,12 +33,23 @@ function getSkuFromProductItem(item) {
 }
 
 function saveCartToLocalStorage() {
-  const cartElement = document.querySelector(`.${cartElementClass}`);
-  localStorage.setItem('cart-items', cartElement.innerHTML);
+  localStorage.setItem('cart-data', JSON.stringify(cartData));
+}
+
+function updateCartPrice() {
+  const totalPrice = cartData.reduce((acc, current) => {
+    const itemPrice = current.salePrice || 0;
+    return acc + itemPrice;
+  }, 0);
+  document.querySelector('.total-price').textContent = totalPrice;
 }
 
 function cartItemClickListener(e) { // remover item do carrinho
+  const { id } = e.target;
   e.target.remove();
+  const itemIndex = cartData.findIndex((item) => item.sku === id);
+  cartData.splice(itemIndex, 1);
+  updateCartPrice();
   saveCartToLocalStorage();
 }
 
@@ -52,18 +65,36 @@ function loadCartFromLocalStorage() {
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
+  li.id = sku;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
+}
+
+function renderCart() {
+  const cartElement = document.querySelector(`.${cartElementClass}`);
+  cartElement.innerHTML = '';
+  cartData.forEach((item) => {
+    const cartItemElement = createCartItemElement(item);
+    cartElement.appendChild(cartItemElement);
+  });
+  updateCartPrice();
+}
+
+function loadCartFromLocalStorage() {
+  const loadedCartData = JSON.parse(localStorage.getItem('cart-data'));
+  if (loadedCartData) {
+    cartData = [...loadedCartData];
+    renderCart();
+  }
 }
 
   async function addItemToCart(e) {
     const sku = getSkuFromProductItem(e.target.parentElement);
     const response = await fetch(`https://api.mercadolibre.com/items/${sku}`);
     const { title, price } = await response.json();
-    const cartElement = document.querySelector('.cart__items');
-    const cartItemElement = createCartItemElement({ sku, name: title, salePrice: price });
-    cartElement.appendChild(cartItemElement);
+    cartData.push({ sku, name: title, salePrice: price });
+    renderCart();
     saveCartToLocalStorage();
   }
   async function loadProducts(queryName) {
@@ -77,6 +108,7 @@ function createCartItemElement({ sku, name, salePrice }) {
         name: product.title, // name = title
         image: product.thumbnail, // image = thumbnail
       });
+      component.querySelector('button').addEventListener('click', addItemToCart);
       itemsSection.appendChild(component); // component torna-se filho de itemsSection, o qual referencia a class items
     });
   }
@@ -85,8 +117,6 @@ function createCartItemElement({ sku, name, salePrice }) {
     loadCartFromLocalStorage();
     await loadProducts('computador');
 
-    const addButtons = document.querySelectorAll('.item__add'); // código para adicionar produtos ao carrinho através do DOM
-    addButtons.forEach((element) => element.addEventListener('click', addItemToCart)); // dispara o evento através de um click para adicionar o item ao carrinho
   };
 
   // Source: consulta ao repositório do Matheus Gaspar = https://github.com/tryber/sd-011-project-shopping-cart/pull/101/
@@ -107,3 +137,5 @@ function createCartItemElement({ sku, name, salePrice }) {
 // };
 
 // Source: consulta ao repositório do Matheus Gaspar = https://github.com/tryber/sd-011-project-shopping-cart/pull/101/
+
+// Source: consulta ao repositório do Matheus Gaspar = https://github.com/tryber/sd-011-project-shopping-cart/pull/101///
