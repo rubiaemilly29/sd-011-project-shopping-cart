@@ -33,8 +33,8 @@ function sumProduct() {
   const totalPrice = document.querySelector('.total-price');
   const listCarts = document.querySelectorAll('.cart__item');
   const list = [...listCarts];
-  const priceItem = list.reduce((acc, curr) => acc + Number(curr.innerHTML.split('PRICE: $')[1]), 0);
-  totalPrice.innerHTML = priceItem;
+  const price = list.reduce((acc, curr) => acc + Number(curr.innerHTML.split('PRICE: $')[1]), 0);
+  totalPrice.innerHTML = price;
 }
 
 function productML() {
