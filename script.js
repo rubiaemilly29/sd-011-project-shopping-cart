@@ -1,7 +1,3 @@
-window.onload = function onload() { 
-  getItem('computer');
-};
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -44,19 +40,32 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-const getItem = (nameItem) => new Promise(() => {
-    fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${nameItem}`)
-      .then((response) => {
-        response.json()
-          .then((data) => {
-            data.results.forEach((items) => {
-              const obj = {
-                sku: items.id,
-                name: items.title,
-                image: items.thumbnail,
-              };
-              document.querySelector('.items').appendChild(createProductItemElement(obj));
-            });
-          });
-      });
+function itemsObj(data) {
+  return {
+    sku: data.id,
+    name: data.title,
+    image: data.thumbnail,
+  };
+}
+
+function addItemToList(item) {
+  document.querySelector('.items').appendChild(item);
+}
+
+function renderItemsHTML(items) {
+  items.forEach((item) => {
+    addItemToList(item);
   });
+}
+
+function getItems(nameItem) {
+  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${nameItem}`)
+    .then((response) => response.json())
+    .then((json) => json.results.map((data) => itemsObj(data)))
+    .then((reusltData) => reusltData.map((item) => createProductItemElement(item)))
+    .then((itemsHTML) => renderItemsHTML(itemsHTML));
+}
+
+window.onload = function onload() { 
+  getItems('computer');
+};
