@@ -13,10 +13,23 @@ function createCustomElement(element, className, innerText) {
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
+
+function createTotal() {
+  const liPrice = document.querySelectorAll('.cart__item');
+  let sumTotal = 0;
+    for (let counter = 0; counter < liPrice.length; counter += 1) {
+      const valor = liPrice[counter].innerHTML.split('$')[1];
+      sumTotal += Number(valor);
+    }
+  const totalPrice = document.querySelector('.total-price');
+  totalPrice.innerHTML = sumTotal;
+}
+
 function cartItemClickListener(event, counter) {
   const removesTheItemFromTheList = event.target;
   removesTheItemFromTheList.parentNode.removeChild(removesTheItemFromTheList);
   localStorage.removeItem(`item${counter}`);
+  createTotal();
 }
 function createCartItemElement({ sku, name, price }) {
   const li = document.createElement('li');
@@ -27,7 +40,7 @@ function createCartItemElement({ sku, name, price }) {
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
   li.addEventListener('click', (event) => cartItemClickListener(event, counter));
   ol.appendChild(li);
-
+  createTotal();
   return li;
 }
 
@@ -65,5 +78,5 @@ function getMercadoLibre() {
 }
 
 window.onload = () => {
-getMercadoLibre();
+  getMercadoLibre();
 };
