@@ -97,9 +97,19 @@ function saveStorage() {
   element.addEventListener('click', cartItemClickListener);
   });
 }
+function clearCart() {
+  const button = document.querySelector('.empty-cart');
+  button.addEventListener('click', () => {
+  const ol = document.querySelector(carItems);
+  ol.innerHTML = '';
+  savingProducts();
+  fullPrice();
+  });
+}
 
 window.onload = function onload() {
 fullPrice();
 promise();
 saveStorage();
+clearCart();
 };
