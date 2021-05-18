@@ -11,31 +11,38 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
+
 const cart = '.cart__items';
+let totalPrice = 0;
+
+function thePrice() {
+  const price = document.querySelector('.total-price');
+  price.innerText = totalPrice;
+}
 
 // Requisito 3 - Depois de receber o click, o item do carrinho é retirado
-function cartItemClickListener(event) {
+function cartItemClickListener(event, price) {
   const clickedItem = event.target;
+  totalPrice -= price;
+  thePrice();
   clickedItem.remove();
-  // LOCAL STORAGE - atualizar
   localStorage.setItem('wishList', document.querySelector(cart).innerHTML);
-  // LOCAL STORAGE - atualizar
 }
 
 // Requisito 2 - Cria o item no carrinho com o sku, nome e preço
 function createCartItemElement({ sku, name, price }) {
+  totalPrice += price;
+  thePrice();
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
   // Requisito 2 - Criação do item no Carrinho
   const shoppingCartItens = document.querySelector(cart);
   shoppingCartItens.appendChild(li);
-  // Local Storage - atualizar
+  // Local Storage - atualização
   localStorage.setItem('wishList', document.querySelector(cart).innerHTML);
-  // Local Storage - atualizar
-  
   // Requisito 3 - Espera receber o click para tirar da lista do carrinho
-  li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', (event) => cartItemClickListener(event, price));
   return li;
 }
 
@@ -76,6 +83,8 @@ function cleartheShoppingCart() {
     const ShoppingCart = document.querySelector(cart);
     ShoppingCart.innerHTML = '';
     localStorage.removeItem('wishList');
+    totalPrice = 0;
+    thePrice();
   });
 }
 
@@ -109,5 +118,6 @@ window.onload = function onload() {
     .then(() => {
       removetextLoading();
       cleartheShoppingCart();
+      thePrice();
     });
 };
