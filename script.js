@@ -25,6 +25,16 @@ function createTotal() {
   totalPrice.innerHTML = sumTotal;
 }
 
+function clearCart() {
+  const li = document.querySelectorAll('.cart__item');
+  const ol = document.querySelector('ol');
+  console.log(li);
+  for (let index = 0; index < li.length; index += 1) {
+    ol.removeChild(li[index]);
+  }
+  createTotal();
+}
+
 function cartItemClickListener(event, counter) {
   const removesTheItemFromTheList = event.target;
   removesTheItemFromTheList.parentNode.removeChild(removesTheItemFromTheList);
@@ -79,4 +89,6 @@ function getMercadoLibre() {
 
 window.onload = () => {
   getMercadoLibre();
+  const buttonClearCart = document.querySelector('.empty-cart');
+  buttonClearCart.addEventListener('click', clearCart);
 };
