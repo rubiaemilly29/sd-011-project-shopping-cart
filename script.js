@@ -81,4 +81,10 @@ window.onload = function onload() {
   getProductList();
   const items = document.querySelector('.items');
   items.addEventListener('click', addItem);
+  const botao = document.querySelector('.empty-cart');
+  botao.addEventListener('click', () => {
+    cart.innerHTML = '';
+    totalPrice.innerText = '0';
+    localStorage.clear();
+  });
 };
