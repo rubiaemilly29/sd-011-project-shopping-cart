@@ -1,3 +1,13 @@
+function addLocalStorage() {
+  const getCart = document.querySelector('ol').innerHTML;
+  localStorage.setItem('cartItems', getCart);
+}
+
+function getLocalStorage() {
+  const getCart = document.querySelector('ol');
+  getCart.innerHTML = localStorage.getItem('cartItems');
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -76,10 +86,12 @@ function addProduct(event) {
         salePrice: json.price,
       };
       renderCart(product);
-    });
+    })
+    .then(() => addLocalStorage());
 }
 
 window.onload = function onload() { 
   getDataFromApi();
+  getLocalStorage();
   document.querySelector('.items').addEventListener('click', addProduct);
 };
