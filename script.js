@@ -53,12 +53,12 @@ function cartItemClickListener(e) { // remover item do carrinho
   saveCartToLocalStorage();
 }
 
-function loadCartFromLocalStorage() {
-  const cartElement = document.querySelector(`.${cartElementClass}`);
-  cartElement.innerHTML = localStorage.getItem('cart-items');
-  document.querySelectorAll('.cart__item')
-    .forEach((element) => element.addEventListener('click', cartItemClickListener));
-}
+// function loadCartFromLocalStorage() {
+//   const cartElement = document.querySelector(`.${cartElementClass}`);
+//   cartElement.innerHTML = localStorage.getItem('cart-items');
+//   document.querySelectorAll('.cart__item')
+//     .forEach((element) => element.addEventListener('click', cartItemClickListener));
+// }
 
 // Source: consulta ao repositório do Matheus Gaspar = https://github.com/tryber/sd-011-project-shopping-cart/pull/101/// Source: consulta ao repositório do Matheus Gaspar = https://github.com/tryber/sd-011-project-shopping-cart/pull/101/
 
