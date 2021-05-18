@@ -116,7 +116,6 @@ function loadCartFromLocalStorage() {
   window.onload = async function onload() {
     loadCartFromLocalStorage();
     await loadProducts('computador');
-
   };
 
   // Source: consulta ao repositório do Matheus Gaspar = https://github.com/tryber/sd-011-project-shopping-cart/pull/101/
