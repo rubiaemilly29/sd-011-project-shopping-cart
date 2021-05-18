@@ -1,3 +1,8 @@
+
+/* body {
+  background-color: red;
+} */
+
 .top-bar {
   align-items: center;
   display: flex;
@@ -42,7 +47,8 @@
 }
 
 .item .item__sku {
-  display: none;
+  /* display: none; */
+  display: flex;
 }
 
 .item .item__title {
