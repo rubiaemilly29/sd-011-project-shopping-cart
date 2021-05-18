@@ -74,3 +74,8 @@
   font-size: 16pt;
   text-align: center;
 }
+
+h3 {
+  display: flex;
+  justify-content: center;
+}
