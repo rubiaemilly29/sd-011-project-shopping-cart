@@ -1,3 +1,6 @@
+const ol = document.querySelector('.cart__items');
+const totalPrice = document.querySelector('.total-price');
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -5,27 +8,27 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
+function cartItemClickListener(event, price) {
+  event.target.remove();
+  totalPrice.innerText = Number(Number(totalPrice.innerText) - Number(price));
+}
+
+function createCartItemElement({ sku, name, price }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
+  li.addEventListener('click', (event) => cartItemClickListener(event, price));
+  localStorage.setItem(`item${ol.childElementCount}`, `${sku}|${name}|${price}`);
+  const count = ol.childElementCount;
+  totalPrice.innerText = Number(Number(totalPrice.innerText) + Number(price));
+  return li;
+}
+
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
   e.innerText = innerText;
   return e;
-}
-
-function cartItemClickListener(event) {
-  event.target.remove();
-}
-
-const arr = [];
-function createCartItemElement(props) {
-  const { sku, name, price } = props;
-  const li = document.createElement('li');
-  arr.push(props);
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
-  li.addEventListener('click', cartItemClickListener);
-  localStorage.setItem('item', JSON.stringify(arr));
-  return li;
 }
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image, price }) {
@@ -39,7 +42,6 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image, pric
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
     .addEventListener('click', () => cartItems
       .appendChild(createCartItemElement({ sku, name, price })));
-
   return section;
 }
 
@@ -48,17 +50,15 @@ function createContainer() {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((r) => r.json())
     .then((r) => (r.results))
-    .then((r) => r.forEach((computer) => {
-      getItemsSection.appendChild(createProductItemElement(computer));
-    }));
-}
-
-async function getCartLocal() {
-  const ol = document.querySelector('.cart__items');
-  const cartItems = JSON.parse(localStorage.getItem('item'));
-  await cartItems.forEach((computer) => {
-    ol.appendChild(createCartItemElement(computer));
-  });
+    .then((r) => r.forEach((computer) => getItemsSection
+      .appendChild(createProductItemElement(computer))))
+    .then(() => {
+      for (let index = 0; index < localStorage.length; index += 1) {
+        const [sku, name, price] = (localStorage.getItem(`item${index}`).split('|'));
+        const objItems = { sku, name, price };
+        ol.appendChild(createCartItemElement(objItems));
+      }
+});
 }
 
 function getSkuFromProductItem(item) {
@@ -67,5 +67,4 @@ function getSkuFromProductItem(item) {
 
 window.onload = function onload() {
   createContainer();
-  getCartLocal();
 };
