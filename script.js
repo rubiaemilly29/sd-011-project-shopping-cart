@@ -12,14 +12,17 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
-function createProductItemElement({ sku, name, image }) {
+function createProductItemElement({ sku, name, image, salePrice }) {
   const section = document.createElement('section');
   section.className = 'item';
 
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
+    .addEventListener('click', () => {
+      createCartItemElement({ sku, name, salePrice });
+    });
 
   return section;
 }
@@ -29,7 +32,7 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -37,6 +40,8 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  const cartItens = document.querySelector('.cart__items');
+  cartItens.appendChild(li);
   return li;
 }
 
@@ -47,18 +52,13 @@ function getProductList(query) {
     .then((response) => response.json())
     .then((data) => {
       data.results.forEach((item) => {
-        console.log(item);
-        const itemElement = createProductItemElement({ 
+        const itemElement = createProductItemElement({
           sku: item.id,
           name: item.title,
-          image: item.thumbnail });
+          image: item.thumbnail,
+          salePrice: item.price,
+        });
         document.querySelector('.items').appendChild(itemElement);
-      });
-    })
-    .then(() => {
-      const buttons = document.querySelectorAll('.item');
-      buttons.addEventListener('click', () => {
-        console.log('oi');
       });
     });
 }
