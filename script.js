@@ -13,7 +13,8 @@ function createProductImageElement(imageSource) {
 }
 
 function cartItemClickListener(event) {
-
+  const delItem = document.querySelector('.cart__items');
+  delItem.removeChild(event.target);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -21,8 +22,8 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
-  const cartItens = document.querySelector('.cart__items');
-  cartItens.appendChild(li);
+  const cartItems = document.querySelector('.cart__items');
+  cartItems.appendChild(li);
   return li;
 }
 
