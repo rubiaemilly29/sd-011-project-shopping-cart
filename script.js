@@ -44,7 +44,7 @@ const totalPrice = (prices) => {
 // split(): https://www.w3schools.com/jsref/jsref_split.asp
 // localStorage: https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
 function cartItemClickListener(event) {
-  totalPrice(-(event.target.innerText.split('$')[1]));
+  totalPrice(-event.target.innerText.split('$')[1]);
   event.target.remove();
   localStorage.setItem('cart', itemsCart.innerHTML);
   localStorage.setItem('price', total.innerText);
