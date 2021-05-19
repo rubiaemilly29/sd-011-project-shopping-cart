@@ -39,6 +39,7 @@ function getSkuFromProductItem(item) {
 
 // Task 3
 function cartItemClickListener(event) {
+  totalPrice(-event.target.innerText.split('$')[1]);
   event.target.remove();
   localStorage.setItem('cart', itemsCart.innerHTML);
   localStorage.setItem('price', total.innerText);
@@ -58,8 +59,22 @@ function createCartItemElement({ sku, name, salePrice }) {
 // Introduction to Fetch: https://developers.google.com/web/updates/2015/03/introduction-to-fetch
 // The Coding Train - Fetch(): https://youtu.be/tc8DU14qX6I
 
+// Task 7
+const nowLoading = () => {
+  const loading = document.createElement('p');
+  loading.className = 'loading';
+  loading.innerText = 'Loading... Please wait...';
+  list.appendChild(loading);
+};
+
+const endLoading = () => {
+  const loading = document.querySelector('.loading');
+  loading.remove();
+};
+
 // Task 1
 const mercadoLivreAPI = () => {
+  nowLoading();
   const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
   const method = { method: 'GET', headers: { Accept: 'application/json' } };
   
@@ -68,7 +83,8 @@ const mercadoLivreAPI = () => {
     .then((json) => json.results
       .forEach((items) => list.appendChild(createProductItemElement(
         { sku: items.id, name: items.title, image: items.thumbnail },
-      ))));
+      ))))
+      .then(endLoading);
 };
 
 // Task 2
@@ -112,7 +128,6 @@ const asyncStart = async () => {
   await mercadoLivreAPI();
   await sendToCart();
   await getCart();
-  await totalPrice();
 };
 
 window.onload = function onload() {
