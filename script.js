@@ -3,21 +3,21 @@ window.onload = function onload() {
 
 // const fetch = require('node-fetch'); // Isso parece não ser necessário.
 
-async function createProductImageElement(imageSource) {
+async function createProductImageElement(imageSource) { // Função invocada dentro de createProductItemElement
   const img = document.createElement('img');
   img.className = 'item__image';
   img.src = imageSource;
   return img;
 }
 
-async function createCustomElement(element, className, innerText) {
+async function createCustomElement(element, className, innerText) { // Função invocada dentro de createProductItemElement
   const e = document.createElement(element);
   e.className = className;
   e.innerText = innerText;
   return e;
 }
 
-async function createProductItemElement(sku, name, image) { // Modificado aqui. Parâmetros estavam entre chavez
+async function createProductItemElement(sku, name, image) { // Função invocada dentro de getProductList()
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -29,9 +29,12 @@ async function createProductItemElement(sku, name, image) { // Modificado aqui. 
   return section;
 }
 
+// [ESSA FUNÇÃO JÁ VEIO] - Não sei se a usarei. Acho que ela substitui a addToCart() que criei
+
 // function getSkuFromProductItem(item) { // Pega um nó (parametro) e...  
 //   return item.querySelector('span.item__sku').innerText; // ...retorna o texto do elemento (filho entre parenteses)
 // } //<< Acho que esse return é passada como dado de pesquisa p/ API do REQUISITO 2
+
 
 // function cartItemClickListener(event) {
 //   // coloque seu código aqui
@@ -45,10 +48,21 @@ async function createProductItemElement(sku, name, image) { // Modificado aqui. 
 //   return li;
 // }
 
+async function fetchToCart (vem) {
+  
+  const param = { headers: { Accept: 'application/json' } };
+  return fetch(`https://api.mercadolibre.com/items/${vem}`, param)
+  .then((r) => { 
+    r.json()
+    .then((r) => console.log(r));
+  })
+}
+
+
 
 
 // [Meu CÓDIGO 1 aqui ABAIXO]:>>
-function addToCart(aqui) { // Recebe a <section> de class .items
+function addToCart(aqui) { // Recebe como parâmetro uma <section> de class .items, passado pela função getProductList()
   alert('Entrou na addToCart()'); // TESTE
   console.log("Var de produto recebida baixo:");
   // console.log(aqui.childNodes);
@@ -60,18 +74,14 @@ function addToCart(aqui) { // Recebe a <section> de class .items
       if (clicado.className === 'item__add') { // Veririfica se o elemento é um <buttom> de class .item__add  
         const pai = clicado.parentElement; // Se for, captura o <elemento pai> desse botão
         const id = pai.querySelector('.item__sku').innerText; // A partir do <elemento pai> pega o texto do <span> filho, que tem a classe .tem__sku
-
+        fetchToCart(id); // Essa função tratará de fazer uma requisição para outro endPoint da API
         console.log('Variavel id:');
         console.log(id);
       alert(`clicou NO item de ID: ${id}`);
-
       } else {
         alert('clicou FORA do botão :-(');
       }
-
-
     });
-   
   }// <<:[Meu CÓDIGO 1 aqui ACIMA]
 
 
@@ -88,21 +98,15 @@ async function getProductList(productType) { // Criei essa função como PROMISE
           const item = await createProductItemElement(element.id, element.title, element.thumbnail);
           produto.appendChild(item);
         }); 
-        
-        return produto; // TESTANDO.....................RETORNO segundo THEN...
-
-    }) // TESTANDO.....................FIM 2 do segundo THEN...
-      .then((proRetorno) => addToCart(proRetorno));  // TESTANDO...................       
+        return produto; // OK.....................RETORNO segundo THEN...
+    }) //.....................FIM 2 do segundo THEN...
+      .then((proRetorno) => addToCart(proRetorno));  // OK...............       
     }); // >> Fim do primeiro THEN 
-    
-    
   }
   throw new Error('Pequisa só com a palavra "computador"');
 }
 // <<:[Meu CÓDIGO 2 aqui ACIMA]
 
-
   // addToCart();
   getProductList('computador');
-
-} // FIM do window.onload
+}
