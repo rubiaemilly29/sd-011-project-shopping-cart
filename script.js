@@ -1,9 +1,10 @@
 const itemsCart = document.querySelector('.cart__items');
 const total = document.querySelector('.total-price');
+const list = document.querySelector('.items');
 
 // Task 5
-const totalPrice = (items) => {
-  total.innerText = (parseFloat(items.innerText) + parseFloat(items));
+const totalPrice = (prices) => {
+  total.innerText = (parseFloat(prices.innerText) + parseFloat(prices));
 };
 
 function createProductImageElement(imageSource) {
@@ -40,6 +41,7 @@ function getSkuFromProductItem(item) {
 function cartItemClickListener(event) {
   event.target.remove();
   localStorage.setItem('cart', itemsCart.innerHTML);
+  localStorage.setItem('price', total.innerText);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -60,7 +62,6 @@ function createCartItemElement({ sku, name, salePrice }) {
 const mercadoLivreAPI = () => {
   const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
   const method = { method: 'GET', headers: { Accept: 'application/json' } };
-  const list = document.querySelector('.items');
   
   return fetch(url, method)
     .then((response) => response.json())
@@ -90,6 +91,7 @@ const getCart = () => {
   if (localStorage.itemsCart) {
     itemsCart.innerHTML = localStorage.getItem('itemsCart');
     itemsCart.addEventListener('click', cartItemClickListener);
+    total.innerText = localStorage.getItem('actualPrice');
   }
 };
 
