@@ -1,4 +1,5 @@
-window.onload = function onload() { };
+const API_ENDPOINT = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+const cartClassName = '.cart__items';
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -14,31 +15,101 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ sku, name, image }) {
+function saveToLocalStorage() {
+  const cartContainer = document.querySelector(cartClassName);
+  localStorage.setItem('cart', JSON.stringify(cartContainer.innerHTML));
+}
+
+function localStorageLoad() {
+  const cartItems = document.querySelector(cartClassName);
+  const loadedCart = JSON.parse(localStorage.getItem('cart'));
+  cartItems.innerHTML = loadedCart;
+}
+
+function updatePrice() {
+  const cartItems = document.querySelectorAll('.cart__item');
+  const totalPrice = document.querySelector('.total-price');
+  let sum = 0;
+  cartItems.forEach((total) => {
+    sum += parseFloat(total.innerText.match(/\d+(.\d+)*$/)[0]);
+  });
+
+  totalPrice.innerText = sum;
+  saveToLocalStorage();
+}
+
+function cartItemClickListener(event) {
+  event.target.remove();
+  updatePrice();
+}
+
+function createCartItemElement({ id, title, price }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
+  li.addEventListener('click', cartItemClickListener);
+  return li;
+}
+
+async function addItemToCart(itemID) {
+  const itemResponse = await fetch(`https://api.mercadolibre.com/items/${itemID}`);
+  const jsonResponse = await itemResponse.json();
+  const cartItems = document.querySelector(cartClassName);
+  const createdItem = createCartItemElement(jsonResponse);
+  cartItems.appendChild(createdItem);
+  updatePrice();
+}
+
+function createProductItemElement({ id, title, thumbnail }) {
   const section = document.createElement('section');
   section.className = 'item';
 
-  section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  section.appendChild(createCustomElement('span', 'item__sku', id));
+  section.appendChild(createCustomElement('span', 'item__title', title));
+  section.appendChild(createProductImageElement(thumbnail));
+  const addItemButton = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
+  addItemButton.addEventListener('click', () => addItemToCart(id));
+  section.appendChild(addItemButton);
 
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
+async function fetchAPI() {
+  const response = await fetch(API_ENDPOINT);
+  const jsonResponse = await response.json();
+  const itemSection = document.querySelector('section.items');
+
+  jsonResponse.results.forEach((item) => {
+    itemSection.append(createProductItemElement(item));
+  });
+  const loadingElement = document.querySelector('.loading');
+  loadingElement.remove();
 }
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
+function addCartItems() {
+  const cartItems = document.querySelector(cartClassName);
+  cartItems.addEventListener('click', (e) => {
+    if (e.target.className === 'cart__item') {
+      e.target.remove();
+      updatePrice();
+    }
+  });
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
+function emptyButton() {
+  const emptyCartButton = document.querySelector('.empty-cart');
+  emptyCartButton.addEventListener('click', () => {
+    const cartList = document.querySelector(cartClassName);
+    cartList.innerHTML = null;
+    updatePrice();
+    saveToLocalStorage();
+  });
 }
-// altera para PR2
+
+window.onload = function onload() {
+  fetchAPI();
+  localStorageLoad();
+  addCartItems();
+  updatePrice();
+  emptyButton();
+};
