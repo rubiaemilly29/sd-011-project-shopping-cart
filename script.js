@@ -34,9 +34,9 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
+/* function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
-}
+} */
 
 // Task 3
 // Event Target: https://developer.mozilla.org/en-US/docs/Web/API/Event/target
@@ -87,13 +87,9 @@ const mercadoLivreAPI = () => {
     .then((response) => response.json())
     .then((json) => {
       json.results.forEach((items) => itemsClass.appendChild(
-          createProductItemElement({
-            sku: items.id,
-            name: items.title,
-            image: items.thumbnail,
-          }),
+          createProductItemElement({ sku: items.id, name: items.title, image: items.thumbnail }),
         ));
-})
+      })
       .then(endLoading);
 };
 
