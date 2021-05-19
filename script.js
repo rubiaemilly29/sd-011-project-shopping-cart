@@ -1,5 +1,4 @@
-
-window.onload = function onload() { 
+// window.onload = function onload() { 
 
 // const fetch = require('node-fetch'); // Isso parece não ser necessário.
 
@@ -10,14 +9,14 @@ async function createProductImageElement(imageSource) { // Função invocada den
   return img;
 }
 
-async function createCustomElement(element, className, innerText) { // Função invocada dentro de createProductItemElement
+async function createCustomElement(element, className, innerText) { // Função invocada de dentro de createProductItemElement()
   const e = document.createElement(element);
   e.className = className;
   e.innerText = innerText;
   return e;
 }
 
-async function createProductItemElement(sku, name, image) { // Função invocada dentro de getProductList()
+async function createProductItemElement(sku, name, image) { // Função invocada de dentro de getProductList() / Removi shorthand
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -35,55 +34,50 @@ async function createProductItemElement(sku, name, image) { // Função invocada
 //   return item.querySelector('span.item__sku').innerText; // ...retorna o texto do elemento (filho entre parenteses)
 // } //<< Acho que esse return é passada como dado de pesquisa p/ API do REQUISITO 2
 
-
 // function cartItemClickListener(event) {
 //   // coloque seu código aqui
 // }
 
-// function createCartItemElement({ sku, name, salePrice }) {
-//   const li = document.createElement('li');
-//   li.className = 'cart__item';
-//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-//   li.addEventListener('click', cartItemClickListener);
-//   return li;
-// }
+function createCartItemElement(sku, name, salePrice) { // Cria os item do carrinho. Invocada de dentro de throwtoCart() / Removi shorthand: { sku, name, salePrice }
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  // li.addEventListener('click', cartItemClickListener);
+  return li;
+}
 
-async function fetchToCart (vem) {
-  
+function throwToCart(item) { // Adiciona item criados ao carrinho
+  const listCart = document.querySelector('.cart__items');
+  const product = createCartItemElement(item.id, item.title, item.price);
+  listCart.appendChild(product);
+}
+
+async function fetchToCart(vem) { // Faz requisição para endpoint, com ID recebido como parâmetro invocado por addToCart() 
   const param = { headers: { Accept: 'application/json' } };
   return fetch(`https://api.mercadolibre.com/items/${vem}`, param)
   .then((r) => { 
     r.json()
-    .then((r) => console.log(r));
-  })
+    .then((response) => {
+      throwToCart(response);
+      // console.log(r)
+    });
+  });
 }
-
-
-
 
 // [Meu CÓDIGO 1 aqui ABAIXO]:>>
 function addToCart(aqui) { // Recebe como parâmetro uma <section> de class .items, passado pela função getProductList()
-  alert('Entrou na addToCart()'); // TESTE
-  console.log("Var de produto recebida baixo:");
-  // console.log(aqui.childNodes);
-  const btn = aqui.childNodes;
-  console.log(btn);
-
     aqui.addEventListener('click', function (event) { // Ativa escuta de clique em toda a <section> .items
       const clicado = event.target; // Captura o elemento que foi clicado nessa <section>
       if (clicado.className === 'item__add') { // Veririfica se o elemento é um <buttom> de class .item__add  
         const pai = clicado.parentElement; // Se for, captura o <elemento pai> desse botão
         const id = pai.querySelector('.item__sku').innerText; // A partir do <elemento pai> pega o texto do <span> filho, que tem a classe .tem__sku
-        fetchToCart(id); // Essa função tratará de fazer uma requisição para outro endPoint da API
-        console.log('Variavel id:');
-        console.log(id);
-      alert(`clicou NO item de ID: ${id}`);
-      } else {
-        alert('clicou FORA do botão :-(');
-      }
+        fetchToCart(id); // Essa função tratará de fazer uma requisição para outro endPoint da mesma API de getProductList()
+      } 
+      // else {
+      //   alert('clicou FORA do botão :-(');
+      // }
     });
   }// <<:[Meu CÓDIGO 1 aqui ACIMA]
-
 
 // [Meu CÓDICO 2 aqui ABAIXO]:>>
 async function getProductList(productType) { // Criei essa função como PROMISE
@@ -93,20 +87,24 @@ async function getProductList(productType) { // Criei essa função como PROMISE
    .then((r) => { 
      r.json()
       .then((resolve) => { // Resposta da APi já transforamda em JSON
-        var produto = document.querySelector('.container .items');
+        const produto = document.querySelector('.container .items');
         resolve.results.forEach(async (element) => { // Filtra para percorrer apenas o array de objetos que são cada produto.
           const item = await createProductItemElement(element.id, element.title, element.thumbnail);
           produto.appendChild(item);
         }); 
         return produto; // OK.....................RETORNO segundo THEN...
-    }) //.....................FIM 2 do segundo THEN...
-      .then((proRetorno) => addToCart(proRetorno));  // OK...............       
+    }) // .....................FIM 2 do segundo THEN...
+      .then((proRetorno) => addToCart(proRetorno)); // OK...............       
     }); // >> Fim do primeiro THEN 
   }
-  throw new Error('Pequisa só com a palavra "computador"');
+  // throw new Error('Pequisa só com a palavra "computador"');
 }
 // <<:[Meu CÓDIGO 2 aqui ACIMA]
 
-  // addToCart();
+  // getProductList('computador');
+
+// } // Fim de window.onload = function onload()
+
+window.onload = function onload() {
   getProductList('computador');
-}
+};
