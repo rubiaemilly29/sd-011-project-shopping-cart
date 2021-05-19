@@ -1,10 +1,11 @@
+// by classes
 const itemsCart = document.querySelector('.cart__items');
-const total = document.querySelector('.total-price');
 const list = document.querySelector('.items');
+const total = document.querySelector('.total-price');
 
 // Task 5
 const totalPrice = (prices) => {
-  total.innerText = (parseFloat(prices.innerText) + parseFloat(prices));
+  total.innerText = (parseFloat(total.innerText) + parseFloat(prices));
 };
 
 function createProductImageElement(imageSource) {
@@ -34,10 +35,13 @@ function createProductItemElement({ sku, name, image }) {
 }
 
 function getSkuFromProductItem(item) {
-   return item.querySelector('span.item__sku').innerText;
+  return item.querySelector('span.item__sku').innerText;
 }
 
 // Task 3
+// Event Target: https://developer.mozilla.org/en-US/docs/Web/API/Event/target
+// split(): https://www.w3schools.com/jsref/jsref_split.asp
+// localStorage: https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
 function cartItemClickListener(event) {
   totalPrice(-event.target.innerText.split('$')[1]);
   event.target.remove();
@@ -63,7 +67,7 @@ function createCartItemElement({ sku, name, salePrice }) {
 const nowLoading = () => {
   const loading = document.createElement('p');
   loading.className = 'loading';
-  loading.innerText = 'Loading... Please wait...';
+  loading.innerText = 'Now loading...';
   list.appendChild(loading);
 };
 
@@ -75,44 +79,50 @@ const endLoading = () => {
 // Task 1
 const mercadoLivreAPI = () => {
   nowLoading();
-  const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
+  const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
   const method = { method: 'GET', headers: { Accept: 'application/json' } };
-  
-  return fetch(url, method)
+  const itemsClass = document.querySelector('.items');
+
+  return fetch(API_URL, method)
     .then((response) => response.json())
-    .then((json) => json.results
-      .forEach((items) => list.appendChild(createProductItemElement(
-        { sku: items.id, name: items.title, image: items.thumbnail },
-      ))))
+    .then((json) => {
+      json.results.forEach((items) => itemsClass.appendChild(
+          createProductItemElement({
+            sku: items.id,
+            name: items.title,
+            image: items.thumbnail,
+          }),
+        ));
+})
       .then(endLoading);
 };
 
 // Task 2
 const sendToCart = () => {
+  const addItemToCart = document.querySelectorAll('.item__add');
   const method = { method: 'GET', headers: { Accept: 'application/json' } };
-  const addToCart = document.querySelectorAll('.item__add'); // according to line 22
-  const itemsInCart = document.querySelector('.cart__items');
+  const cartItems = document.querySelector('.cart__items');
 
-  addToCart.forEach((items) => 
-    items.addEventListener('click', () => 
+  addItemToCart.forEach((items) =>
+    items.addEventListener('click', () =>
       fetch(`https://api.mercadolibre.com/items/${items.parentNode.children[0].innerText}`, method)
         .then((response) => response.json())
-        .then((product) => {
-          itemsInCart.appendChild(createCartItemElement(
-              { sku: product.id, name: product.title, salePrice: product.price },
-            ));
-        totalPrice(product.price);
+        .then((json) => {
+          cartItems.appendChild(
+            createCartItemElement({ sku: json.id, name: json.title, salePrice: json.price }),
+          );
+          totalPrice(json.price);
         })
-        .then(() => localStorage.setItem('itemsCart', itemsCart.innerHTML))
+        .then(() => localStorage.setItem('cart', itemsCart.innerHTML))
         .then(() => localStorage.setItem('price', total.innerText))));
 };
 
 // Task 4
-const getCart = () => {
-  if (localStorage.itemsCart) {
-    itemsCart.innerHTML = localStorage.getItem('itemsCart');
+const getCart = async () => {
+  if (localStorage.cart) {
+    itemsCart.innerHTML = localStorage.getItem('cart');
     itemsCart.addEventListener('click', cartItemClickListener);
-    total.innerText = localStorage.getItem('actualPrice');
+    total.innerText = localStorage.getItem('price');
   }
 };
 
@@ -126,8 +136,8 @@ document.querySelector('.empty-cart').addEventListener('click', emptyCart);
 
 const asyncStart = async () => {
   await mercadoLivreAPI();
-  await sendToCart();
   await getCart();
+  await sendToCart();
 };
 
 window.onload = function onload() {
