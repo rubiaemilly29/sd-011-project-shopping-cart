@@ -3,12 +3,6 @@ const itemsCart = document.querySelector('.cart__items');
 const list = document.querySelector('.items');
 const total = document.querySelector('.total-price');
 
-// Task 5
-// Sum of all items in the cart
-const totalPrice = (prices) => {
-  total.innerText = (parseFloat(total.innerText) + parseFloat(prices));
-};
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -34,6 +28,12 @@ function createProductItemElement({ sku, name, image }) {
 
   return section;
 }
+
+// Task 5
+// Sum of all items in the cart
+const totalPrice = (prices) => {
+  total.innerText = (parseFloat(total.innerText) + parseFloat(prices));
+};
 
 /* function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
@@ -129,6 +129,9 @@ const emptyCart = () => {
   itemsCart.innerHTML = '';
 };
 
+const empty = document.querySelector('.empty-cart');
+empty.addEventListener('click', emptyCart);
+
 const asyncStart = async () => {
   await mercadoLivreAPI();
   await getCart();
@@ -137,5 +140,4 @@ const asyncStart = async () => {
 
 window.onload = function onload() {
   asyncStart();
-  document.querySelector('.empty-cart').addEventListener('click', emptyCart);
 };
