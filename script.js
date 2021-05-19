@@ -81,9 +81,14 @@ const sendToCart = () => {
     items.addEventListener('click', () => 
       fetch(`https://api.mercadolibre.com/items/${items.parentNode.children[0].innerText}`, method)
         .then((response) => response.json())
-        .then((product) => itemsInCart.appendChild(createCartItemElement(
-          { sku: product.id, name: product.title, salePrice: product.price },
-      ))).then(() => localStorage.setItem('itemsCart', itemsCart.innerHTML))));
+        .then((product) => {
+          itemsInCart.appendChild(createCartItemElement(
+              { sku: product.id, name: product.title, salePrice: product.price },
+            ));
+        totalPrice(product.price);
+        })
+        .then(() => localStorage.setItem('itemsCart', itemsCart.innerHTML))
+        .then(() => localStorage.setItem('price', total.innerText))));
 };
 
 // Task 4
