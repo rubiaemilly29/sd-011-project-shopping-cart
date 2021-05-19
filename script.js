@@ -1,6 +1,11 @@
 // get endPoint
 const endPoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
 
+// 
+const cartItemClickListener = () => {
+console.log('Remove o item do carrinho');
+};
+
 // create the product image and sent it to create element 
 const createProductImageElement = (imageSource) => {
   const imgFeature = document.createElement('img');
@@ -33,28 +38,15 @@ const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) =>
 
 // Get info from de second API
 // !important for the second required
-const fetchItem = (param) => {
-  fetch(`https://api.mercadolibre.com/items/${param}`)
+const fetchItem = (param) => fetch(`https://api.mercadolibre.com/items/${param}`)
     .then((response) => response.json())
-    .then((product) => {
-      // eslint-disable-next-line no-use-before-define
-      getItemInfo(product);
-    });
-};
-
-// When the button is listened, the id is get and send to a second API
-const cartItemClickListener = () => {
-  const cartItemClick = document.querySelectorAll('.item__add');
-  cartItemClick.forEach((_, index) => {
-    cartItemClick[index].addEventListener('click', () => {
-      const getSku = document.querySelectorAll('.item__sku');
-      const nome = getSku[index].innerText;
-      console.log(`https://api.mercadolibre.com/items/${nome}`);
-      // eslint-disable-next-line sonarjs/no-extra-arguments
-      fetchItem(nome);
-    });
-  });
-};
+    .then((product) => product);
+    
+const getItemInfo = (productInfo) => ({
+  id: productInfo.id,
+  title: productInfo.title,
+  salePrice: productInfo.price,
+});
 
 const createCartItemElement = ({ id: sku, title: name, price: salePrice }, funct) => {
   const li = document.createElement('li');
@@ -64,14 +56,28 @@ const createCartItemElement = ({ id: sku, title: name, price: salePrice }, funct
   return li;
 };
 
-function getItemInfo(object) {
-  const itemInfo = {
-    id: object.id,
-    title: object.title,
-    salePrice: object.price,
-  };
-  createCartItemElement(itemInfo, cartItemClickListener);
-}
+const putItemAfterButtonClick = () => {
+  const findGreenButtons = document.querySelector('.item__add');
+  findGreenButtons.addEventListener('click', () => {
+    createCartItemElement(getItemInfo);
+  });
+};
+
+// getItemInfo(product);
+// When the button is listened, the id is get and send to a second API address
+const productButtonsListener = () => {
+  const addProductButtons = document.querySelectorAll('.item__add');
+  addProductButtons.forEach((_, index) => {
+    addProductButtons[index].addEventListener('click', () => {
+      const getSku = document.querySelectorAll('.item__sku');
+      const sku = getSku[index].innerText;
+      // !Only a test that can be removed
+      console.log(`https://api.mercadolibre.com/items/${sku}`);
+      getItemInfo(fetchItem(sku)
+        .then((objectItem) => createCartItemElement(objectItem, cartItemClickListener)));
+    });
+  });
+};
 
 const getProductInfo = (object) => (object.results.forEach((info) => {
     const objectInfo = {
@@ -92,7 +98,7 @@ const fetchPCList = () => {
     .then((object) => {
       getProductInfo(object);
     })
-    .then(() => cartItemClickListener());
+    .then(() => productButtonsListener());
 };
 
 window.onload = () => {
