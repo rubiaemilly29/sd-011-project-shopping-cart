@@ -90,6 +90,6 @@ window.onload = async function onload() {
     <h2 font-size='30px'>Loading...</h2>
     </div>
     `;
-    document.body.appendChild = loadingElement;
+    document.body.innerHTML = loadingElement;
   }
 };
