@@ -3,7 +3,6 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
   const cartItems = document.querySelector('.cart__items');
   const thisElement = event.target;
 
@@ -78,10 +77,19 @@ function renderProductsList(productsArray) {
 }
 
 window.onload = async function onload() {
-  const fetchML = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
-  const response = await fetchML.json();
-  const resultJson = await response;
-  const { results } = resultJson;
-
+  const fetchML = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');  
+  if (fetchML) {
+    const response = await fetchML.json();
+    const resultJson = await response;
+    const { results } = resultJson;
+  
   renderProductsList(results);
+  } else {
+    const loadingElement = `
+    <div class='loading'>
+    <h2 font-size='30px'>Loading...</h2>
+    </div>
+    `;
+    document.body.appendChild = loadingElement;
+  }
 };
