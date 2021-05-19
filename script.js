@@ -34,15 +34,17 @@ async function createProductItemElement(sku, name, image) { // Função invocada
 //   return item.querySelector('span.item__sku').innerText; // ...retorna o texto do elemento (filho entre parenteses)
 // } //<< Acho que esse return é passada como dado de pesquisa p/ API do REQUISITO 2
 
-// function cartItemClickListener(event) {
-//   // coloque seu código aqui
-// }
+function cartItemClickListener(event) { // Remove item do carrinho. É invocada na função createCartItemElement()
+  // coloque seu código aqui
+  const item = event.target;
+  item.remove();
+}
 
 function createCartItemElement(sku, name, salePrice) { // Cria os item do carrinho. Invocada de dentro de throwtoCart() / Removi shorthand: { sku, name, salePrice }
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  // li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
