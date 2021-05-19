@@ -13,7 +13,6 @@ function createCustomElement(element, className, innerText) {
 }
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
-  
   const section = document.createElement('section');
   section.className = 'item'; 
 
