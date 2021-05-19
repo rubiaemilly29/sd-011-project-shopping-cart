@@ -60,6 +60,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const button = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
   button.addEventListener('click', ({ target }) => {
     fetchApiCartItem(getSkuFromProductItem(target.parentElement));
+    storage();
   });
 
   section.appendChild(createCustomElement('span', 'item__sku', sku));
