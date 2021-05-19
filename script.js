@@ -43,7 +43,7 @@ const fetchItem = (param) => {
 };
 
 // When the button is listened, the id is get and send to a second API
-const cartItemClickListener = (func) => {
+const cartItemClickListener = () => {
   const cartItemClick = document.querySelectorAll('.item__add');
   cartItemClick.forEach((_, index) => {
     cartItemClick[index].addEventListener('click', () => {
@@ -51,7 +51,7 @@ const cartItemClickListener = (func) => {
       const nome = getSku[index].innerText;
       console.log(`https://api.mercadolibre.com/items/${nome}`);
       // eslint-disable-next-line sonarjs/no-extra-arguments
-      fetchItem(nome, func);
+      fetchItem(nome);
     });
   });
 };
