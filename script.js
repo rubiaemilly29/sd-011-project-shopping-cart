@@ -1,4 +1,10 @@
 const itemsCart = document.querySelector('.cart__items');
+const total = document.querySelector('.total-price');
+
+// Task 5
+const totalPrice = (items) => {
+  total.innerText = (parseFloat(items.innerText) + parseFloat(items));
+};
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -85,18 +91,6 @@ const getCart = () => {
     itemsCart.innerHTML = localStorage.getItem('itemsCart');
     itemsCart.addEventListener('click', cartItemClickListener);
   }
-};
-
-// Task 5
-const totalPrice = () => {
-  const priceClass = document.querySelector('.total-price');
-
-  const total = itemsCart.reduce((acc, curr) => {
-    const price = curr.sales;
-    return acc + price;
-  }, 0);
-
-  priceClass.textContent = (Math.round(total * 100) / 100);
 };
 
 const asyncStart = async () => {
