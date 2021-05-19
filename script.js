@@ -1,9 +1,10 @@
-// by classes
+// get elements by class
 const itemsCart = document.querySelector('.cart__items');
 const list = document.querySelector('.items');
 const total = document.querySelector('.total-price');
 
 // Task 5
+// Sum of all items in the cart
 const totalPrice = (prices) => {
   total.innerText = (parseFloat(total.innerText) + parseFloat(prices));
 };
@@ -43,7 +44,7 @@ function createProductItemElement({ sku, name, image }) {
 // split(): https://www.w3schools.com/jsref/jsref_split.asp
 // localStorage: https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
 function cartItemClickListener(event) {
-  totalPrice(event.target.innerText.split('$')[1]);
+  totalPrice(!event.target.innerText.split('$')[1]);
   event.target.remove();
   localStorage.setItem('cart', itemsCart.innerHTML);
   localStorage.setItem('price', total.innerText);
@@ -79,11 +80,11 @@ const endLoading = () => {
 // Task 1
 const mercadoLivreAPI = () => {
   nowLoading();
-  const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
+  const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
   const method = { method: 'GET', headers: { Accept: 'application/json' } };
   const itemsClass = document.querySelector('.items');
 
-  return fetch(API_URL, method)
+  return fetch(url, method)
     .then((response) => response.json())
     .then((json) => {
       json.results.forEach((items) => itemsClass.appendChild(
@@ -128,8 +129,6 @@ const emptyCart = () => {
   itemsCart.innerHTML = '';
 };
 
-document.querySelector('.empty-cart').addEventListener('click', emptyCart);
-
 const asyncStart = async () => {
   await mercadoLivreAPI();
   await getCart();
@@ -138,4 +137,5 @@ const asyncStart = async () => {
 
 window.onload = function onload() {
   asyncStart();
+  document.querySelector('.empty-cart').addEventListener('click', emptyCart);
 };
