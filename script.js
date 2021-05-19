@@ -83,9 +83,7 @@ function clearCart() {
 }
 
 function createLoadingElement() {
-  const loadingElement = document.createElement('div');
-  loadingElement.className = 'loading';
-  loadingElement.innerText = 'Loading...';
+  const loadingElement = createCustomElement('div', 'loading', 'Loading...');
   loadingElement.style.fontSize = '80px';
 
   return loadingElement;
@@ -95,8 +93,8 @@ window.onload = async function onload() {
   itemsContainer = document.querySelector('.items');
   cartItems = document.querySelector('.cart__items');
   document.querySelector('.empty-cart').addEventListener('click', clearCart);
+  const loadingEl = createLoadingElement();
 
-  const loadingEl = createLoadingElement();  
   itemsContainer.appendChild(loadingEl);
   
   const fetchML = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
