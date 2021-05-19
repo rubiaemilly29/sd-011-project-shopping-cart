@@ -24,25 +24,6 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-const itemsSection = document.querySelector('.items');
-
-window.onload = function onload() { 
-  fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
-    .then((resp) => resp.json())
-    .then((resp) => resp.results)
-    .then((product) => {
-      console.log();
-      product.map((item) => {
-        const productData = {
-          sku: item.id,
-          name: item.title,
-          image: item.thumbnail,
-        };
-        return itemsSection.appendChild(createProductItemElement(productData));
-      });
-    });
-};
-
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
@@ -51,6 +32,18 @@ function cartItemClickListener(event) {
   // coloque seu código aqui
 }
 
+const itemsSection = document.querySelector('.items');
+
+const handleProduct = (item) => {
+  const productData = {
+    sku: item.id,
+    name: item.title,
+    image: item.thumbnail,
+    salePrice: item.price,
+  };
+  return productData;
+};
+
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -58,3 +51,42 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+const fetchPCs = () => {
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+  .then((resp) => resp.json())
+  .then((resp) => resp.results)
+  .then((product) => {
+  product
+  .map((item) => { 
+    const finalProd = handleProduct(item);
+    return itemsSection.appendChild(createProductItemElement(finalProd));
+    });
+  });
+};
+
+const fetchId = (id) => {
+  let objData;
+  fetch(`https://api.mercadolibre.com/items/${id}`)
+  .then((resp) => resp.json())
+  .then((object) => { 
+    objData = createCartItemElement(handleProduct(object));
+    const cartList = document.querySelector('.cart__items');
+    cartList.appendChild(objData);
+    // console.log(objData);
+  });
+  return objData;
+};
+
+const addToCartBtn = () => {
+  itemsSection.addEventListener('click', (event) => {
+    const pcId = getSkuFromProductItem(event.target.parentNode);
+    const test = fetchId(pcId);
+    return test;
+  });
+};
+
+window.onload = function onload() { 
+  fetchPCs();
+  addToCartBtn();
+};
