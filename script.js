@@ -95,6 +95,14 @@ const getCart = () => {
   }
 };
 
+// Task 6
+const emptyCart = () => {
+  localStorage.clear();
+  itemsCart.innerHTML = '';
+};
+
+document.querySelector('.empty-cart').addEventListener('click', emptyCart);
+
 const asyncStart = async () => {
   await mercadoLivreAPI();
   await sendToCart();
