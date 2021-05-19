@@ -1,3 +1,5 @@
+const olclass = 'ol.cart__items';
+
 // ex 05 - Soma valor total
 const sumProducts = () => {
   const liItems = [...document.querySelectorAll('li.cart__item')];
@@ -5,6 +7,14 @@ const sumProducts = () => {
   const totalPrice = document.querySelector('span.total-price');
   totalPrice.innerText = price;
 };
+
+// ex 3 - Remove item do carrinho ao clicar
+function cartItemClickListener() {
+  this.remove();
+  const cartList = document.querySelector(olclass);
+  localStorage.setItem('olCart', cartList.innerHTML);
+  sumProducts();
+}
 
 // Cria um item da lista do carrinho e configura
 function createCartItemElement({ id: sku, title: name, price }) {
@@ -28,15 +38,6 @@ const appendToCart = async (event) => {
   createCartItemElement(itemJson);
   sumProducts();
 };
-
-// ex 3 - Remove item do carrinho ao clicar
-const olclass = 'ol.cart__items';
-function cartItemClickListener() {
-  this.remove();
-  const cartList = document.querySelector(olclass);
-  localStorage.setItem('olCart', cartList.innerHTML);
-  sumProducts();
-}
 
 // ex 6 - Esvazia o carrinho
 const emptyCartButton = document.querySelector('.empty-cart');
