@@ -77,19 +77,19 @@ function renderProductsList(productsArray) {
 }
 
 window.onload = async function onload() {
-  const fetchML = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');  
-  if (fetchML) {
-    const response = await fetchML.json();
-    const resultJson = await response;
-    const { results } = resultJson;
+  const loadingElement = document.createElement('div');
+  loadingElement.className = 'loading';
+  loadingElement.innerText = 'Loading...';
+  loadingElement.style.fontSize = '100px';
   
+  document.querySelector('.items').appendChild(loadingElement);
+  
+  const fetchML = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');  
+  const response = await fetchML.json();
+  const resultJson = await response;
+  const { results } = resultJson;
+  
+  loadingElement.style.display = 'none';
+
   renderProductsList(results);
-  } else {
-    const loadingElement = `
-    <div class='loading'>
-    <h2 font-size='30px'>Loading...</h2>
-    </div>
-    `;
-    document.body.innerHTML = loadingElement;
-  }
 };
