@@ -48,20 +48,28 @@ async function createProductItemElement(sku, name, image) { // Modificado aqui. 
 
 
 // [Meu CÓDIGO 1 aqui ABAIXO]:>>
-function addToCart(aqui) {
+function addToCart(aqui) { // Recebe a <section> de class .items
   alert('Entrou na addToCart()'); // TESTE
   console.log("Var de produto recebida baixo:");
   // console.log(aqui.childNodes);
   const btn = aqui.childNodes;
   console.log(btn);
 
-    aqui.addEventListener('click', function (event) { // Detecta em qual item foi clicado e trata algo com o target retornado
-      const clicado = event.target;
-      if (clicado.className === 'item__add') {
-      alert('clicou NO botão heim ;-)');
+    aqui.addEventListener('click', function (event) { // Ativa escuta de clique em toda a <section> .items
+      const clicado = event.target; // Captura o elemento que foi clicado nessa <section>
+      if (clicado.className === 'item__add') { // Veririfica se o elemento é um <buttom> de class .item__add  
+        const pai = clicado.parentElement; // Se for, captura o <elemento pai> desse botão
+        const id = pai.querySelector('.item__sku').innerText; // A partir do <elemento pai> pega o texto do <span> filho, que tem a classe .tem__sku
+
+        console.log('Variavel id:');
+        console.log(id);
+      alert(`clicou NO item de ID: ${id}`);
+
       } else {
         alert('clicou FORA do botão :-(');
       }
+
+
     });
    
   }// <<:[Meu CÓDIGO 1 aqui ACIMA]
