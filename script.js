@@ -32,7 +32,7 @@ function createProductItemElement({ sku, name, image }) {
 // Task 5
 // Sum of all items in the cart
 const totalPrice = (prices) => {
-  total.innerText = (parseFloat(total.innerText + prices));
+  total.innerText = (parseFloat(total.innerText) + parseFloat(prices));
 };
 
 /* function getSkuFromProductItem(item) {
@@ -44,7 +44,7 @@ const totalPrice = (prices) => {
 // split(): https://www.w3schools.com/jsref/jsref_split.asp
 // localStorage: https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
 function cartItemClickListener(event) {
-  totalPrice(-event.target.innerText.split('$')[1]);
+  totalPrice(-event.target.innerText.split('$')[1]); // the minus here are negativing all variable inside
   event.target.remove();
   localStorage.setItem('cart', itemsCart.innerHTML);
   localStorage.setItem('price', total.innerText);
