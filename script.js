@@ -1,3 +1,4 @@
+const getPrices = [];
 const classCart = '.cart__items';
 
 function createProductImageElement(imageSource) {
@@ -14,10 +15,22 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function cartItemClickListener() {
-  // coloque seu código aqui
+const cartItemClickListener = ({ target }) => {
+  const obj = target.parentNode.children;
+  const getPriceHtml = document.querySelector('.total-price');
   
-}
+  const objRest = [...obj];
+  objRest.forEach((itemList, index) => {
+    if (target === itemList) {
+      target.parentNode.removeChild(target);
+      getPrices.splice(index, 1);
+      const soma = getPrices.reduce((acc, currValue) => acc + currValue, 0);
+      getPriceHtml.textContent = soma;
+    }
+  });
+  
+  return target;
+};
 
 const addItemCart = async (item) => {
   const product = await fetch(`https://api.mercadolibre.com/items/${item}`);
@@ -45,6 +58,10 @@ function createProductItemElement({ sku, name, image }) {
     const son = section.firstChild.textContent;
     const data = await addItemCart(son);
     document.querySelector(classCart).appendChild(createCartItemElement(data));
+    getPrices.push(data.price);
+    const getPriceHtml = document.querySelector('.total-price');
+    const soma = getPrices.reduce((acc, currValue = 0) => acc + currValue);
+    getPriceHtml.textContent = soma;
   });
   
   return section;
@@ -53,6 +70,15 @@ function createProductItemElement({ sku, name, image }) {
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
+
+const clearCart = () => {
+  const getButtonClear = document.querySelector('.empty-cart');
+  
+  getButtonClear.addEventListener('click', () => {
+    document.querySelector('ol.cart__items').innerHTML = '';
+    document.querySelector('span.total-price').innerHTML = '$0,00';
+  });
+};
 
 function fetchApiAndAddList() {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
@@ -65,4 +91,5 @@ function fetchApiAndAddList() {
 }
 window.onload = function onload() {
   fetchApiAndAddList();
+  clearCart();
 };
