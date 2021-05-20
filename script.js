@@ -1,4 +1,4 @@
-window.onload = function onload() { };
+// window.onload = function onload() { };
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -34,34 +34,35 @@ function createProductItemElement({ sku, name, image }) {
 //   // coloque seu código aqui
 // }
 
-// function createCartItemElement({ sku, name, salePrice }) {
-//   const li = document.createElement('li');
-//   li.className = 'cart__item';
-//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-//   li.addEventListener('click', cartItemClickListener);
-//   return li;
-// }
+function createCartItemElement({ sku, name, salePrice }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.addEventListener('click', cartItemClickListener);
+  return li;
+}
 
 const query = 'computador';
 const url = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
 
-async function fetchApi(URL) {
-  if (URL === `https://api.mercadolibre.com/sites/MLB/search?q=${query}`) {
-    return fetch(URL)
+function fetchApi(URL) {
+  return new Promise((resolve, reject) => {
+    fetch(URL)
       .then((r) => r.json())
-      .then((r) => (r.results));
-  } 
-  throw new Error('endpoint não existe');
-}  
-
-async function createList() {
-  const productsList = await fetchApi(url);
-  console.log(productsList);
-  const productsContainer = document.querySelector('.items');
-  productsList.forEach(({ id, title, thumbnail }) => {
-    const productSection = createProductItemElement({ sku: id, name: title, image: thumbnail });
-    productsContainer.appendChild(productSection);
+      .then((json) => resolve(json.results))
+      .catch((error) => reject(error));
   });
 }
 
-createList();
+async function createList() {
+  const productsList = await fetchApi(url);
+  const productsContainer = document.querySelector('.items');
+  productsList.forEach(({ id, title, thumbnail }) => {
+    const product = createProductItemElement({ sku: id, name: title, image: thumbnail });
+    productsContainer.appendChild(product);
+  });
+}
+
+window.onload = function onload() {
+  createList();
+};
