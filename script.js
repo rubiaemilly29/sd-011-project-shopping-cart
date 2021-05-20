@@ -13,18 +13,6 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ sku, name, image }) {
-  const section = document.createElement('section');
-  section.className = 'item';
-
-  section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
-  return section;
-}
-
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
@@ -33,60 +21,62 @@ const showSumPrice = () => {
   const totalPrice = document.querySelector('.total-price');
   const cartItem = [...document.querySelectorAll('.cart__item')];
   const getPrice = cartItem
-  .reduce((acc, currVal) => acc + Number(currVal.innerText.split('$')[1]), 0);
+    .reduce((acc, currVal) => acc + Number(currVal.innerText.split('$')[1]), 0);
   totalPrice.innerText = getPrice;
+  /* console.log(totalPrice); */
 };
 
 function cartItemClickListener(event, count) {
-  localStorage.removeItem(`Item ${count}`); // remove item - local storage
   event.target.remove();
+  localStorage.removeItem(`Item${count}`); // remove item - local storage
   showSumPrice();
 }
 
-function createCartItemElement({ id: sku, title: name, price: salePrice }, count) {
+function createCartItemElement({ sku, name, price }) {
   const li = document.createElement('li');
+  const cartItems = document.querySelector(getOl);
+  const count = cartItems.childElementCount;
+  localStorage.setItem(`Item${count}`, `${sku}|${name}|${price}`);
+  /* console.log(localStorage); */
   li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
   li.addEventListener('click', (event) => cartItemClickListener(event, count));
+  cartItems.appendChild(li);
+  /* console.log(cartItems); */
+  showSumPrice();
   return li;
 }
 
-const addItemsCart = () => {
-  const btnCart = document.querySelectorAll('.item__add');
-  const getItems = document.querySelector(getOl);
-  btnCart.forEach((items) => {
-    items.addEventListener('click', () => {
-      const sku = items.parentElement.firstChild.innerText;
-      const count = getItems.childElementCount;
-      fetch(`https://api.mercadolibre.com/items/${sku}`)
-        .then((result) => result.json())
-        .then((data) => getItems.appendChild(createCartItemElement(data, count)))
-        .then(() => showSumPrice());
-      localStorage.setItem(`Item ${count}`, sku); // save - localStorage
-    });
-  });
-};
+function createProductItemElement({ sku, name, image, price }) {
+  const section = document.createElement('section');
+  section.className = 'item';
 
-const keepCartStored = () => {
-  const cart = document.querySelector(getOl);
-  for (let i = 0; i < localStorage.length; i += 1) {
-    const getStorage = localStorage.getItem(`Item ${i}`);
-    fetch(`https://api.mercadolibre.com/items/${getStorage}`)
-      .then((result) => result.json())
-      .then((data) => cart.appendChild(createCartItemElement(data, i)));
-  }
-};
+  section.appendChild(createCustomElement('span', 'item__sku', sku));
+  section.appendChild(createCustomElement('span', 'item__title', name));
+  section.appendChild(createProductImageElement(image));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
+    .addEventListener('click', () => createCartItemElement({ sku, name, price }));
+
+  return section;
+}
 
 const fetchProduct = () => {
+  const selecItem = document.querySelector('.items');
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((response) => response.json())
-    .then((data) => data.results.forEach(({ id, title, thumbnail }) => {
-      const selecItem = document.querySelector('.items');
-      const listProduct = createProductItemElement({ sku: id, name: title, image: thumbnail });
+    .then((data) => data.results.forEach(({ id, title, thumbnail, price }) => {
+      const listProduct = createProductItemElement({ 
+        sku: id, name: title, image: thumbnail, price });
       selecItem.appendChild(listProduct);
+      /* console.log(selecItem); */
     }))
-    .then(() => addItemsCart())
-    .then(() => keepCartStored());
+    .then(setTimeout(() => document.querySelector('.loading').remove(), 1000))
+    .then(() => {
+      for (let index = 0; index < localStorage.length; index += 1) {
+        const [sku, name, price] = localStorage.getItem(`Item${index}`).split('|');
+        createCartItemElement({ sku, name, price });
+      }
+    });
 };
 
 const clearCart = () => {
