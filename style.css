@@ -3,6 +3,10 @@
   background-color: red;
 } */
 
+.loading {
+  display: none;
+}
+
 .top-bar {
   align-items: center;
   display: flex;

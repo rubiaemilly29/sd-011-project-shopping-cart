@@ -1,3 +1,15 @@
+function makeLoader() {
+  const e = document.createElement('span');
+  e.className = 'loading';
+  e.innerText = 'Carregando...';
+  document.body.appendChild(e);
+}
+
+function delLoader() {
+  const loader = document.querySelector('.loading');
+  document.body.removeChild(loader);
+}
+
 async function createProductImageElement(imageSource) { // Função invocada dentro de createProductItemElement
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -24,11 +36,10 @@ async function createProductItemElement(sku, name, image) { // Função invocada
   return section;
 }
 
-// [ESSA FUNÇÃO JÁ VEIO] - Não sei se a usarei. Acho que ela substitui a addToCart() que criei
-
+// [ESSA FUNÇÃO JÁ VEIO] - Função que veio com o projeto. Não a utilizei.
 // function getSkuFromProductItem(item) { // Pega um nó (parametro) e...  
 //   return item.querySelector('span.item__sku').innerText; // ...retorna o texto do elemento (filho entre parenteses)
-// } //<< Acho que esse return é passada como dado de pesquisa p/ API do REQUISITO 2
+// }
 
   function clearCart() { // TESTE
   const btnClear = document.querySelector('.empty-cart');
@@ -62,10 +73,12 @@ function throwToCart(item) { // Adiciona item criados ao carrinho
   listCart.appendChild(product); // FUNCIONANDO
 }
 
-async function fetchToCart(id) { // Faz requisição para endpoint, com ID recebido como parâmetro invocado por addToCart() 
+async function fetchToCart(id) { // Faz requisição para endpoint, com ID recebido como parâmetro invocado por addToCart()
+  makeLoader(); // Cria elemento <span> para loading
   const param = { headers: { Accept: 'application/json' } };
   return fetch(`https://api.mercadolibre.com/items/${id}`, param)
   .then((r) => { 
+    delLoader(); // Deleta elemento <span> para loading
     r.json()
     .then((response) => {
       throwToCart(response);
@@ -75,9 +88,6 @@ async function fetchToCart(id) { // Faz requisição para endpoint, com ID receb
 
 // [Meu CÓDIGO 1 aqui ABAIXO]:>>
  function addToCart(olList) { // Recebe como parâmetro uma <section> de class .items, passado pela função getProductList()
-    console.log('O que chegou está em addToCart()');
-    console.log(olList);
-
      olList.addEventListener('click', function (event) { // TESTANDO
       // olList.addEventListener('click', function (event) { // RUIM
       const clicado = event.target; // Captura o elemento que foi clicado nessa <section>
@@ -86,15 +96,17 @@ async function fetchToCart(id) { // Faz requisição para endpoint, com ID receb
         const id = pai.querySelector('.item__sku').innerText; // A partir do <elemento pai> pega o texto do <span> filho, que tem a classe .tem__sku
         fetchToCart(id); // Essa função tratará de fazer uma requisição para outro endPoint da mesma API de getProductList()
       } 
-    });// TESTANDO
+    });
   }// <<:[Meu CÓDIGO 1 aqui ACIMA]
 
 // [Meu CÓDICO 2 aqui ABAIXO]:>>
-async function getProductList(productType) { // Criei essa função como PROMISE
+async function getProductList(productType) { // Função PROMISE
   if (productType === 'computador') {
+    makeLoader(); // Cria elemento <span> para loading
     const param = { headers: { Accept: 'application/json' } };
     return fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${productType}`, param) // Obtenção de dados da API
    .then((r) => { 
+     delLoader(); // Deleta elemento <span> para loading
      r.json()
       .then((resolve) => { // Resposta da APi já transforamda em JSON
         const produto = document.querySelector('.container .items');
@@ -111,7 +123,6 @@ async function getProductList(productType) { // Criei essa função como PROMISE
 // <<:[Meu CÓDIGO 2 aqui ACIMA]
 
 window.onload = function onload() {
-  // cart = document.querySelectorAll('.cart__items'); // TESTE
   getProductList('computador');
   // addToCart();
   clearCart();
