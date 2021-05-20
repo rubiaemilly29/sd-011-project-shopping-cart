@@ -19,7 +19,6 @@ function createCartItemElement({ sku, name, price }) {
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
   li.addEventListener('click', (event) => cartItemClickListener(event, price));
   localStorage.setItem(`item${ol.childElementCount}`, `${sku}|${name}|${price}`);
-  const count = ol.childElementCount;
   totalPrice.innerText = Number(Number(totalPrice.innerText) + Number(price));
   return li;
 }
