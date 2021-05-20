@@ -61,10 +61,14 @@ function createContainer() {
 });
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
+function emptyCart() {
+  const getItem = document.querySelectorAll('.cart__item');
+  document.querySelector('.total-price').innerHTML = 0;
+  localStorage.clear();
+  return getItem.forEach((item) => item.remove());
 }
 
 window.onload = function onload() {
   createContainer();
+  document.querySelector('.empty-cart').addEventListener('click', emptyCart);
 };
