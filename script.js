@@ -58,7 +58,8 @@ function createContainer() {
         const objItems = { sku, name, price };
         ol.appendChild(createCartItemElement(objItems));
       }
-});
+})
+    .then(() => document.querySelector('.loading').remove());
 }
 
 function emptyCart() {
