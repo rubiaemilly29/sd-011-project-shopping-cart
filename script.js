@@ -29,7 +29,6 @@ function createProductItemElement({ sku, name, image }) {
 
 // Task 5
 // Sum of all items in the cart
-
 const total = document.querySelector('.total-price');
 
 const totalPrice = (prices) => {
@@ -50,13 +49,15 @@ const itemsCart = document.querySelector('.cart__items');
 
 // remove cart's items
 function cartItemClickListener(event) {
-  totalPrice(-event.target.innerText.split('$')[1]); // the minus here are negativing all variables inside
-  event.target.remove();
-  localStorage.setItem('cart', itemsCart.innerHTML);
-  localStorage.setItem('price', total.innerText);
+  // thanks to Cesar Bhering's explanation and help
+  totalPrice(-event.target.innerText.split('$')[1]); // the minus here are negating all variables inside
+  event.target.remove(); // remove event on click (on EventListener in line 150)
+  localStorage.setItem('cart', itemsCart.innerHTML); // innerHTML cause cart contains objects, images and so far, html elements.
+  localStorage.setItem('price', total.innerText); // innerText cause is just text (numbers in this case)
 }
 
 // create cart items on click
+// SKU = Stock Keeping Unit, it's like an ID for stocking units
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -71,56 +72,59 @@ function createCartItemElement({ sku, name, salePrice }) {
 const list = document.querySelector('.items');
 
 const nowLoading = () => {
-  const loading = document.createElement('p');
-  loading.className = 'loading';
-  loading.innerText = 'Now loading...';
-  list.appendChild(loading);
+  const loading = document.createElement('p'); // create paragraph element
+  loading.className = 'loading'; // add loading to class loading
+  loading.innerText = 'Now loading...'; // add text to loading
+  list.appendChild(loading); // append loading to section with list class
 };
 
 const endLoading = () => {
-  const loading = document.querySelector('.loading');
-  loading.remove();
+  const loading = document.querySelector('.loading'); // get loading paragraph
+  loading.remove(); // remove it
 };
 
 // Task 1
 // References:
-// Rest API Header: https://stackoverflow.com/questions/43209924/rest-api-use-the-accept-application-json-http-header
 // Fetch: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
 // Introduction to Fetch: https://developers.google.com/web/updates/2015/03/introduction-to-fetch
 // The Coding Train - Fetch(): https://youtu.be/tc8DU14qX6I
 
 // fetch mercado livre API plus Loading functions
 const mercadoLivreAPI = () => {
-  nowLoading();
-  const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
-  const method = { method: 'GET', headers: { Accept: 'application/json' } };
-  const itemsClass = document.querySelector('.items');
+  nowLoading(); // calls nowLoading function
 
-  return fetch(url, method)
-    .then((response) => response.json())
-    .then((json) => {
-      json.results.forEach((items) => itemsClass.appendChild(
-          createProductItemElement({ sku: items.id, name: items.title, image: items.thumbnail }),
-        ));
-      })
-      .then(endLoading);
+  // get Mercado Livre API url
+  const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
+
+  // API Header: https://stackoverflow.com/questions/43209924/rest-api-use-the-accept-application-json-http-header
+  const method = { method: 'GET', headers: { Accept: 'application/json' } };
+
+  return fetch(url, method) // fetch API's url and method/accept
+    .then((response) => response.json()) // gets and converts the responde to json
+    .then((json) => { // then uses json for each items on the list
+    json.results.forEach((items) => list.appendChild(createProductItemElement(
+        { sku: items.id, name: items.title, image: items.thumbnail },
+      )));
+    }).then(endLoading); // calss endLoading function
 };
 
 // Task 2
 // Add items to the cart and localStorage
 const sendToCart = () => {
+  // get alls items from createProductItemElement in line 25
   const addItemToCart = document.querySelectorAll('.item__add');
+  // API Header
   const method = { method: 'GET', headers: { Accept: 'application/json' } };
-  const cartItems = document.querySelector('.cart__items');
 
+  // for each items in addItemToCart add an EventListener to add the specific item fetched to the cart on the page and LocalStorage
   addItemToCart.forEach((items) =>
-    items.addEventListener('click', () =>
+    items.addEventListener('click', () => // thanks to https://stackoverflow.com/questions/40710922/how-can-i-add-item-to-cart-by-using-event-listener
       fetch(`https://api.mercadolibre.com/items/${items.parentNode.children[0].innerText}`, method)
         .then((response) => response.json())
         .then((json) => {
-          cartItems.appendChild(
-            createCartItemElement({ sku: json.id, name: json.title, salePrice: json.price }),
-          );
+          itemsCart.appendChild(createCartItemElement({
+            sku: json.id, name: json.title, salePrice: json.price,
+          }));
           totalPrice(json.price);
         })
         .then(() => localStorage.setItem('cart', itemsCart.innerHTML))
@@ -130,23 +134,23 @@ const sendToCart = () => {
 // Task 4
 // get cart's items on localStorage
 const getCart = () => {
-  if (localStorage.cart) {
-    itemsCart.innerHTML = localStorage.getItem('cart');
-    itemsCart.addEventListener('click', cartItemClickListener);
-    total.innerText = localStorage.getItem('price');
+  if (localStorage.cart) { // if there's a key called cart on localStorage, then...
+    itemsCart.innerHTML = localStorage.getItem('cart'); // localStorage gets itemsCart
+    itemsCart.addEventListener('click', cartItemClickListener); // add the click on itemsCart
+    total.innerText = localStorage.getItem('price'); // gets the item's price
   }
 };
 
 // Task 6
 // clean cart
 const emptyCart = () => {
-  localStorage.clear();
-  itemsCart.innerHTML = '';
+  localStorage.clear(); // clears the localStorage
+  itemsCart.innerHTML = ''; // insert blank text
 };
 
 // clear button EventListener
-const empty = document.querySelector('.empty-cart');
-empty.addEventListener('click', emptyCart);
+const empty = document.querySelector('.empty-cart'); // gets the button by empty-cart class
+empty.addEventListener('click', emptyCart); // add the event click to it
 
 // async functions
 const asyncStart = async () => {
