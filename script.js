@@ -31,13 +31,25 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
+
+function sumPrices() {  
+  const lis = document.querySelectorAll('.cart__item');
+  let totalPrice = 0;
+  lis.forEach((item) => {
+    const liText = item.innerText;    
+    totalPrice += parseFloat(liText.split('$')[1]);    
+  });
+  const finalPrice = document.querySelector('.total-price');
+  finalPrice.innerText = totalPrice;
+}
 
 function cartItemClickListener(event) {
   document.querySelector(cartItems).removeChild(event.target);
-  toStorage();  
+  toStorage();
+  sumPrices();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {  
@@ -57,6 +69,7 @@ const addToCart = async () => {
       const prodJson = await selectedToAdd.json();
       document.querySelector(cartItems).appendChild(createCartItemElement(prodJson));
       toStorage();
+      sumPrices();
     });    
   });
 };
@@ -67,9 +80,18 @@ async function fetchingProducts() {
   results.forEach((element) => {
     document.querySelector('.items').appendChild(createProductItemElement(element));
   });
-  addToCart();  
+  addToCart();    
 }
 
+function emptyCart() {
+  const btnToEmpty = document.querySelector('.empty-cart');
+  btnToEmpty.addEventListener('click', () => {
+    document.querySelector(cartItems).innerHTML = '';
+    localStorage.removeItem('itemsList');
+    const finalPrice = document.querySelector('.total-price');
+    finalPrice.innerText = '';
+  });
+}
 window.onload = function onload() {   
   fetchingProducts();
   if (localStorage.itemsList) {
@@ -77,4 +99,5 @@ window.onload = function onload() {
   const itemsAfterStorage = document.querySelectorAll('.cart__item');
   itemsAfterStorage.forEach((element) => element.addEventListener('click', cartItemClickListener));
   }
+  emptyCart();
 };
