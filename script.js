@@ -1,3 +1,5 @@
+const cartItemsClass = '.cart__items';
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -31,9 +33,9 @@ function createProductItemElement({ sku, name, image }) {
 // Requisito 5
 function payment() {
   const payout = document.querySelector('.total-price');
-  const listItems = [...document.querySelectorAll('.cart__item')];
+  const list = [...document.querySelectorAll(cartItemsClass)];
   payout.innerText = 0;
-  const sum = listItems.reduce((acc, cv) => acc + Number(cv.innerText.split('PRICE: $')[1]), 0);
+  const sum = list.reduce((acc, cv) => acc + Number(cv.innerText.split('PRICE: $')[1]), 0);
   // payout.innerText = `Total a pagar: $${sum}`;
   payout.innerText = sum;
 }
@@ -65,7 +67,7 @@ function addProductToCart() {
       localStorage.setItem('TotalItems', `${count}`);
       localStorage.setItem(`Item${count}`, 
       `SKU: ${data.id} | NAME: ${data.title} | PRICE: $${data.price}`);
-      document.querySelector('.cart__items').appendChild(createCartItemElement(data));
+      document.querySelector(cartItemsClass).appendChild(createCartItemElement(data));
     })
     .then(() => payment());
   }));
@@ -95,7 +97,7 @@ function clearCart() {
   const btnClear = document.querySelector('.empty-cart');  
   btnClear.addEventListener('click', () => {
     const payout = document.querySelector('.total-price');
-    const cartToCart = document.querySelector('.cart__items');
+    const cartToCart = document.querySelector(cartItemsClass);
     cartToCart.innerHTML = '';
     payout.innerHTML = 0;
     payout.innerText = '';
@@ -107,7 +109,7 @@ function clearCart() {
 function backupListItem() {
   if (localStorage.getItem('TotalItems') > 0) {
     for (let index = 0; index <= localStorage.getItem('TotalItems'); index += 1) {
-      const cartItems = document.querySelector('.cart__items');
+      const cartItems = document.querySelector(cartItemsClass);
       const li = document.createElement('li');
       li.className = 'cart__item';
       cartItems.appendChild(li);
