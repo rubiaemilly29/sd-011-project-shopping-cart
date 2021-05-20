@@ -1,11 +1,13 @@
-window.onload = function onload() { };
-//console.log();
-function createProductImageElement(imageSource) {
-  const img = document.createElement('img');
-  img.className = 'item__image';
-  img.src = imageSource;
-  return img;
-}
+// Requisitos realizados em sala de estudos junto com o colega Nikolas Silva, 
+//  com o apoio dos colegas Vinicius Goncalves, Jeferson Casagrande, 
+// Gustavo Mendes, Fernando Lasmar e Alberto Candido
+// e pesquisas aos sites:
+// https://www.youtube.com/watch?v=wG65FdU-Yos
+// https://www.youtube.com/watch?v=YeFzkC2awTM
+// https://www.blogson.com.br/carrinho-de-compras-com-localstorage-do-html-5/
+//
+
+const lintCorrect = '.cart__items';
 
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
@@ -14,24 +16,22 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ sku, name, image }) {
-  const section = document.createElement('section');
-  section.className = 'item';
-
-  section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
-  return section;
+function createProductImageElement(imageSource) {
+  const img = document.createElement('img');
+  img.className = 'item__image';
+  img.src = imageSource;
+  return img;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
+function storage() {
+  const cartStorage = document.querySelector(lintCorrect);
+  localStorage.setItem('shopCart', cartStorage.innerHTML);
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+  const delItem = document.querySelector(lintCorrect);
+  delItem.removeChild(event.target);
+  storage();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -39,5 +39,52 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  const cartItems = document.querySelector(lintCorrect);
+  cartItems.appendChild(li);
   return li;
 }
+
+function createProductItemElement({ sku, name, image, salePrice }) {
+  const section = document.createElement('section');
+  section.className = 'item';
+
+  section.appendChild(createCustomElement('span', 'item__sku', sku));
+  section.appendChild(createCustomElement('span', 'item__title', name));
+  section.appendChild(createProductImageElement(image));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
+    .addEventListener('click', () => {
+      createCartItemElement({ sku, name, salePrice });
+      storage();
+    });
+
+  return section;
+}
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
+
+function getProductList(query) {
+  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${query}`)
+    .then((response) => response.json())
+    .then((data) => {
+      data.results.forEach((item) => {
+        const itemElement = createProductItemElement({
+          sku: item.id,
+          name: item.title,
+          image: item.thumbnail,
+          salePrice: item.price,
+        });
+        document.querySelector('.items').appendChild(itemElement);
+      });
+    });
+}
+
+window.onload = function onload() {
+  getProductList('computador');
+  if (localStorage.shopCart) {
+    document.querySelector(lintCorrect).innerHTML = localStorage.getItem('shopCart');
+    document.querySelectorAll('.cart__item').forEach((li) => {
+      li.addEventListener('click', cartItemClickListener);
+    });
+  }
+}; 
