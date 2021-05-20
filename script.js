@@ -45,9 +45,9 @@ function createProductItemElement({ sku, name, image }) {
 const query = 'computador';
 const url = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
 
-async function fetchApi(url) {
-  if (url === `https://api.mercadolibre.com/sites/MLB/search?q=${query}`) {
-    return fetch(url)
+async function fetchApi(URL) {
+  if (URL === `https://api.mercadolibre.com/sites/MLB/search?q=${query}`) {
+    return fetch(URL)
       .then((r) => r.json())
       .then((r) => (r.results));
   } 
