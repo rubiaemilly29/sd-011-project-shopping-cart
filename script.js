@@ -1,8 +1,4 @@
-// get elements by class
-const itemsCart = document.querySelector('.cart__items');
-const list = document.querySelector('.items');
-const total = document.querySelector('.total-price');
-
+// create product image
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -10,6 +6,7 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
+// create custom element
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
@@ -17,6 +14,7 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// create and append products
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -31,7 +29,11 @@ function createProductItemElement({ sku, name, image }) {
 
 // Task 5
 // Sum of all items in the cart
+
+const total = document.querySelector('.total-price');
+
 const totalPrice = (prices) => {
+  // total-price recieves by innerText all values summed converted to float type
   total.innerText = (parseFloat(total.innerText) + parseFloat(prices));
 };
 
@@ -43,13 +45,18 @@ const totalPrice = (prices) => {
 // Event Target: https://developer.mozilla.org/en-US/docs/Web/API/Event/target
 // split(): https://www.w3schools.com/jsref/jsref_split.asp
 // localStorage: https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
+
+const itemsCart = document.querySelector('.cart__items');
+
+// remove cart's items
 function cartItemClickListener(event) {
-  totalPrice(-event.target.innerText.split('$')[1]); // the minus here are negativing all variable inside
+  totalPrice(-event.target.innerText.split('$')[1]); // the minus here are negativing all variables inside
   event.target.remove();
   localStorage.setItem('cart', itemsCart.innerHTML);
   localStorage.setItem('price', total.innerText);
 }
 
+// create cart items on click
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -58,13 +65,11 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-// References:
-// Rest API Header: https://stackoverflow.com/questions/43209924/rest-api-use-the-accept-application-json-http-header
-// Fetch: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-// Introduction to Fetch: https://developers.google.com/web/updates/2015/03/introduction-to-fetch
-// The Coding Train - Fetch(): https://youtu.be/tc8DU14qX6I
-
 // Task 7
+// Loadings
+
+const list = document.querySelector('.items');
+
 const nowLoading = () => {
   const loading = document.createElement('p');
   loading.className = 'loading';
@@ -78,6 +83,13 @@ const endLoading = () => {
 };
 
 // Task 1
+// References:
+// Rest API Header: https://stackoverflow.com/questions/43209924/rest-api-use-the-accept-application-json-http-header
+// Fetch: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+// Introduction to Fetch: https://developers.google.com/web/updates/2015/03/introduction-to-fetch
+// The Coding Train - Fetch(): https://youtu.be/tc8DU14qX6I
+
+// fetch mercado livre API plus Loading functions
 const mercadoLivreAPI = () => {
   nowLoading();
   const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
@@ -95,6 +107,7 @@ const mercadoLivreAPI = () => {
 };
 
 // Task 2
+// Add items to the cart and localStorage
 const sendToCart = () => {
   const addItemToCart = document.querySelectorAll('.item__add');
   const method = { method: 'GET', headers: { Accept: 'application/json' } };
@@ -115,7 +128,8 @@ const sendToCart = () => {
 };
 
 // Task 4
-const getCart = async () => {
+// get cart's items on localStorage
+const getCart = () => {
   if (localStorage.cart) {
     itemsCart.innerHTML = localStorage.getItem('cart');
     itemsCart.addEventListener('click', cartItemClickListener);
@@ -124,20 +138,24 @@ const getCart = async () => {
 };
 
 // Task 6
+// clean cart
 const emptyCart = () => {
   localStorage.clear();
   itemsCart.innerHTML = '';
 };
 
+// clear button EventListener
 const empty = document.querySelector('.empty-cart');
 empty.addEventListener('click', emptyCart);
 
+// async functions
 const asyncStart = async () => {
   await mercadoLivreAPI();
   await getCart();
   await sendToCart();
 };
 
+// start window.onload
 window.onload = function onload() {
   asyncStart();
 };
