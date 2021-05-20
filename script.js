@@ -33,7 +33,7 @@ function createProductItemElement({ sku, name, image }) {
 // Requisito 5
 function payment() {
   const payout = document.querySelector('.total-price');
-  const list = [...document.querySelectorAll(cartItemsClass)];
+  const list = [...document.querySelectorAll('.cart__item')];
   payout.innerText = 0;
   const sum = list.reduce((acc, cv) => acc + Number(cv.innerText.split('PRICE: $')[1]), 0);
   // payout.innerText = `Total a pagar: $${sum}`;
@@ -65,7 +65,7 @@ function addProductToCart() {
       const ol = document.querySelector('ol');
       const count = ol.childElementCount;
       localStorage.setItem('TotalItems', `${count}`);
-      localStorage.setItem(`Item${count}`, 
+      localStorage.setItem(`Item${count}`,
       `SKU: ${data.id} | NAME: ${data.title} | PRICE: $${data.price}`);
       document.querySelector(cartItemsClass).appendChild(createCartItemElement(data));
     })
