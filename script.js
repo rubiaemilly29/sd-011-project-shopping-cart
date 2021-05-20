@@ -3,7 +3,12 @@ const endPoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
 
 // 
 const cartItemClickListener = () => {
-console.log('Remove o item do carrinho');
+  const parentList = document.querySelector('.cart__items');
+  const itemInList = document.querySelectorAll('.cart__item');
+  return itemInList.forEach((item) => {
+    console.log('Clicaram em mim tbm =D');
+    parentList.removeChild(item);
+  });
 };
 
 // create the product image and sent it to create element 
@@ -48,36 +53,39 @@ const getItemInfo = (productInfo) => ({
   salePrice: productInfo.price,
 });
 
-const createCartItemElement = ({ id: sku, title: name, price: salePrice }, funct) => {
+const createCartItemElement = ({ id: sku, title: name, price: salePrice }) => {
+  const list = document.querySelector('.cart__items');
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', funct);
-  return li;
-};
-
-const putItemAfterButtonClick = () => {
-  const findGreenButtons = document.querySelector('.item__add');
-  findGreenButtons.addEventListener('click', () => {
-    createCartItemElement(getItemInfo);
-  });
+  li.addEventListener('click', cartItemClickListener);
+  return list.appendChild(li);
 };
 
 // getItemInfo(product);
 // When the button is listened, the id is get and send to a second API address
 const productButtonsListener = () => {
   const addProductButtons = document.querySelectorAll('.item__add');
-  addProductButtons.forEach((_, index) => {
+  return addProductButtons.forEach((_, index) => {
     addProductButtons[index].addEventListener('click', () => {
       const getSku = document.querySelectorAll('.item__sku');
       const sku = getSku[index].innerText;
-      // !Only a test that can be removed
-      console.log(`https://api.mercadolibre.com/items/${sku}`);
-      getItemInfo(fetchItem(sku)
-        .then((objectItem) => createCartItemElement(objectItem, cartItemClickListener)));
+      // send the returned info to createCartItemElement into an object
+      return getItemInfo(fetchItem(sku)
+        .then((objectItem) => {
+          const ObjectInfos = {
+            id: objectItem.id,
+            title: objectItem.title,
+            price: objectItem.price,
+          };
+          console.log(ObjectInfos);
+          createCartItemElement(ObjectInfos);
+        }));
     });
   });
 };
+// console.log(productButtonsListener());
+// createCartItemElement(productButtonsListener(), cartItemClickListener);
 
 const getProductInfo = (object) => (object.results.forEach((info) => {
     const objectInfo = {
@@ -87,6 +95,17 @@ const getProductInfo = (object) => (object.results.forEach((info) => {
     };
     createProductItemElement(objectInfo);
   }));
+
+const asyncListener = () => {
+  productButtonsListener();
+};
+
+const findGreenButtons = document.querySelectorAll('.item__add');
+findGreenButtons.forEach((_, index) => {
+  findGreenButtons[index].addEventListener('click', () => {
+  console.log('Clicaram em mim =D');
+});
+});
 
 const fetchPCList = () => {
   const myObject = {
@@ -98,7 +117,9 @@ const fetchPCList = () => {
     .then((object) => {
       getProductInfo(object);
     })
-    .then(() => productButtonsListener());
+    .then(() => {
+      asyncListener();
+    });
 };
 
 window.onload = () => {
