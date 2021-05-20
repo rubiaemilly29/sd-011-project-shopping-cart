@@ -66,11 +66,9 @@ function createCartItemElement(sku, name, salePrice) { // Cria os item do carrin
 }
 
 function throwToCart(item) { // Adiciona item criados ao carrinho
-  const listCart = document.querySelector('.cart__items'); // FUNCIONANDO
-  // cart = document.querySelector('.cart__items'); // TESTE com essa atribuição no começo
-  
-  const product = createCartItemElement(item.id, item.title, item.price); // FUNCIONANDO
-  listCart.appendChild(product); // FUNCIONANDO
+  const listCart = document.querySelector('.cart__items');  
+  const product = createCartItemElement(item.id, item.title, item.price);
+  listCart.appendChild(product);
 }
 
 async function fetchToCart(id) { // Faz requisição para endpoint, com ID recebido como parâmetro invocado por addToCart()
@@ -88,8 +86,7 @@ async function fetchToCart(id) { // Faz requisição para endpoint, com ID receb
 
 // [Meu CÓDIGO 1 aqui ABAIXO]:>>
  function addToCart(olList) { // Recebe como parâmetro uma <section> de class .items, passado pela função getProductList()
-     olList.addEventListener('click', function (event) { // TESTANDO
-      // olList.addEventListener('click', function (event) { // RUIM
+     olList.addEventListener('click', function (event) { 
       const clicado = event.target; // Captura o elemento que foi clicado nessa <section>
       if (clicado.className === 'item__add') { // Veririfica se o elemento é um <buttom> de class .item__add  
         const pai = clicado.parentElement; // Se for, captura o <elemento pai> desse botão
@@ -116,14 +113,13 @@ async function getProductList(productType) { // Função PROMISE
         }); 
         return produto; 
       }).then((proRetorno) => { addToCart(proRetorno); });  
-    }); // >> Fim do primeiro THEN 
+    });
   }
-  // throw new Error('Pequisa só com a palavra "computador"');
+  // throw new Error('Pequise só com a palavra "computador"');
 }
 // <<:[Meu CÓDIGO 2 aqui ACIMA]
 
 window.onload = function onload() {
   getProductList('computador');
-  // addToCart();
   clearCart();
 };
