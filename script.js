@@ -6,7 +6,7 @@ let cartPriceAmount = 0;
 let totalCartPriceElement;
 
 function updateRenderCartPrice() {
-  totalCartPriceElement.innerText = `$${cartPriceAmount}`;
+  totalCartPriceElement.innerText = cartPriceAmount;
 }
 
 function getSkuFromProductItem(item) {
@@ -22,12 +22,12 @@ function createCustomElement(element, className, innerText) {
 }
 
 function renderCartPrice(totalPrice) {
-  totalCartPriceElement = createCustomElement('span', 'total-price', `$${totalPrice}`);
+  totalCartPriceElement = createCustomElement('span', 'total-price', totalPrice);
 
   cart.appendChild(totalCartPriceElement);
 }
 
-function totalCartPrice() {
+function calculateCartPrice() {
   cartPriceAmount = cartPricesArray.reduce((previous, current) => previous + current, 0);
 
   updateRenderCartPrice();
@@ -36,7 +36,7 @@ function totalCartPrice() {
 function removeFromTotalPrices(targetPrice) {
   cartPricesArray = cartPricesArray.filter((price) => price !== targetPrice);
 
-  totalCartPrice();
+  calculateCartPrice();
 }
 
 function cartItemClickListener(event) {
@@ -81,7 +81,7 @@ async function addItemToCart(event) {
 
   cartPricesArray.push(price);
 
-  totalCartPrice();
+  calculateCartPrice();
 
   cartItems.appendChild(singleItemElement);
 }
@@ -120,7 +120,7 @@ function clearCart() {
 
   cartPricesArray = [];
 
-  totalCartPrice();
+  calculateCartPrice();
   updateRenderCartPrice();
 }
 
