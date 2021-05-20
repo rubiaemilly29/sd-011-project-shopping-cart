@@ -100,3 +100,10 @@ window.onload = function onload() {
 
 const ol = document.querySelector('ol');
 ol.addEventListener('click', cartItemClickListener);
+
+const delCartBtn = document.querySelector('.empty-cart');
+
+delCartBtn.addEventListener('click', () => {
+  cartList.innerHTML = '';
+  localStorage.removeItem('list');
+});
