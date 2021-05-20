@@ -1,3 +1,4 @@
+// Projeto contou com auxilio dos trybers da turma 11: Islene, Tales e Oryange
 const getOl = '.cart__items';
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
