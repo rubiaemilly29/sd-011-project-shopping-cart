@@ -20,11 +20,15 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+// Feito em sala com Nikolas,Alberto e outros rsrs
 function cartItemClickListener(event) {
   // coloque seu código aqui
+  const delItem = document.querySelector('.cart__items');
+  delItem.removeChild(event.target);
   
 }
 
+// Feito em sala com Nikolas,Alberto e outros rsrs
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -35,6 +39,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+// Feito em sala com Nikolas,Alberto e outros rsrs
 function createProductItemElement({ sku, name, image, salePrice }) {
   const section = document.createElement('section');
   section.className = 'item';
