@@ -1,12 +1,11 @@
 const recoverTotalSum = () => document.querySelector('.total-price');
 const recoverCartItems = () => document.querySelector('.cart__items');
 const shoppingCart = 'shopping-cart';
-const recoverShoppingCart = () => JSON.parse(localStorage.getItem(shoppingCart));
 
 function saveItem(sku, name, salePrice) {
   let arrayshoppingCart = [];
   if (Object.keys(localStorage).length > 0) {
-    arrayshoppingCart = recoverShoppingCart();
+    arrayshoppingCart = JSON.parse(localStorage.getItem(shoppingCart));
   }
   arrayshoppingCart.push(`${sku}|${name}|${salePrice}`);
   localStorage.setItem(shoppingCart, JSON.stringify(arrayshoppingCart));
@@ -55,7 +54,7 @@ function cartItemClickListener(event) { // para remover da lista
   const li = event.target.closest('li');
   const nodes = Array.from(recoverCartItems().children);
   const index = nodes.indexOf(li);
-  const newShoppingCart = recoverShoppingCart().splice(index, 1);
+  const newShoppingCart = JSON.parse(localStorage.getItem(shoppingCart)).splice(index, 1);
   localStorage.setItem(shoppingCart, JSON.stringify(newShoppingCart));
   event.target.remove();
   createSumPrice();
@@ -123,10 +122,13 @@ async function addItemToCart(event) {
 }
 
 function openShoppingCart() {
-  recoverShoppingCart().forEach((productCart) => {
-    const [sku, name, salePrice] = productCart.split('|');
-    recoverCartItems().appendChild(createCartItemElement({ sku, name, salePrice }));
-  });
+  if (Object.keys(localStorage).length > 0) {
+    const savedShoppingCart = JSON.parse(localStorage.getItem(shoppingCart));
+    savedShoppingCart.forEach((productCart) => {
+      const [sku, name, salePrice] = productCart.split('|');
+      recoverCartItems().appendChild(createCartItemElement({ sku, name, salePrice }));
+    });
+  }
   createSumPrice();
 }
 
