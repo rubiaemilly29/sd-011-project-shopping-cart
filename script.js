@@ -1,6 +1,7 @@
 window.onload = function onload() { };
 
 // inicio
+const cartItems = '.cart__items';
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -16,6 +17,11 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+function storage() {
+  const cartStorage = document.querySelector(cartItems);
+  localStorage.setItem('shopCart', cartStorage.innerHTML);
+}
+
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
@@ -23,8 +29,9 @@ function getSkuFromProductItem(item) {
 // Feito em sala com Nikolas,Alberto e outros rsrs
 function cartItemClickListener(event) {
   // coloque seu código aqui
-  const delItem = document.querySelector('.cart__items');
+  const delItem = document.querySelector(cartItems);
   delItem.removeChild(event.target);
+  storage();
 }
 
 // Feito em sala com Nikolas,Alberto e outros rsrs
@@ -33,7 +40,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
-  const itemsCart = document.querySelector('.cart__items');
+  const itemsCart = document.querySelector(cartItems);
   itemsCart.appendChild(li);
   return li;
 }
@@ -49,6 +56,7 @@ function createProductItemElement({ sku, name, image, salePrice }) {
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
   .addEventListener('click', () => {
     createCartItemElement({ sku, name, salePrice });
+    storage();
   });
 
   return section;
@@ -73,6 +81,12 @@ function getProducts(query) {
 
 window.onload = function onload() {
   getProducts('computador');
+  if (localStorage.shopCart) {
+    document.querySelector(cartItems).innerHTML = localStorage.getItem('shopCart');
+    document.querySelectorAll(cartItems).forEach((li) => {
+      li.addEventListener('click', cartItemClickListener);
+    });
+  }
 };
 
 // utilizar na função fetch e passar como segundo parametro da api
