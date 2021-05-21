@@ -1,17 +1,18 @@
 const cartItems = '.cart__items';
+const totalPrice = '.total-price';
 
 // remove o item do carrinho
 function cartItemClickListener(price, event) {
   const eventTg = event.target;
   const cartOL = document.querySelector('.cart__items');
-  const spanTotal = document.querySelector('.total-price');
+  const spanTotal = document.querySelector(totalPrice);
   spanTotal.innerHTML = parseFloat(Number(spanTotal.innerHTML) - Number(price)); // faz a subtração
   eventTg.remove();
   localStorage.setItem('keyName', cartOL.innerHTML);
 }
 
 function sumCart(price) {
-  const spanTotal = document.querySelector('.total-price');
+  const spanTotal = document.querySelector(totalPrice);
   spanTotal.innerHTML = parseFloat(Number(spanTotal.innerHTML) + Number(price)); // faz a soma
 }
 
@@ -79,6 +80,17 @@ const fetchApi = () => {
   });
 };
 
+function clearCart() {
+  const clearButton = document.getElementsByClassName('empty-cart')[0];
+  clearButton.addEventListener('click', () => {
+    const cartOL = document.querySelector(cartItems);
+    const spanTotal = document.querySelector(totalPrice);
+    cartOL.innerHTML = '';
+    spanTotal.innerHTML = '0';
+    localStorage.clear();
+  });
+}
+
 function getItem() {
   const local = localStorage.getItem('keyName');
   const cartOL = document.querySelector(cartItems);
@@ -90,4 +102,5 @@ function getItem() {
 window.onload = function onload() {
   fetchApi();
   getItem();
+  clearCart();
 };
