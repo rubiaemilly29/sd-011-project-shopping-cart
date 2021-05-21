@@ -26,8 +26,8 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) { 
   return item.querySelector('span.item__sku').innerText;
 } */
 
-function cartItemClickListener() {
-  // coloque seu código aqui
+function cartItemClickListener(event) {
+  event.target.remove();
 }
 
 // Requisito 2 - Cria os componentes HTML referente a um item do carrinho
