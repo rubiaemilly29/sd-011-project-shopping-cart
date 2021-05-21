@@ -140,6 +140,17 @@ const localStorageItemsCart = (idArr) => {
   idArr.forEach((id) => addItemtoShoppingCart(id));
 };
 
+const emptyCart = () => {
+  olCart.innerHTML = '';
+  cartItemsPrices.splice(0, cartItemsPrices.length);
+  sumPricesCartItems(0);
+  removeItemArray(cartItemsPrices, 0);
+  localStorage.clear();
+};
+
+const emptyCartBtn = document.querySelector('.empty-cart');
+emptyCartBtn.addEventListener('click', emptyCart);
+
 window.onload = async () => {
   await getProductList('computador');
   await localStorageItemsCart(Object.keys(localStorage));
