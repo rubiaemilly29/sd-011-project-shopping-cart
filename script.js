@@ -1,4 +1,3 @@
-// ############################### Funções Fornecidas #####################
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -29,10 +28,15 @@ function getSkuFromProductItem(item) { // função auxiliar fornecida
   return item.querySelector('span.item__sku').innerText;
 }
 
+function saveCart() {
+  const cart = document.querySelector('ol').innerHTML;
+  localStorage.setItem('cartItems', cart);
+}
+
 function cartItemClickListener(event) {
   const toRemove = event.target;
-  console.log(toRemove);
   toRemove.remove();
+  saveCart();
 }
 
 function createCartItemElement({ sku, name, salePrice }) { // função auxiliar fornecida
@@ -42,12 +46,10 @@ function createCartItemElement({ sku, name, salePrice }) { // função auxiliar 
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
-// ############################### Fim das Funções Fornecidas #####################
 
 async function fetchAndReturnJson(url) {
-  const productList = await fetch(url)
-  .then((result) => result.json());
-  return productList;
+  const productList = await fetch(url);
+  return productList.json();
 }
 
 async function createItemSection() {
@@ -73,11 +75,20 @@ async function addToCart(event) {
       name: selectedProduct.title,
       salePrice: selectedProduct.price,
     };
-    document.querySelector('.cart__items').appendChild(createCartItemElement(product));
+    await document.querySelector('.cart__items').appendChild(createCartItemElement(product));
+    saveCart();
+}
+
+function retrieveCart() {
+  const cart = localStorage.getItem('cartItems');
+  document.querySelector('.cart__items').innerHTML = cart;
+  const cartItems = document.querySelectorAll('.cart__item');
+  cartItems.forEach((item) => item.addEventListener('click', cartItemClickListener));
 }
 
 window.onload = function onload() {
   createItemSection();
   const itemsSection = document.querySelector('.items');
   itemsSection.addEventListener('click', addToCart);
+  retrieveCart();
 };
