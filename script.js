@@ -15,10 +15,6 @@ const emptyCart = () => {
   });
 };
 
-// sum of prices
-// const sumOfPrices = () => {
-// };
-
 // create the product image and sent it to create element 
 const createProductImageElement = (imageSource) => {
   const imgFeature = document.createElement('img');
@@ -52,27 +48,31 @@ const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) =>
 // Get info from de second API
 // !important for the second required
 const fetchItem = (param) => fetch(`https://api.mercadolibre.com/items/${param}`)
-    .then((response) => response.json())
-    .then((product) => product);
-    
+.then((response) => response.json())
+.then((product) => product);
+
 const getItemInfo = (productInfo) => ({
   id: productInfo.id,
   title: productInfo.title,
   salePrice: productInfo.price,
 });
 
-const teste = () => {
-  const saved = localStorage.getItem('info');
-  if (saved) {
-    const list = document.querySelector(cartItems);
-    list.innerHTML = saved;
-  }
-};
-
 // remove the item selected form the car list
 const cartItemClickListener = (event) => {
   event.target.remove();
   localStorage.removeItem('info');
+};
+
+const loadItemsFromLocalStorage = () => {
+  const saved = localStorage.getItem('info');
+  if (saved) {
+    const list = document.querySelector(cartItems);
+    list.innerHTML = saved;
+    const listItems = document.querySelectorAll('.cart__item');
+    listItems.forEach((item) => {
+      item.addEventListener('click', cartItemClickListener);
+    });
+  }
 };
 
 const createCartItemElement = ({ id: sku, title: name, price: salePrice }) => {
@@ -85,7 +85,6 @@ const createCartItemElement = ({ id: sku, title: name, price: salePrice }) => {
   localStorage.setItem('info', list.innerHTML);
 };
 
-// getItemInfo(product);
 // When the button is listened, the id is get and send to a second API address
 const productButtonsListener = () => {
   const addProductButtons = document.querySelectorAll('.item__add');
@@ -93,30 +92,29 @@ const productButtonsListener = () => {
     addProductButtons[index].addEventListener('click', () => {
       const getSku = document.querySelectorAll('.item__sku');
       const sku = getSku[index].innerText;
-      // send the returned info to createCartItemElement into an object
       return getItemInfo(fetchItem(sku)
-        .then((objectItem) => {
-          const ObjectInfos = {
-            id: objectItem.id,
-            title: objectItem.title,
-            price: objectItem.price,
-          };
-          console.log(ObjectInfos);
-          createCartItemElement(ObjectInfos);
-        }));
+      .then((objectItem) => {
+        const ObjectInfos = {
+          id: objectItem.id,
+          title: objectItem.title,
+          price: objectItem.price,
+        };
+        createCartItemElement(ObjectInfos);
+        getItemInfo(ObjectInfos);
+      }));
     });
   });
 };
 
 const getProductInfo = (object) => (object.results.forEach((info) => {
-    const objectInfo = {
-      id: info.id,
-      title: info.title,
+  const objectInfo = {
+    id: info.id,
+    title: info.title,
       thumbnail: info.thumbnail,
     };
     createProductItemElement(objectInfo);
   }));
-
+  
 const asyncListener = () => {
   productButtonsListener();
 };
@@ -124,28 +122,28 @@ const asyncListener = () => {
 const findGreenButtons = document.querySelectorAll('.item__add');
 findGreenButtons.forEach((_, index) => {
   findGreenButtons[index].addEventListener('click', () => {
-  console.log('Clicaram em mim =D');
+    console.log('Clicaram em mim =D');
+  });
 });
-});
-
+  
 const fetchPCList = () => {
   const myObject = {
     method: 'GET',
     headers: { Accept: 'application/json' },
   };
   fetch(endPoint, myObject)
-    .then((response) => response.json())
-    .then((object) => {
-      getProductInfo(object);
-    })
-    .then(() => {
-      asyncListener();
-    });
+  .then((response) => response.json())
+  .then((object) => {
+    getProductInfo(object);
+  })
+  .then(() => {
+    asyncListener();
+  });
 };
 
 window.onload = () => {
   fetchPCList();
-  teste();
+  loadItemsFromLocalStorage();
   emptyCart();
 };
 
