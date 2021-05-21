@@ -6,7 +6,7 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
-// create custom element
+// create custom elements
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
@@ -33,7 +33,9 @@ const total = document.querySelector('.total-price');
 
 const totalPrice = (prices) => {
   // total-price recieves by innerText all values summed converted to float type
-  total.innerText = (parseFloat(total.innerText) + parseFloat(prices));
+  const totalFloat = parseFloat(total);
+  const pricesFloat = parseFloat(prices);
+  total.innerText = totalFloat + pricesFloat;
 };
 
 /* function getSkuFromProductItem(item) {
@@ -50,8 +52,8 @@ const itemsCart = document.querySelector('.cart__items');
 // remove cart's items
 function cartItemClickListener(event) {
   // thanks to Cesar Bhering's explanation and help
-  totalPrice(-event.target.innerText.split('$')[1]); // the minus here are negating all variables inside
-  event.target.remove(); // remove event on click (on EventListener in line 150)
+  totalPrice(-event.target.innerText.split('$')[1]); // the subtration symbol here are negating all values inside *string.split(separator, limit)
+  event.target.remove(); // remove event on click (on this case, the EventListener in line 150)
   localStorage.setItem('cart', itemsCart.innerHTML); // innerHTML cause cart contains objects, images and so far, html elements.
   localStorage.setItem('price', total.innerText); // innerText cause is just text (numbers in this case)
 }
@@ -100,12 +102,13 @@ const mercadoLivreAPI = () => {
   const method = { method: 'GET', headers: { Accept: 'application/json' } };
 
   return fetch(url, method) // fetch API's url and method/accept
-    .then((response) => response.json()) // gets and converts the responde to json
+    .then((response) => response.json()) // gets and converts the response to json
     .then((json) => { // then uses json for each items on the list
-    json.results.forEach((items) => list.appendChild(createProductItemElement(
+      json.results.forEach((items) => list.appendChild(createProductItemElement(
         { sku: items.id, name: items.title, image: items.thumbnail },
       )));
-    }).then(endLoading); // calss endLoading function
+    })
+    .then(endLoading); // calls endLoading function
 };
 
 // Task 2
@@ -122,9 +125,9 @@ const sendToCart = () => {
       fetch(`https://api.mercadolibre.com/items/${items.parentNode.children[0].innerText}`, method)
         .then((response) => response.json())
         .then((json) => {
-          itemsCart.appendChild(createCartItemElement({
-            sku: json.id, name: json.title, salePrice: json.price,
-          }));
+          itemsCart.appendChild(createCartItemElement(
+            { sku: json.id, name: json.title, salePrice: json.price },
+          ));
           totalPrice(json.price);
         })
         .then(() => localStorage.setItem('cart', itemsCart.innerHTML))
@@ -136,7 +139,7 @@ const sendToCart = () => {
 const getCart = () => {
   if (localStorage.cart) { // if there's a key called cart on localStorage, then...
     itemsCart.innerHTML = localStorage.getItem('cart'); // localStorage gets itemsCart
-    itemsCart.addEventListener('click', cartItemClickListener); // add the click on itemsCart
+    itemsCart.addEventListener('click', cartItemClickListener); // add the click event to get cart's items
     total.innerText = localStorage.getItem('price'); // gets the item's price
   }
 };
