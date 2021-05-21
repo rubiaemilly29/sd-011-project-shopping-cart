@@ -36,7 +36,7 @@ function cartItemClickListener(event, salePrice) {
 function createCartItemElement({ id: sku, title: name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: R$${salePrice}`;
   localStorage.setItem(`Produto${cartItems.childElementCount}`, `${sku}|${name}|${salePrice}`);
   li.addEventListener('click', (event) => cartItemClickListener(event, salePrice));
   allitemsPrice.innerText = parseFloat(Number(allitemsPrice.innerText) + salePrice);
@@ -82,8 +82,8 @@ window.onload = function onload() {
   createProductList();
   const items = document.querySelector('.items');
   items.addEventListener('click', addProduct);
-  const button = document.querySelector('.empty-cart');
-  button.addEventListener('click', () => {
+  const eraseButton = document.querySelector('.empty-cart');
+  eraseButton.addEventListener('click', () => {
     cartItems.innerHTML = '';
     allitemsPrice.innerText = '0';
     localStorage.clear();
