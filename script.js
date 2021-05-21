@@ -1,6 +1,7 @@
 const api = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
 const itemsCart = '.cart__items';
 
+// criar elemento personalizado
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
@@ -8,6 +9,7 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// criar elemento de imagem do produto
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -20,7 +22,7 @@ function storage() {
   localStorage.setItem('shopCart', cartStorage.innerHTML);
 }
 
-// 3 Para remover o item do carrinho
+// 3 clique de item do carrinho
 function cartItemClickListener(event) {
   // coloque seu código aqui
   const delItem = document.querySelector(itemsCart);
@@ -28,7 +30,8 @@ function cartItemClickListener(event) {
   storage();
  }
 
- function createCartItemElement({ id: sku, title: name, price: salePrice }) {
+ // 2 criar elemento de item do carrinho
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
@@ -38,6 +41,7 @@ function cartItemClickListener(event) {
   return li;
 }
 
+// 2 adicionar ao carrinho buscar item do carrinho de API
 const fetchApiCartItem = (id) => {
   const API_URL = `https://api.mercadolibre.com/items/${id}`;
   const headers = { headers: { Accept: 'application/json' } };
@@ -50,10 +54,12 @@ const fetchApiCartItem = (id) => {
     });
 };
 
+// obter sku do item do produto
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;  
 }
 
+// criar elemento de item de produto
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -71,7 +77,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
-// 1
+// 1 Buscar api
 const fetchApi = () => {
   const headers = { headers: { Accept: 'application/json' } };
   fetch(api, headers)
@@ -85,14 +91,25 @@ const fetchApi = () => {
     });
   });  
 };
-fetchApi();
+
+// Limpa o carrinho
+function clearListItens() {
+  document.querySelector('.empty-cart').addEventListener('click', () => {
+    localStorage.clear();
+    const listClear = document.querySelector(itemsCart);
+    while (listClear.firstChild) {
+      listClear.removeChild(listClear.firstChild);
+    }
+  });
+}
 
  window.onload = function onload() { 
   fetchApi();
   if (localStorage.shopCart) {
-    document.querySelector(itemsCart).innerHTML = localStorage.getItem('shopCart');
+    document.querySelector(itemsCart).innerHTML = localStorage.getItem('shopCart'); // pra carregar a pagina do local storage
     document.querySelectorAll('.cart__item').forEach((li) => {
       li.addEventListener('click', cartItemClickListener);
     });
   }
+  clearListItens();
 };
