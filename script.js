@@ -73,6 +73,7 @@ const fetchApi = () => {
   fetch(url, headers)
     .then((response) => response.json())
     .then((json) => {
+      document.querySelector('.loading').remove();
       const jsonResults = json.results;
       jsonResults.forEach(({ id, title, thumbnail, price }) => {
         createProductItemElement({ sku: id, name: title, image: thumbnail, price });
@@ -104,3 +105,5 @@ window.onload = function onload() {
   getItem();
   clearCart();
 };
+
+// Bruno me salvou nesse projeto <3 
