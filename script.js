@@ -31,7 +31,7 @@ async function findProducts(key = 'computador') {
   return json.results;
 }
 
-function cartItemClickListener() {
+function createsProductContainers() {
   // coloque seu código aqui.
   findProducts('o segredo').then((products) => {
     products.forEach((product) => {
@@ -42,7 +42,7 @@ function cartItemClickListener() {
 }
 
 window.onload = function onload() { 
-  cartItemClickListener();
+  createsProductContainers();
 };
 
 // 2 - Adicione o produto ao carrinho de compras
@@ -57,4 +57,8 @@ window.onload = function onload() {
 //   li.innerText = `SKU: ${element.id} | NAME: ${element.title} | PRICE: $${element.price}`;
 //   li.addEventListener('click', cartItemClickListener);
 //   return li;
+// }
+
+// function cartItemClickListener(event) {
+//   // coloque seu código aqui.
 // }
