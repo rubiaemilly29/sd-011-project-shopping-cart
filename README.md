@@ -64,7 +64,7 @@ Seu projeto deve ter o comportamento parecido com o do gif abaixo quando finaliz
 
   - Projeto individual;
 
-  - Data de entrega para avaliação final do projeto: `21/05/2021 - 14:00h`.
+  - Data de entrega para avaliação final do projeto: `24/05/2021 - 14:00h`.
 
 ---
 
