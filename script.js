@@ -81,4 +81,14 @@ window.onload = function onload() {
       li.addEventListener('click', cartItemClickListener);
     });
   }
+  document.querySelector('.empty-cart').addEventListener('click', () => {
+    localStorage.clear();
+    const listChild = document.querySelector('.cart__items');
+    while (listChild.firstChild) {
+      listChild.removeChild(listChild.firstChild);
+    }
+  });
 };
+
+// // Percorrer todas as LIs do carrinho com for each, usar o split com o $, somar a ultima posição do array com parseInt
+// <p> innerHTML =  soma da função acima </p>
