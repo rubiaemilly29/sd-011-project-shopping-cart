@@ -73,6 +73,17 @@ function getProductList(query) {
     });
 }
 
+// Requisito 6 - Crie um botão para limpar carrinho de compras
+function clearListItems() {
+  document.querySelector('.empty-cart').addEventListener('click', () => {
+    localStorage.clear();
+    const listChild = document.querySelector('.cart__items');
+    while (listChild.firstChild) {
+      listChild.removeChild(listChild.firstChild);
+    }
+  });
+}
+
 window.onload = function onload() {
   getProductList('computador');
   if (localStorage.shopCart) {
@@ -81,13 +92,11 @@ window.onload = function onload() {
       li.addEventListener('click', cartItemClickListener);
     });
   }
-  document.querySelector('.empty-cart').addEventListener('click', () => {
-    localStorage.clear();
-    const listChild = document.querySelector('.cart__items');
-    while (listChild.firstChild) {
-      listChild.removeChild(listChild.firstChild);
-    }
-  });
+  clearListItems();
+  // references: https://www.w3schools.com/jsref/met_win_settimeout.asp; https://pt.stackoverflow.com/questions/4605/remover-elemento-da-p%C3%A1gina-com-javascript;
+  setTimeout(() => {
+    document.querySelector('.loading').remove();
+  }, 500);
 };
 
 // // Percorrer todas as LIs do carrinho com for each, usar o split com o $, somar a ultima posição do array com parseInt
