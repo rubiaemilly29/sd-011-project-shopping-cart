@@ -35,7 +35,7 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) { // 
   // const cartList = document.querySelector('.cart_items');
   const li = document.createElement('li');
   li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: ${salePrice}`;
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   // cartList.appendChild(li); // O elemento retornado é filho do elemento ol
 
   li.addEventListener('click', cartItemClickListener); // Inicia a lógica que remove o item do carrinho ao clicar nele
@@ -64,7 +64,9 @@ const fetchProduct = () => {
     .then((data) => data.results.forEach((computador) => {
         const getItem = document.querySelector('.items');
         getItem.appendChild(createProductItemElement(computador));
-      }));
+      }))
+    .then(() => addToCart())
+    .catch((error) => console.log(error));
 };
 
 window.onload = function onload() {
