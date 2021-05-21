@@ -34,13 +34,19 @@ const createCustomElement = (element, className, innerText) => {
 // create an element using de shortcut to make it automated
 const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) => {
   const section = document.createElement('section');
+  const loadingSpan = document.createElement('span');
+  loadingSpan.className = 'loading';
+  loadingSpan.innerText = 'loading...';
+  section.appendChild(loadingSpan);
   const sectionOfItems = document.querySelector('.items');
   section.className = 'item';
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-  
+  setTimeout(() => {
+    section.removeChild(loadingSpan);
+  }, 3000);
   sectionOfItems.appendChild(section);
   return sectionOfItems;
 };
