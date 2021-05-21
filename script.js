@@ -4,6 +4,7 @@ let itemsContainer;
 let cartPricesArray = [];
 let cartPriceAmount = 0;
 let totalCartPriceElement;
+const targetKey = 'Cart Products';
 
 function updateRenderCartPrice() {
   totalCartPriceElement.innerText = cartPriceAmount;
@@ -28,25 +29,68 @@ function renderCartPrice(totalPrice) {
 }
 
 function calculateCartPrice() {
-  cartPriceAmount = cartPricesArray.reduce((previous, current) => previous + current, 0);
+  const rawCartPriceAmount = cartPricesArray
+    .reduce((previous, current) => previous + current, 0)
+    .toFixed(2);
+
+  cartPriceAmount = rawCartPriceAmount === '0.00' ? '0' : rawCartPriceAmount;
 
   updateRenderCartPrice();
 }
 
+function removeItemFromArray(termToRemove, fromArray) {
+  const indexOfItemToRemove = fromArray.indexOf(termToRemove);
+  
+  fromArray.splice(indexOfItemToRemove, 1);
+}
+
 function removeFromTotalPrices(targetPrice) {
-  cartPricesArray = cartPricesArray.filter((price) => price !== targetPrice);
+  removeItemFromArray(targetPrice, cartPricesArray);
 
   calculateCartPrice();
+}
+
+function extractInfoFromString(string, targetInfo) {
+  if (targetInfo === 'price') return string.split('$')[1];
+  if (targetInfo === 'id') return string.split(' ', 13)[1];
+  return null;
+}
+
+function setToLocalStorage(productSKU) {
+  const cartItemsInStorage = localStorage.getItem(targetKey);
+  let cartItemsArr;
+  if (cartItemsInStorage) {
+    cartItemsArr = JSON.parse(cartItemsInStorage);
+    cartItemsArr.push(productSKU);
+  } else {
+    cartItemsArr = [productSKU];
+  }
+
+  localStorage.setItem(targetKey, JSON.stringify(cartItemsArr));
+}
+
+function removeFromLocalStorage(productSKU) {
+  const cartItemsInString = localStorage.getItem(targetKey);
+  let localStorageCartItems = JSON.parse(cartItemsInString);
+
+  removeItemFromArray(productSKU, localStorageCartItems);
+
+  localStorageCartItems = JSON.stringify(localStorageCartItems);
+
+  localStorage.setItem(targetKey, localStorageCartItems);
 }
 
 function cartItemClickListener(event) {
   const thisElement = event.target;
   
   const fullString = thisElement.innerText;
-  const price = fullString.split('$')[1];
+  const price = extractInfoFromString(fullString, 'price');
+  const sku = extractInfoFromString(fullString, 'id');
   
   cartItems.removeChild(thisElement);
+
   removeFromTotalPrices(+price);
+  removeFromLocalStorage(sku);
 
   updateRenderCartPrice();
 }
@@ -68,12 +112,9 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
-async function addItemToCart(event) {
-  const item = event.target.parentNode;
-  const singleItemId = getSkuFromProductItem(item);
-
-  const fetchSingleItem = await fetch(`https://api.mercadolibre.com/items/${singleItemId}`);
-  const response = await fetchSingleItem.json();
+async function fetchSingleItem(singleItemId) {
+  const fetchedSingleItem = await fetch(`https://api.mercadolibre.com/items/${singleItemId}`);
+  const response = await fetchedSingleItem.json();
   const singleItemJson = await response;
 
   const { id, title, price } = singleItemJson;
@@ -84,6 +125,14 @@ async function addItemToCart(event) {
   calculateCartPrice();
 
   cartItems.appendChild(singleItemElement);
+}
+
+function addItemToCart(event) {
+  const item = event.target.parentNode;
+  const id = getSkuFromProductItem(item);
+
+  setToLocalStorage(id);
+  fetchSingleItem(id);
 }
 
 function createProductItemElement({ sku, name, image }) {
@@ -117,8 +166,9 @@ function renderProductsList(productsArray) {
 
 function clearCart() {
   cartItems.innerHTML = '';
-
   cartPricesArray = [];
+
+  localStorage.clear(targetKey);
 
   calculateCartPrice();
   updateRenderCartPrice();
@@ -129,6 +179,13 @@ function createLoadingElement() {
   loadingElement.style.fontSize = '80px';
 
   return loadingElement;
+}
+
+function renderCartFromLocalStorage() {  
+  if (localStorage.getItem(targetKey)) {
+    const localStorageCartItems = JSON.parse(localStorage.getItem(targetKey));
+    localStorageCartItems.forEach((sku) => fetchSingleItem(sku));
+  }
 }
 
 window.onload = async function onload() {
@@ -149,4 +206,5 @@ window.onload = async function onload() {
 
   renderCartPrice(cartPriceAmount);
   renderProductsList(results);
+  renderCartFromLocalStorage();
 };
