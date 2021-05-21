@@ -30,7 +30,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 
 function cartItemClickListener(event, price) {
   cartItems.removeChild(event.target);
-  allitemsPrice.innerText = parseFloat(Number(allitemsPrice.innerText) - price);
+  allitemsPrice.innerText = parseFloat(Number(allitemsPrice.innerText) - Number(price));
 }
 
 function createCartItemElement({ id: sku, title: name, price }) {
@@ -39,7 +39,7 @@ function createCartItemElement({ id: sku, title: name, price }) {
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
   localStorage.setItem(`Produto${cartItems.childElementCount}`, `${sku}|${name}|${price}`);
   li.addEventListener('click', (event) => cartItemClickListener(event, price));
-  allitemsPrice.innerText = parseFloat(Number(allitemsPrice.innerText) + price);
+  allitemsPrice.innerText = parseFloat(Number(allitemsPrice.innerText) + Number(price));
   return li;
 }
 
