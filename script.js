@@ -66,7 +66,6 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-
 function addProduct(event) {
   if (event.target.className === 'item__add') {
     const itemID = getSkuFromProductItem(event.target.parentNode);
