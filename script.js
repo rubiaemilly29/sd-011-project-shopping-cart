@@ -51,12 +51,12 @@ function createProductItemElement({ sku, name, image, salePrice }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 // requisito 1 - Você deve criar uma listagem de produtos que devem ser consultados através da API do Mercado Livre.
-// const param = { method: 'GET' , headers: { Accept: 'application/json' } };
+// const param = {method: 'GET' , headers: {Accept: 'application/json' } };
 function getProductList(query) {
   fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${query}`)
     .then((response) => response.json())
@@ -99,5 +99,6 @@ window.onload = function onload() {
   }, 500);
 };
 
-// // Percorrer todas as LIs do carrinho com for each, usar o split com o $, somar a ultima posição do array com parseInt
-// <p> innerHTML =  soma da função acima </p>
+// Requisito 5
+// // // Percorrer todas as LIs do carrinho com for each, usar o split com o $, somar a ultima posição do array com parseInt
+// // <p> innerHTML =  soma da função acima </p>
