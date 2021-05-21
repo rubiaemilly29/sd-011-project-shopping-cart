@@ -22,11 +22,11 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) { 
   return section;
 }
 // Requisito 2 - retorna o valor do itemID
-function getSkuFromProductItem(item) {
+/* function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
-}
+} */
 
-function cartItemClickListener(event) {
+function cartItemClickListener() {
   // coloque seu código aqui
 }
 
@@ -35,7 +35,7 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) { // 
   //const cartList = document.querySelector('.cart_items');
   const li = document.createElement('li');
   li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: ${salePrice}`;
   //cartList.appendChild(li); // O elemento retornado é filho do elemento ol
 
   li.addEventListener('click', cartItemClickListener); // Inicia a lógica que remove o item do carrinho ao clicar nele
@@ -44,7 +44,7 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) { // 
 
 // Requisito 2 - Requisição da API 
 function fetchCartItem(itemID) {
-  const cartList = document.querySelector('.cart_items')
+  const cartList = document.querySelector('.cart__items')
   fetch(`https://api.mercadolibre.com/items/${itemID}`) // Busca na API pelos valores do itemID clicado
     .then((response) => response.json())
     .then((data) => cartList.appendChild(createCartItemElement(data)));
@@ -58,7 +58,7 @@ function addToCart(event) {
 
 // Requisito 2 - Atribui a todos os botões o evento de capturar o span
 function eventButtonCart() {
-  const getButton = document.querySelector('.item_add')
+  const getButton = document.querySelector('.item__add')
   getButton.forEach((button) => button.addEventListener('click', addToCart)); // Quando clicar no item captura o itemID 
 }
 
@@ -74,6 +74,4 @@ const fetchProduct = () => {
 
 window.onload = function onload() {
   fetchProduct(); // Requisito 1
-  fetchCartItem(); // Requisito 2
-  eventButtonCart();
  };
