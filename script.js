@@ -26,11 +26,24 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+// Percorrer todas as LIs do carrinho com for each, usar o split com o $, somar a ultima posição do array com parseInt
+
+function calculatePriceTotal() {
+  const items = document.querySelectorAll('.cart__item');
+  let sum = 0;
+  items.forEach((item) => {
+    sum += parseFloat(item.innerHTML.split('$')[1]);
+    console.log(item.innerHTML.split('$')[1]);
+  });
+  document.querySelector('.total-price').innerText = sum;
+}
+
 // Feito em sala com Nikolas,Alberto e outros rsrs
 function cartItemClickListener(event) {
   // coloque seu código aqui
   const delItem = document.querySelector(cartItems);
   delItem.removeChild(event.target);
+  calculatePriceTotal();
   storage();
 }
 
@@ -56,6 +69,7 @@ function createProductItemElement({ sku, name, image, salePrice }) {
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
   .addEventListener('click', () => {
     createCartItemElement({ sku, name, salePrice });
+    calculatePriceTotal();
     storage();
   });
 
