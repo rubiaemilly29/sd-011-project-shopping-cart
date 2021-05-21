@@ -1,3 +1,5 @@
+const cartItemsPrices = [];
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -43,13 +45,30 @@ const removeIdStorange = (eventTarget) => {
   localStorage.removeItem(id);
 };
 
+//Source: https://stackoverflow.com/questions/5767325/how-can-i-remove-a-specific-item-from-an-array
+const removeItemArray = (arr, item) => {
+  const index = arr.indexOf(item);
+  if (index > -1) arr.splice(index, 1);
+}
+
 function cartItemClickListener(event) {
+  olCart.removeEventListener('click', cartItemClickListener);
+  
   const isLi = event.target.nodeName === 'LI';
   if (!isLi) return;
-
+  
   removeIdStorange(event.target);
 
+  const textInLi = event.target.textContent;
+  const price = textInLi.split('PRICE: $').pop();
+  const itemPrice = parseFloat(price);
+  
+  removeItemArray(cartItemsPrices, itemPrice);
+  sumPricesCartItems(0);
+  removeItemArray(cartItemsPrices, 0);
+
   event.target.remove();
+
 }
 
 const olCart = document.querySelector('.cart__items');
@@ -67,6 +86,27 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+const createTotalPriceOlCart = () => {
+  const ol = document.createElement('ol');
+  ol.className = 'total-price';
+  const sectionCart = document.querySelector('.cart');
+
+  sectionCart.appendChild(ol)
+
+  const liTotalPrice = createCustomElement('li', 'li-total-price', 'PREÇO TOTAL:');
+
+  ol.appendChild(liTotalPrice);
+} 
+
+const sumPricesCartItems = (price) => {
+  cartItemsPrices.push(price);
+
+  sumPrices = Math.round(cartItemsPrices.reduce((a, b) => a + b, 0) * 100) / 100;
+  
+  const liWithPrice = document.querySelector('.li-total-price');
+  liWithPrice.textContent = `${sumPrices}`
+}
+
 const addItemtoShoppingCart = (itemId) => {
   fetch(`https://api.mercadolibre.com/items/${itemId}`)
   .then((response) => response.json())
@@ -77,6 +117,7 @@ const addItemtoShoppingCart = (itemId) => {
       salePrice: json.price,
     };
     olCart.appendChild(createCartItemElement(obj));
+    sumPricesCartItems(json.price);
   });
 };
 
@@ -102,4 +143,5 @@ const localStorageItemsCart = (idArr) => {
 window.onload = async () => {
   await getProductList('computador');
   await localStorageItemsCart(Object.keys(localStorage));
+  await createTotalPriceOlCart();
 };
