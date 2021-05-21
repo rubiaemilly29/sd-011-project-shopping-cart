@@ -1,14 +1,9 @@
 // get endPoint
 const endPoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
 
-// 
-const cartItemClickListener = () => {
-  const parentList = document.querySelector('.cart__items');
-  const itemInList = document.querySelectorAll('.cart__item');
-  return itemInList.forEach((item) => {
-    console.log('Clicaram em mim tbm =D');
-    parentList.removeChild(item);
-  });
+// remove aitem selected form the car list
+const cartItemClickListener = (event) => {
+    event.target.remove();
 };
 
 // create the product image and sent it to create element 
