@@ -108,6 +108,10 @@ function clearCart() {
 
 window.onload = function onload() {
   createItemSection()
+  .then(() => {
+    const loading = document.getElementById('loading');
+    loading.remove();
+  })
   .then(() => document.querySelectorAll('.item'))
   .then((result) => result.forEach((item) => item.addEventListener('click', addToCart)));
   retrieveCart();

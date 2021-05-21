@@ -80,3 +80,15 @@
   font-size: 16pt;
   text-align: center;
 }
+
+.loading {
+  display: block;
+  position: absolute;
+  top: 200px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 100;
+  font-size: 5rem;
+  background-color: red;
+}
