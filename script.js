@@ -79,6 +79,16 @@ function getProducts(query) {
   });
 }
 
+function clearList() {
+  document.querySelector('.empty-cart').addEventListener('click', () => {
+    localStorage.clear();
+    const liCart = document.querySelector(cartItems);
+    while (liCart.firstChild) {
+      liCart.removeChild(liCart.firstChild);
+    }
+  });
+}
+
 window.onload = function onload() {
   getProducts('computador');
   if (localStorage.shopCart) {
@@ -87,9 +97,13 @@ window.onload = function onload() {
       li.addEventListener('click', cartItemClickListener);
     });
   }
+  clearList();
 };
 
 // utilizar na função fetch e passar como segundo parametro da api
 // const myHeaders = { method: 'GET',
 // headers: 'application/json',
 // cache: 'default' }; 
+// Requisito 5
+// // // Percorrer todas as LIs do carrinho com for each, usar o split com o $, somar a ultima posição do array com parseInt
+// // <p> innerHTML =  soma da função acima </p> 
