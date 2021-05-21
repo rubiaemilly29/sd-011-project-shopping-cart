@@ -92,7 +92,7 @@ const fetchApi = () => {
   });  
 };
 
-// Limpa o carrinho
+// 6 Limpa o carrinho
 function clearListItens() {
   document.querySelector('.empty-cart').addEventListener('click', () => {
     localStorage.clear();
@@ -112,4 +112,7 @@ function clearListItens() {
     });
   }
   clearListItens();
+  setTimeout(() => {
+    document.querySelector('.loading').remove();
+  }, 500);
 };
