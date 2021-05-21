@@ -30,7 +30,7 @@ function renderCartPrice(totalPrice) {
 
 function calculateCartPrice() {
   const rawCartPriceAmount = cartPricesArray
-    .reduce((previous, current) => previous + current, 0)
+    .reduce((previous, current) => previous + current, 0);
 
   cartPriceAmount = +rawCartPriceAmount;
 
