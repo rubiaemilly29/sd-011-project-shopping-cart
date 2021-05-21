@@ -33,9 +33,7 @@ const total = document.querySelector('.total-price');
 
 const totalPrice = (prices) => {
   // total-price recieves by innerText all values summed converted to float type
-  const totalFloat = parseFloat(total);
-  const pricesFloat = parseFloat(prices);
-  total.innerText = totalFloat + pricesFloat;
+  total.innerText = parseFloat(total) + parseFloat(prices);
 };
 
 /* function getSkuFromProductItem(item) {
@@ -52,7 +50,7 @@ const itemsCart = document.querySelector('.cart__items');
 // remove cart's items
 function cartItemClickListener(event) {
   // thanks to Cesar Bhering's explanation and help
-  totalPrice(-event.target.innerText.split('$')[1]); // the subtration symbol here are negating all values inside *string.split(separator, limit)
+  totalPrice(-event.target.innerText.split('$')[1]); // the subtraction symbol here are negating all values inside *string.split(separator, limit)
   event.target.remove(); // remove event on click (on this case, the EventListener in line 150)
   localStorage.setItem('cart', itemsCart.innerHTML); // innerHTML cause cart contains objects, images and so far, html elements.
   localStorage.setItem('price', total.innerText); // innerText cause is just text (numbers in this case)
