@@ -30,8 +30,25 @@ function getSkuFromProductItem(item) {
 
 const cartList = document.querySelector('.cart__items');
 
+const cartSection = document.querySelector('.cart');
+
+const fl = (str) => parseFloat(str);
+
+const rd = (num) => Math.round((num + Number.EPSILON) * 100) / 100;
+
+const numberDots = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:(\.|,)\d+)?$/;
+
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+  const price = document.querySelector('.total-price');
+  let priceNumber = 0;
+  if (price) priceNumber = fl(price.innerText);
+  // priceRemovalHandling();
+  const targetText = event.target.innerText;
+  const dollarSignIndex = targetText.indexOf('$');
+  const rawValue = targetText.substring(dollarSignIndex + 1);
+  const finalValue = fl(rawValue.match(numberDots)[0]);
+  const newTotal = rd(priceNumber - finalValue);
+  if (price) price.innerText = newTotal;
   event.target.remove();
   localStorage.setItem('list', cartList.innerHTML);
 }
@@ -52,13 +69,25 @@ function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  // li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
+const startLoading = () => {
+  const div = document.createElement('div');
+  div.className = 'loading';
+  div.innerText = 'Loading...';
+  document.body.appendChild(div);
+};
+
 const fetchPCs = () => {
+  startLoading();
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
-    .then((resp) => resp.json())
+    .then((resp) => {
+      const div = document.querySelector('div');
+      div.remove();
+      return resp.json();
+    })
     .then((resp) => resp.results)
     .then((product) => {
       product
@@ -69,12 +98,24 @@ const fetchPCs = () => {
     });
 };
 
+const totalPrice = document.createElement('p');
+totalPrice.classList = 'total-price';
+let numberPrice = 0;
+
+const priceHandler = ({ salePrice }) => {
+  const currentTotal = fl(salePrice);
+  numberPrice += currentTotal;
+  totalPrice.innerHTML = rd((numberPrice));
+  cartSection.appendChild(totalPrice);
+};
+
 const fetchId = (id) => {
   let objData;
   fetch(`https://api.mercadolibre.com/items/${id}`)
     .then((resp) => resp.json())
     .then((object) => {
       const singleProduct = handleProduct(object);
+      priceHandler(singleProduct);
       objData = createCartItemElement(singleProduct);
       cartList.appendChild(objData);
       localStorage.setItem('list', cartList.innerHTML);
