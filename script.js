@@ -49,7 +49,7 @@ function createCartItemElement({ sku, name, price }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
-  const items = document.querySelector('.cart__items');
+  const items = document.querySelector(carrinhoItem);
   items.appendChild(li);
   sumPrices();
   saveLocal();
