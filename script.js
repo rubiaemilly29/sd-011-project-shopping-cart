@@ -5,7 +5,7 @@
 // https://www.youtube.com/watch?v=wG65FdU-Yos
 // https://www.youtube.com/watch?v=YeFzkC2awTM
 // https://www.blogson.com.br/carrinho-de-compras-com-localstorage-do-html-5/
-//
+// https://www.horadecodar.com.br/2020/11/03/mostrar-gif-enquanto-uma-pagina-carrega-com-javascript/
 
 const lintCorrect = '.cart__items';
 
@@ -79,6 +79,8 @@ function getProductList(query) {
     });
 }
 
+// em conjunto com o colega Nykolas Silva para corrigir o erro de limpar o 
+// carrinho que forçava o recarregamento da tela e função de exibição do loading
 window.onload = function onload() {
   getProductList('computador');
   if (localStorage.shopCart) {
@@ -87,4 +89,15 @@ window.onload = function onload() {
       li.addEventListener('click', cartItemClickListener);
     });
   }
+
+document.querySelector('.empty-cart').addEventListener('click', () => {
+  localStorage.clear();
+  const listChild = document.querySelector('.cart__items');
+  while (listChild.firstChild) {
+  listChild.removeChild(listChild.firstChild);
+  } 
+  });  
+  setTimeout(() => {
+    document.querySelector('.loading').remove();
+    }, 500);   
 }; 
