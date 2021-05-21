@@ -27,6 +27,7 @@
   display: flex;
   justify-content: space-around;
   width: 100%;
+  background-color: azure;
 }
 
 .items {
@@ -34,17 +35,19 @@
   flex-basis: 70%;
   flex-wrap: wrap;
   justify-content: center;
+  margin-top: 18px;
 }
 
 .item {
-  border: 2px solid blue;
-  border-radius: 5px;
-  box-sizing: border-box;
+  border-radius: 3px;
   display: flex;
   flex-direction: column;
   height: auto;
   margin: 5px;
   width: 200px;
+  background-color: white;
+  padding: 3px;
+  box-shadow: 4px 4px 5px 1px rgb(61, 60, 60);
 }
 
 .item .item__sku {
@@ -62,33 +65,93 @@
 }
 
 .item .item__add {
-  background-color: green;
-  border: 0;
+  background-color: rgba(138, 235, 138, 0.774);
   cursor: pointer;
   margin: 0;
   padding: 5px;
+  border-radius: 5px;
 }
 
 .cart {
   display: flex;
+  position: sticky;
   flex-basis: 30%;
   flex-flow: column wrap;
+  padding: 25px;
+  background-color: bisque;
+  border: 3px solid rgb(71, 70, 67);
+  border-radius: 2px;
+  margin: 18px 6px;
+  height: fit-content;
+  min-height: 80vh;
+  top: 80px;
 }
 
 .cart .cart__title {
   flex-basis: 1;
   font-size: 16pt;
   text-align: center;
+  padding-bottom: 10px;
 }
 
 .loading {
-  display: block;
+  display: flex;
   position: absolute;
-  top: 200px;
-  left: 0;
-  right: 0;
-  text-align: center;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
   z-index: 100;
   font-size: 5rem;
-  background-color: red;
+  font-weight: 800;
+  color: rgb(238, 231, 165);
+  background-color: rgba(36, 34, 34, 0.719);
+}
+
+.empty-cart {
+  padding: 5px;
+  margin-bottom: 8px;
+  border: none;
+  box-shadow: 3px 3px 2px 0.5px;
+  background-color: rgba(255, 0, 0, 0.459);
+}
+
+.empty-cart:hover {
+  background-color: rgb(184, 2, 2);
+  color: antiquewhite;
+  box-shadow: 3px 3px 2px 0.5px black;
+}
+
+.total-price {
+  background-color: rgb(216, 255, 245);
+  text-align: center;
+  padding: 5px;
+  border-radius: 3px;
+  box-shadow: 3px 3px 2px 0.5px black;
+  margin-bottom: 20px;
+}
+
+.header {
+  display: flex;
+  position: sticky;
+  align-items: center;
+  top: 0;
+  height: 50px;
+  box-shadow: 1px 2px 10px 0.5px black;
+  padding: 5px;
+  background-color: rgb(128, 81, 236);
+  color: antiquewhite;
+}
+
+#title {
+  margin: 0 auto;
+}
+
+#logo {
+  max-width: 40px;
+}
+
+#logo-div {
+  margin: 0 40px;
 }
