@@ -45,11 +45,22 @@ const removeIdStorange = (eventTarget) => {
   localStorage.removeItem(id);
 };
 
-//Source: https://stackoverflow.com/questions/5767325/how-can-i-remove-a-specific-item-from-an-array
+// Source: https://stackoverflow.com/questions/5767325/how-can-i-remove-a-specific-item-from-an-array
 const removeItemArray = (arr, item) => {
   const index = arr.indexOf(item);
   if (index > -1) arr.splice(index, 1);
-}
+};
+
+const sumPricesCartItems = (price) => {
+  cartItemsPrices.push(price);
+
+  const sumPrices = Math.round(cartItemsPrices.reduce((a, b) => a + b, 0) * 100) / 100;
+  
+  const liWithPrice = document.querySelector('.li-total-price');
+  liWithPrice.textContent = `${sumPrices}`;
+};
+
+const olCart = document.querySelector('.cart__items');
 
 function cartItemClickListener(event) {
   olCart.removeEventListener('click', cartItemClickListener);
@@ -58,7 +69,7 @@ function cartItemClickListener(event) {
   if (!isLi) return;
   
   removeIdStorange(event.target);
-
+  
   const textInLi = event.target.textContent;
   const price = textInLi.split('PRICE: $').pop();
   const itemPrice = parseFloat(price);
@@ -66,12 +77,10 @@ function cartItemClickListener(event) {
   removeItemArray(cartItemsPrices, itemPrice);
   sumPricesCartItems(0);
   removeItemArray(cartItemsPrices, 0);
-
+  
   event.target.remove();
-
 }
 
-const olCart = document.querySelector('.cart__items');
 olCart.addEventListener('click', cartItemClickListener);
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -91,21 +100,12 @@ const createTotalPriceOlCart = () => {
   ol.className = 'total-price';
   const sectionCart = document.querySelector('.cart');
 
-  sectionCart.appendChild(ol)
+  sectionCart.appendChild(ol);
 
   const liTotalPrice = createCustomElement('li', 'li-total-price', 'PREÇO TOTAL:');
 
   ol.appendChild(liTotalPrice);
-} 
-
-const sumPricesCartItems = (price) => {
-  cartItemsPrices.push(price);
-
-  sumPrices = Math.round(cartItemsPrices.reduce((a, b) => a + b, 0) * 100) / 100;
-  
-  const liWithPrice = document.querySelector('.li-total-price');
-  liWithPrice.textContent = `${sumPrices}`
-}
+};
 
 const addItemtoShoppingCart = (itemId) => {
   fetch(`https://api.mercadolibre.com/items/${itemId}`)
