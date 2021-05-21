@@ -16,7 +16,7 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ id: sku,title: name,thumbnail: image }) {
+function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -32,8 +32,8 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function cartItemClickListener(event) {
-  cart.removeChild(event.target);
+function cartItemClickListener(event, salePrice) {
+  cartItems.removeChild(event.target);
   allitemsPrice.innerText = parseFloat(Number(allitemsPrice.innerText) - salePrice);
 }
 
