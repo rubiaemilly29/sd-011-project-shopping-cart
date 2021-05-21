@@ -32,35 +32,30 @@ function cartItemClickListener() {
 
 // Requisito 2 - Cria os componentes HTML referente a um item do carrinho
 function createCartItemElement({ id: sku, title: name, price: salePrice }) { // Altera parâmetros para receber dados como chegam
-  //const cartList = document.querySelector('.cart_items');
+  // const cartList = document.querySelector('.cart_items');
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: ${salePrice}`;
-  //cartList.appendChild(li); // O elemento retornado é filho do elemento ol
+  // cartList.appendChild(li); // O elemento retornado é filho do elemento ol
 
   li.addEventListener('click', cartItemClickListener); // Inicia a lógica que remove o item do carrinho ao clicar nele
   return li;
 }
 
-// Requisito 2 - Requisição da API 
-function fetchCartItem(itemID) {
-  const cartList = document.querySelector('.cart__items')
-  fetch(`https://api.mercadolibre.com/items/${itemID}`) // Busca na API pelos valores do itemID clicado
-    .then((response) => response.json())
-    .then((data) => cartList.appendChild(createCartItemElement(data)));
-}
+// Requisito 2 - Requisição da API, captura o elemento span com a id, atribui a todos os botões o evento de capturar o span
+const addToCart = () => { 
+  const getButton = document.querySelectorAll('.item__add');
+  const listCart = document.querySelector('ol.cart__items');
 
-// Requisito 2 - Captura o elemento span com a id 
-function addToCart(event) { 
-  const id = getSkuFromProductItem(event.target.parentElement); // Referencia: https://developer.mozilla.org/pt-BR/docs/Web/API/Node/parentNode
-  fetchCartItem(id);
-}
-
-// Requisito 2 - Atribui a todos os botões o evento de capturar o span
-function eventButtonCart() {
-  const getButton = document.querySelector('.item__add')
-  getButton.forEach((button) => button.addEventListener('click', addToCart)); // Quando clicar no item captura o itemID 
-}
+  getButton.forEach((button) => {
+    button.addEventListener('click', () => { // Quando clicar no item captura o itemID 
+    const itemID = button.parentElement.firstChild.innerText; // Referencia: https://developer.mozilla.org/pt-BR/docs/Web/API/Node/parentNode
+    fetch(`https://api.mercadolibre.com/items/${itemID}`) // Busca na API pelos valores do itemID clicado
+      .then((response) => response.json())
+      .then((data) => listCart.appendChild(createCartItemElement(data)));
+    });
+  });
+};
 
 // Requisito 1 - Requisição da API 
 const fetchProduct = () => { 
@@ -74,4 +69,4 @@ const fetchProduct = () => {
 
 window.onload = function onload() {
   fetchProduct(); // Requisito 1
- };
+};
