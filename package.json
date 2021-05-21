@@ -32,5 +32,8 @@
     "node-fetch": "^2.6.1",
     "stylelint": "13.8.0",
     "stylelint-config-standard": "20.0.0"
+  },
+  "devDependencies": {
+    "eslint-plugin-editorconfig": "^3.0.2"
   }
 }
