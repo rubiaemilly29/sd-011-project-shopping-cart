@@ -7,7 +7,22 @@ let totalCartPriceElement;
 const targetKey = 'Cart Products';
 
 function updateRenderCartPrice() {
-  totalCartPriceElement.innerText = cartPriceAmount;
+  const stringOfCartPrice = JSON.stringify(cartPriceAmount);
+  const decimalPoints = stringOfCartPrice.split('.')[1];
+  if (decimalPoints === undefined) {
+    totalCartPriceElement.innerText = stringOfCartPrice;
+  } else {
+    let priceWithDecimalPoints;
+    switch (decimalPoints.length) {
+      case 1:
+        priceWithDecimalPoints = cartPriceAmount.toFixed(1);
+      break;  
+      default:
+        priceWithDecimalPoints = cartPriceAmount.toFixed(2);
+      break;
+    }
+    totalCartPriceElement.innerText = priceWithDecimalPoints;
+  }
 }
 
 function getSkuFromProductItem(item) {
@@ -23,9 +38,12 @@ function createCustomElement(element, className, innerText) {
 }
 
 function renderCartPrice(totalPrice) {
+  const priceContainer = createCustomElement('p', 'price-container', 'Total Price: $');
   totalCartPriceElement = createCustomElement('span', 'total-price', totalPrice);
 
-  cart.appendChild(totalCartPriceElement);
+  priceContainer.appendChild(totalCartPriceElement);
+
+  cart.appendChild(priceContainer);
 }
 
 function calculateCartPrice() {
@@ -76,7 +94,8 @@ function removeFromLocalStorage(productSKU) {
 
   localStorageCartItems = JSON.stringify(localStorageCartItems);
 
-  localStorage.setItem(targetKey, localStorageCartItems);
+  if (localStorageCartItems === '[]') localStorage.clear(targetKey);
+  else localStorage.setItem(targetKey, localStorageCartItems);
 }
 
 function cartItemClickListener(event) {
