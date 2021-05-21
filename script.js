@@ -1,20 +1,15 @@
 const recoverTotalSum = () => document.querySelector('.total-price');
 const recoverCartItems = () => document.querySelector('.cart__items');
-
-// function checkLocalStorage() {
-//   if (Object.keys(localStorage).length === 0) {
-//     return false;
-//   }
-//   return localStorage.getItem('shopping-cart');
-// }
+const shoppingCart = 'shopping-cart';
+const recoverShoppingCart = () => JSON.parse(localStorage.getItem(shoppingCart));
 
 function saveItem(sku, name, salePrice) {
-  let shoppingCart = [];
+  let arrayshoppingCart = [];
   if (Object.keys(localStorage).length > 0) {
-    shoppingCart = JSON.parse(localStorage.getItem('shopping-cart'));
+    arrayshoppingCart = recoverShoppingCart();
   }
-  shoppingCart.push(`${sku}|${name}|${salePrice}`);
-  localStorage.setItem('shopping-cart', JSON.stringify(shoppingCart));
+  arrayshoppingCart.push(`${sku}|${name}|${salePrice}`);
+  localStorage.setItem(shoppingCart, JSON.stringify(arrayshoppingCart));
 }
 
 function createSumPrice() {
@@ -60,9 +55,8 @@ function cartItemClickListener(event) { // para remover da lista
   const li = event.target.closest('li');
   const nodes = Array.from(recoverCartItems().children);
   const index = nodes.indexOf(li);
-  const shoppingCart = JSON.parse(localStorage.getItem('shopping-cart'));
-  shoppingCart.splice(index, 1);
-  localStorage.setItem('shopping-cart', JSON.stringify(shoppingCart));
+  const newShoppingCart = recoverShoppingCart().splice(index, 1);
+  localStorage.setItem(shoppingCart, JSON.stringify(newShoppingCart));
   event.target.remove();
   createSumPrice();
 }
@@ -129,8 +123,7 @@ async function addItemToCart(event) {
 }
 
 function openShoppingCart() {
-  const shoppingCart = JSON.parse(localStorage.getItem('shopping-cart'));
-  shoppingCart.forEach((productCart) => {
+  recoverShoppingCart().forEach((productCart) => {
     const [sku, name, salePrice] = productCart.split('|');
     recoverCartItems().appendChild(createCartItemElement({ sku, name, salePrice }));
   });
@@ -165,9 +158,3 @@ window.onload = function onload() {
   checkButtonEmptyCart();
   openShoppingCart();
 };
-
-// Questão do preço total está confusa (feito separando valor do cart__items). Qual melhor maneira?
-// Funções 'soma preço' e 'salvar no localstorage' foram colocadas no addItemToCart, emptyCart e cartItemClickListener. A lógica é mesmo essa? 
-// Verificar lógica das funções assíncronas.
-// Coloca esse mói de coisa no window.onload mesmo? Por ter funções assíncronas e coisas sendo criadas 
-// Linter reclamando de criar a mesma constante várias vezes. Mas considerando as funções assíncronas, daria certo criá-las uma vez no corpo principal do JS? Para parar de reclamar, fiz uma função que gera a constante.
