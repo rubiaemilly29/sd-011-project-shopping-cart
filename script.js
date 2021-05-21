@@ -124,9 +124,24 @@ function renderLocalStorage() {
   });
 }
 
+function removeAll() {
+  const ol = document.querySelector(cartItemsClass);
+  while (ol.firstChild) {
+    ol.removeChild(document.querySelector('li'));
+    totalPrice();
+    saveLocal();
+  }
+}
+
+function emptyCart() {
+  const emptyBtn = document.querySelector('.empty-cart');
+  emptyBtn.addEventListener('click', removeAll);
+}
+
 window.onload = function onload() { 
   getItems('computer');
   addCartItem();
   renderLocalStorage();
   totalPrice();
+  emptyCart();
 };
