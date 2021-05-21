@@ -78,10 +78,11 @@ const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) =>
 const getProducts = () => {
   const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
   const headers = { headers: { Accept: 'application/json' } };
-
+  const loading = document.querySelector('.loading');
   fetch(API_URL, headers)
     .then((response) => response.json())
     .then((json) => {
+      loading.parentNode.removeChild(loading);
       const result = json.results;
       const section = document.querySelector('.items');
       result.forEach((computer) => {
