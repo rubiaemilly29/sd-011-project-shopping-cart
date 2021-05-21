@@ -1,10 +1,23 @@
 // get endPoint
 const endPoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+const cartItems = '.cart__items';
 
-// remove aitem selected form the car list
-const cartItemClickListener = (event) => {
-    event.target.remove();
+// clear cart
+const emptyCart = () => {
+  const emptyCartButton = document.querySelector('.empty-cart');
+  emptyCartButton.addEventListener('click', () => {
+    localStorage.removeItem('info');
+    const parentList = document.querySelector('.cart__items');
+    const itemInList = document.querySelectorAll('.cart__item');
+    return itemInList.forEach((item) => {
+      parentList.removeChild(item);
+    });
+  });
 };
+
+// sum of prices
+// const sumOfPrices = () => {
+// };
 
 // create the product image and sent it to create element 
 const createProductImageElement = (imageSource) => {
@@ -48,13 +61,28 @@ const getItemInfo = (productInfo) => ({
   salePrice: productInfo.price,
 });
 
+const teste = () => {
+  const saved = localStorage.getItem('info');
+  if (saved) {
+    const list = document.querySelector(cartItems);
+    list.innerHTML = saved;
+  }
+};
+
+// remove the item selected form the car list
+const cartItemClickListener = (event) => {
+  event.target.remove();
+  localStorage.removeItem('info');
+};
+
 const createCartItemElement = ({ id: sku, title: name, price: salePrice }) => {
-  const list = document.querySelector('.cart__items');
+  const list = document.querySelector(cartItems);
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
-  return list.appendChild(li);
+  list.appendChild(li);
+  localStorage.setItem('info', list.innerHTML);
 };
 
 // getItemInfo(product);
@@ -79,8 +107,6 @@ const productButtonsListener = () => {
     });
   });
 };
-// console.log(productButtonsListener());
-// createCartItemElement(productButtonsListener(), cartItemClickListener);
 
 const getProductInfo = (object) => (object.results.forEach((info) => {
     const objectInfo = {
@@ -119,6 +145,8 @@ const fetchPCList = () => {
 
 window.onload = () => {
   fetchPCList();
+  teste();
+  emptyCart();
 };
 
 const getSkuFromProductItem = () => console.log('oi');
