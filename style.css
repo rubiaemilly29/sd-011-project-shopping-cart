@@ -102,14 +102,32 @@ body {
   font-size: larger;
   border-radius: 5px;
   inline-size: 250px;
+  align-items: center;
 }
 
 .total-price {
-  margin: 10px;
-  padding: 10px;
+  margin: 0px;
+  padding: 0px;
   font-size: larger;
   border-radius: 5px;
   inline-size: 250px;
+  text-align: center;
+}
+
+.fullPrice {
+  text-align: center;
+}
+
+.priceTitle {
+  text-align: center;
+  margin: 0px;
+}
+
+.loading {
+  background-color: rgb(111, 246, 0);
+  /* padding: px; */
+  border-radius: 20px;
+  font-size: x-large;
   text-align: center;
 }
 

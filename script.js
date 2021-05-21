@@ -19,9 +19,22 @@ function storage() {
   localStorage.setItem('shopCart', cartStorage.innerHTML);
 }
 
+// Requisito 5
+// // // Percorrer todas as LIs do carrinho com for each, usar o split com o $, somar a ultima posição do array com parseInt
+// // <p> innerHTML =  soma da função acima </p>
+function sumPrices() {
+  let sum = 0;
+  const itemsCart = document.querySelectorAll('.cart__item');
+  itemsCart.forEach((item) => {
+    sum += parseFloat(item.innerHTML.split('$')[1]);
+  });
+  document.querySelector('.total-price').innerText = sum;
+}
+
 function cartItemClickListener(event) {
   const delItem = document.querySelector(lintGritando);
   delItem.removeChild(event.target);
+  sumPrices();
   storage();
 }
 
@@ -45,6 +58,7 @@ function createProductItemElement({ sku, name, image, salePrice }) {
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
     .addEventListener('click', () => {
       createCartItemElement({ sku, name, salePrice });
+      sumPrices();
       storage();
     });
 
@@ -81,6 +95,7 @@ function clearListItems() {
     while (listChild.firstChild) {
       listChild.removeChild(listChild.firstChild);
     }
+    sumPrices();
   });
 }
 
@@ -92,13 +107,10 @@ window.onload = function onload() {
       li.addEventListener('click', cartItemClickListener);
     });
   }
+  sumPrices();
   clearListItems();
   // references: https://www.w3schools.com/jsref/met_win_settimeout.asp; https://pt.stackoverflow.com/questions/4605/remover-elemento-da-p%C3%A1gina-com-javascript;
   setTimeout(() => {
     document.querySelector('.loading').remove();
-  }, 500);
+  }, 750);
 };
-
-// Requisito 5
-// // // Percorrer todas as LIs do carrinho com for each, usar o split com o $, somar a ultima posição do array com parseInt
-// // <p> innerHTML =  soma da função acima </p>
