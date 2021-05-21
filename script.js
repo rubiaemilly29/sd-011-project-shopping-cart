@@ -1,5 +1,6 @@
 function cartItemClickListener(event) {
-  console.log(event);
+  const parent = event.target.parentNode;
+  parent.removeChild(event.target);
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
