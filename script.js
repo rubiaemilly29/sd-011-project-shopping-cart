@@ -1,5 +1,4 @@
-//1 - Crie uma listagem de produtos
-
+// 1 - Crie uma listagem de produtos.
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -34,6 +33,12 @@ async function findProducts(key = 'computador') {
 
 function cartItemClickListener() {
   // coloque seu código aqui.
+  findProducts('o segredo').then((products) => {
+    products.forEach((product) => {
+      const div = document.querySelector('.items');
+      div.appendChild(createProductItemElement(product));
+    });
+  });
 }
 
 window.onload = function onload() { 
@@ -42,14 +47,14 @@ window.onload = function onload() {
 
 // 2 - Adicione o produto ao carrinho de compras
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
-function createCartItemElement(element) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${element.id} | NAME: ${element.title} | PRICE: $${element.price}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-}
+// function createCartItemElement(element) {
+//   const li = document.createElement('li');
+//   li.className = 'cart__item';
+//   li.innerText = `SKU: ${element.id} | NAME: ${element.title} | PRICE: $${element.price}`;
+//   li.addEventListener('click', cartItemClickListener);
+//   return li;
+// }
