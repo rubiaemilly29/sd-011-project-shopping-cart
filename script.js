@@ -31,9 +31,8 @@ function renderCartPrice(totalPrice) {
 function calculateCartPrice() {
   const rawCartPriceAmount = cartPricesArray
     .reduce((previous, current) => previous + current, 0)
-    .toFixed(2);
 
-  cartPriceAmount = rawCartPriceAmount === '0.00' ? '0' : rawCartPriceAmount;
+  cartPriceAmount = +rawCartPriceAmount;
 
   updateRenderCartPrice();
 }
