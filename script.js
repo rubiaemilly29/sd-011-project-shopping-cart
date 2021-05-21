@@ -1,6 +1,3 @@
-const apiUrl = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
-const myObject = { method: 'GET', headers: { Accept: 'application/json' } };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -36,16 +33,36 @@ function cartItemClickListener(event) {
   // coloque seu código aqui
 }
 
-function createCartItemElement({ id: sku, title: name, salePrice }) {
+function createCartItemElement({ id, title, price }) {
   const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.className = 'cart__item'; 
+  li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
-window.onload = function onload() { 
-  fetch(apiUrl)
+const addButtonsListener = () => {
+  const elementoPai = document.querySelector('.cart__items');
+  const buttonsList = document.querySelectorAll('.item__add');
+  buttonsList.forEach((button) => {
+    button.addEventListener('click', (event) => {
+      const id = event.target.parentElement.firstChild.innerText;
+      fetch(`https://api.mercadolibre.com/items/${id}`)
+      .then((response) => response.json())
+      .then((data) => elementoPai.appendChild(createCartItemElement(data)));
+    });  
+  });
+};
+
+const itensList = () => {
+  const apiUrl = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
+  const myObject = { method: 'GET', headers: { Accept: 'application/json' } };
+  fetch(apiUrl, myObject)
   .then((response) => response.json())
-  .then((data) => data.results.forEach((value) => createProductItemElement(value))); 
+  .then((data) => data.results.forEach((value) => createProductItemElement(value)))
+  .then(() => addButtonsListener());
+};
+
+window.onload = function onload() {
+  itensList();  
 };
