@@ -25,7 +25,6 @@ function cartItemClickListener(event) {
   // coloque seu código aqui
   const delItem = document.querySelector('.cart__items');
   delItem.removeChild(event.target);
-  
 }
 
 // Feito em sala com Nikolas,Alberto e outros rsrs
