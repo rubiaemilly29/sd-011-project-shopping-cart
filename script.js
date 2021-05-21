@@ -1,10 +1,18 @@
 const cartItems = '.cart__items';
 
+// remove o item do carrinho
 function cartItemClickListener(price, event) {
   const eventTg = event.target;
   const cartOL = document.querySelector('.cart__items');
+  const spanTotal = document.querySelector('.total-price');
+  spanTotal.innerHTML = parseFloat(Number(spanTotal.innerHTML) - Number(price)); // faz a subtração
   eventTg.remove();
   localStorage.setItem('keyName', cartOL.innerHTML);
+}
+
+function sumCart(price) {
+  const spanTotal = document.querySelector('.total-price');
+  spanTotal.innerHTML = parseFloat(Number(spanTotal.innerHTML) + Number(price)); // faz a soma
 }
 
 // adiciona o produto ao carrinho 
@@ -17,6 +25,7 @@ function createCartItemElement({ sku, name, price }) {
 
   cartOL.appendChild(li);
   localStorage.setItem('keyName', cartOL.innerHTML);
+  sumCart(price);
   return li;
 }
 
