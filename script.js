@@ -35,41 +35,34 @@ const SumOfCart = () => {
 };
 
 // REQUISITO 3
+// Código refatorado com a ajuda da colega Oryange.
 
-function cartItemClickListener(event) {
+function cartItemClickListener(event, count) {
     event.target.remove();
-  SumOfCart();
+    localStorage.removeItem(`item${count}`);
+    SumOfCart();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
-  li.id = sku;
+  const count = document.querySelector(getCartItems).childElementCount;
+  localStorage.setItem(`item${count}`, `${sku}|${name}|${salePrice}`);
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', (event) => cartItemClickListener(event, count));
   return li;
 }
 
 // REQUISITO 4
 // Consulta em https://www.blogson.com.br/carrinho-de-compras-com-localstorage-do-html-5/#:~:text=Gravando%20dados&text=Para%20gravar%20dados%20na%20localStorage,posi%C3%A7%C3%A3o%20do%20produto%20no%20carrinho.
-
-const getCart = () => {
-  const saveCart = localStorage.getItem('savedCart');
-  const ArrayOfItens = saveCart ? JSON.parse(saveCart) : [];
-  return ArrayOfItens;
-};
-
-const saveItems = (cartItem) => {
-  const ArrayOfItens = getCart();
-  ArrayOfItens.push(cartItem);
-  localStorage.setItem('savedCart', JSON.stringify(ArrayOfItens));
-};
+// Código refatorado com a ajuda da colega Oryange.
 
 const onloadCart = () => {
-  const ArrayOfItens = getCart();
-  ArrayOfItens.forEach(({ sku, name, salePrice }) => {
-  document.querySelector(getCartItems).appendChild(createCartItemElement({ sku, name, salePrice }));
-  });
+  for (let index = 0; index < localStorage.length; index += 1) {
+    const [sku, name, salePrice] = localStorage.getItem(`item${index}`).split('|');
+    const getCart = document.querySelector(getCartItems);
+    getCart.appendChild(createCartItemElement({ sku, name, salePrice }));
+}
 };
 
 // REQUISITO 2
@@ -84,7 +77,6 @@ const fetchToCartItem = (event) => {
          name: json.title,
          salePrice: json.price,
         };
-        saveItems(cartItem);
         document.querySelector(getCartItems).appendChild(createCartItemElement(cartItem));
         SumOfCart();
   });
@@ -95,19 +87,17 @@ const fetchToCartItem = (event) => {
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
   .addEventListener('click', fetchToCartItem);
-
   return section;
 }
 
 // REQUISITO 1
-const createProductList = (term) => {
-  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${term}`)
+const createProductList = () => {
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=$$computador')
    .then((response) => response.json()
    .then((json) => {
     document.querySelector('.loading').remove();
@@ -121,8 +111,6 @@ const createProductList = (term) => {
      });
     }));
 };
-
-const setSearch = () => createProductList('computador');
 
 // -------------------------------------------------
 
@@ -139,7 +127,7 @@ const empty = () => {
 };
 
 window.onload = function onload() { 
-  setSearch();
+  createProductList();
   onloadCart();
   document.querySelector('.empty-cart').addEventListener('click', empty);
 };
