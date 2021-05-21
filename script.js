@@ -99,9 +99,17 @@ function retrieveCart() {
   sumPrices();
 }
 
+function clearCart() {
+  const cart = document.querySelector('ol');
+  cart.innerHTML = '';
+  saveCart();
+  sumPrices();
+}
+
 window.onload = function onload() {
-  createItemSection();
-  const itemsSection = document.querySelector('.items');
-  itemsSection.addEventListener('click', addToCart);
+  createItemSection()
+  .then(() => document.querySelectorAll('.item'))
+  .then((result) => result.forEach((item) => item.addEventListener('click', addToCart)));
   retrieveCart();
+  document.querySelector('.empty-cart').addEventListener('click', clearCart);
 };
