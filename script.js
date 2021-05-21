@@ -1,15 +1,26 @@
 const recoverTotalSum = () => document.querySelector('.total-price');
 const recoverCartItems = () => document.querySelector('.cart__items');
 
-function saveItems() {
-  localStorage.setItem('shoppingCart', recoverCartItems().innerHTML);
-  localStorage.setItem('totalSum', recoverTotalSum().innerHTML);
+// function checkLocalStorage() {
+//   if (Object.keys(localStorage).length === 0) {
+//     return false;
+//   }
+//   return localStorage.getItem('shopping-cart');
+// }
+
+function saveItem(sku, name, salePrice) {
+  let shoppingCart = [];
+  if (Object.keys(localStorage).length > 0) {
+    shoppingCart = JSON.parse(localStorage.getItem('shopping-cart'));
+  }
+  shoppingCart.push(`${sku}|${name}|${salePrice}`);
+  localStorage.setItem('shopping-cart', JSON.stringify(shoppingCart));
 }
 
-async function createSumPrice() {
+function createSumPrice() {
   const listCart = recoverCartItems().childNodes;
   const arrayPrices = [];
-  listCart.forEach((item) => arrayPrices.push(Number(item.innerText.split('$')[1])));
+  listCart.forEach((item) => arrayPrices.push(Number(item.innerHTML.split('$')[1])));
   const totalSum = arrayPrices.reduce((accPrice, price) => accPrice + price, 0);
   recoverTotalSum().innerText = Math.round(totalSum * 100) / 100;
 }
@@ -44,10 +55,16 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+// https://stackoverflow.com/questions/48977577/how-to-get-the-index-of-the-li-clicked-in-javascript
 function cartItemClickListener(event) { // para remover da lista
+  const li = event.target.closest('li');
+  const nodes = Array.from(recoverCartItems().children);
+  const index = nodes.indexOf(li);
+  const shoppingCart = JSON.parse(localStorage.getItem('shopping-cart'));
+  shoppingCart.splice(index, 1);
+  localStorage.setItem('shopping-cart', JSON.stringify(shoppingCart));
   event.target.remove();
   createSumPrice();
-  saveItems();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -74,8 +91,8 @@ function render(json) {
 function emptyCart() {
   const listCart = document.querySelectorAll('.cart__item');
   listCart.forEach((item) => item.remove());
+  window.localStorage.clear();
   createSumPrice();
-  saveItems();
 }
 
 function checkButtonEmptyCart() {
@@ -94,8 +111,8 @@ async function getItemsFromAPI(term) {
 }
 
 async function addItemToCart(event) {
-  const currentId = await getSkuFromProductItem((event.target).parentNode);
   try {
+    const currentId = await getSkuFromProductItem((event.target).parentNode);
     const response = await fetch(`https://api.mercadolibre.com/items/${currentId}`);
     const json = await response.json();
     const objectItem = {
@@ -103,25 +120,26 @@ async function addItemToCart(event) {
       name: json.title,
       salePrice: json.price,
     };
-    const cartItem = createCartItemElement(objectItem);
-    recoverCartItems().appendChild(cartItem);
+    recoverCartItems().appendChild(createCartItemElement(objectItem));
     createSumPrice();
-    saveItems();
+    saveItem(json.id, json.title, json.price);
   } catch (error) {
     alert('ao clicar botão de adicionar ao carrinho');
   }
 }
 
 function openShoppingCart() {
-  const savedShoppingCart = localStorage.getItem('shoppingCart');
-  const savedTotalSum = localStorage.getItem('totalSum');
-  recoverCartItems().innerHTML = savedShoppingCart;
-  recoverTotalSum().innerHTML = savedTotalSum;
+  const shoppingCart = JSON.parse(localStorage.getItem('shopping-cart'));
+  shoppingCart.forEach((productCart) => {
+    const [sku, name, salePrice] = productCart.split('|');
+    recoverCartItems().appendChild(createCartItemElement({ sku, name, salePrice }));
+  });
+  createSumPrice();
 }
 
 async function createObjectButtons() {
-  await getItemsFromAPI('computador');
   try {
+    await getItemsFromAPI('computador');
     const objectButtonsAdd = document.querySelectorAll('.item__add');
     objectButtonsAdd.forEach((button) => button.addEventListener('click', addItemToCart));
   } catch (error) {
@@ -130,8 +148,8 @@ async function createObjectButtons() {
 }
 
 async function showBody() {
-  await createObjectButtons();
   try {
+    await createObjectButtons();
     document.querySelector('.loading').remove();
     document.querySelector('body').style.visibility = 'visible';
   } catch (error) {
@@ -146,17 +164,10 @@ window.onload = function onload() {
   showBody();
   checkButtonEmptyCart();
   openShoppingCart();
-  createSumPrice();
 };
 
-// $(window).load(function() {
-//   document.querySelector('.loading').style.display = 'none';
-//   document.querySelector('body').style.display = 'inline';
-// }
-
-// Não apaga quando salvo no localstorage. Isso acontece porque não foi criado dinamicamente?
 // Questão do preço total está confusa (feito separando valor do cart__items). Qual melhor maneira?
-// Funções 'soma preço' e 'salvar no localstorage' foram colocadas no addItemToCart, emptyCart e cartItemClickListener. A lógia é mesmo essa? 
+// Funções 'soma preço' e 'salvar no localstorage' foram colocadas no addItemToCart, emptyCart e cartItemClickListener. A lógica é mesmo essa? 
 // Verificar lógica das funções assíncronas.
-// Coloca esse mói de coisa no window.onload mesmo?
+// Coloca esse mói de coisa no window.onload mesmo? Por ter funções assíncronas e coisas sendo criadas 
 // Linter reclamando de criar a mesma constante várias vezes. Mas considerando as funções assíncronas, daria certo criá-las uma vez no corpo principal do JS? Para parar de reclamar, fiz uma função que gera a constante.
