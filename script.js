@@ -18,9 +18,10 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   // coloque seu código aqui!
+  event.target.remove();
 }
 
-function createCartItemElement({ id: sku, title: name, salePrice: salePrice }) {
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
@@ -30,36 +31,43 @@ function createCartItemElement({ id: sku, title: name, salePrice: salePrice }) {
 
 const addCarItem = (id) => {
   const param = { headers: { Accept: 'application/json' } };
-  fetch('https://api.mercadolibre.com/items/${id}', param)
+  fetch(`https://api.mercadolibre.com/items/${id}`, param)
     .then((response) => response.json())
     .then((json) => {
       const selectCarItem = document.querySelector('.cart__items')
-      selectCarItem.appendChild(createCartItemElement);
+      selectCarItem.appendChild(createCartItemElement(json));
     }); 
 };
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
-  const createButton = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
-  createButton.addEventListener('click', ({event}) => {
-    addCarItem.appendChild(getSkuFromProductItem(event.parentElement));
-  })
 
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  //section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  const createButton = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
+  createButton.addEventListener('click', ({target}) => {
+    addCarItem(getSkuFromProductItem(target.parentElement));
+  })
+  section.appendChild(createButton);
 
   return section;
 }
 
+// A função a seguir e disparada depois do carregamento da página
 window.onload = function onload() {
+  // Atribuição da variável param que será usada como segundo parametro do fetch
   const param = { headers: { Accept: 'application/json' } };
-  fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador', param)
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador', param)
+    // Caso tenha-se uma resposta ela pegara essa informação e transformará em um objeto (son)
     .then((response) => response.json())
     .then((json) => {
+      // Seleciona a classe 'item' do arquivo HTML
       const objSection = document.querySelector('.items');
+      // A HOF é reponsável por atuar como um somador, pra cada elemento do vetor results é Item 
+      // a pagina e esse filho é adicionado 
       json.results.forEach((value) => {
         objSection.appendChild(createProductItemElement(value));
       });
