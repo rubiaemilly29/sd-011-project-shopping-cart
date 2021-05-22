@@ -1,5 +1,13 @@
 const cartClass = '.cart__items';
 const cartItemStorage = 'cart-items';
+const price = document.querySelector('.total-price')
+let cartItems;
+
+if (localStorage.getItem(cartItemStorage)) {
+  cartItems = JSON.parse(localStorage.getItem(cartItemStorage));
+} else {
+  cartItems = [];
+}
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -27,6 +35,18 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
+const load = () => {
+  const itens = document.querySelector('.items');
+  const h2 = document.createElement('h2');
+  h2.className = 'loading';
+  h2.innerText = 'loading...';
+  itens.appendChild(h2);
+};
+
+const endLoad = () => {
+  document.querySelector('.loading').remove();
+};
+
 async function getItens() {
   const loading = document.createElement('p');
   loading.className = 'loading';
@@ -46,8 +66,15 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  const removeCart = document.querySelector(cartClass);
-  removeCart.removeChild(event.target);
+  event.target.remove();
+  const id = event.target.innerHTML.split(' ')[1];
+  cartItems.forEach((item) => {
+    if (item.id === id) {
+      cartItems.splice(cartItems.indexOf(item), 1);
+    }
+  });
+  localStorage.removeItem(cartItemStorage);
+  localStorage.setItem(cartItemStorage, JSON.stringify(cartItems)); 
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -57,8 +84,6 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
-
-const cartItems = [];
 
 async function addItem(event) {
   const ol = document.querySelector(cartClass);
@@ -77,18 +102,24 @@ async function addItem(event) {
 const removeAll = () => {
   const cart = document.querySelector(cartClass);
   cart.innerHTML = '';
+  localStorage.removeItem(cartItemStorage);
+  cartItems = []
 };
 
 window.onload = async function onload() { 
+ load()
  await getItens();
  const items = document.querySelector('.items');
  items.addEventListener('click', addItem);
- const localItems = JSON.parse(localStorage.getItem(cartItemStorage));
- localItems.forEach((item) => {
-   const createItem = createCartItemElement(item);
-   const ol = document.querySelector(cartClass);
-   ol.appendChild(createItem);
- });
+ if (localStorage.getItem(cartItemStorage)) {
+  const cartItemsWebStorage = JSON.parse(localStorage.getItem(cartItemStorage));
+  cartItemsWebStorage.forEach((cartItem) => {
+    const item = createCartItemElement(cartItem);
+    const ol = document.querySelector('.cart__items')
+    ol.appendChild(item);
+  });
+}
  const removeButton = document.querySelector('.empty-cart');
  removeButton.addEventListener('click', removeAll);
+ endLoad()
 };
