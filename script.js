@@ -106,7 +106,8 @@ const mercadoLivreAPI = () => {
         { sku: items.id, name: items.title, image: items.thumbnail },
       )));
     })
-    .then(endLoading); // calls endLoading function
+    .then(endLoading) // calls endLoading function
+    .catch((error) => console.error('rejected'));
 };
 
 // Task 2
@@ -129,7 +130,8 @@ const sendToCart = () => {
           totalPrice(json.price);
         })
         .then(() => localStorage.setItem('cart', itemsCart.innerHTML))
-        .then(() => localStorage.setItem('price', total.innerText))));
+        .then(() => localStorage.setItem('price', total.innerText)))
+        .catch((error) => console.error('rejected')))
 };
 
 // Task 4
