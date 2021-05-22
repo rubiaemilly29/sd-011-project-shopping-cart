@@ -32,7 +32,7 @@ function getSkuFromProductItem(item) {
 function getSkuFromText(itemText) {
   const skuIndex = itemText.indexOf('SKU: ') + 5;
   const pipeIndex = itemText.indexOf(' | ');
-  return itemText.substring(skuIndex,pipeIndex);
+  return itemText.substring(skuIndex, pipeIndex);
 }
 
 function cartItemClickListener(event) {
