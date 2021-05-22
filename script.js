@@ -1,7 +1,7 @@
 // requisito 5
 const sumAll = () => {
   const items = document.querySelectorAll('.cart__item');
-  const itemsArr = Array.from(items); //array de elementos html (li)
+  const itemsArr = Array.from(items); // array de elementos html (li)
   const price = document.querySelector('.total-price');
   const total = itemsArr.reduce((acc, item) => acc + Number(item.innerText.split('$')[1]), 0);
   price.innerText = `Preço Total: $${total.toFixed(2)}`;
