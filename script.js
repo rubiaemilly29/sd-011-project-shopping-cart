@@ -31,10 +31,10 @@ function getSkuFromProductItem(item) {
 
 // requisito 5
 const sumAll = async () => {
-  const itemsCart = [...document.querySelectorAll('.cart__item')];
-  // const itemsArr = Array.from(itemsCart); // array de elementos html (li)
+  // const itemsCart = document.querySelectorAll('.cart__item');
+  const itemsArr = Array.from(document.querySelectorAll('.cart__item')); // array de elementos html (li)
   const price = document.querySelector('.total-price');
-  const total = itemsCart.reduce((acc, item) => acc + Number(item.innerText.split('$')[1]), 0);
+  const total = itemsArr.reduce((acc, item) => acc + Number(item.innerText.split('$')[1]), 0);
   price.innerText = `Preço Total: $${total.toFixed(2)}`;
 };
 
