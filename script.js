@@ -7,6 +7,7 @@ let sectionItems;
 let addItemButtons;
 let cartItemsList;
 let sectionPrice;
+let buttonEmptyCart;
 let storageList = [];
 const skuItems = [];
 
@@ -155,10 +156,17 @@ function fetchSearch(keyword) {
   });
 }
 
+function clearCart() {
+  showTotalPrice(cartItemsList);
+  cartItemsList.innerText = '';
+}
+
 window.onload = async function onload() {
   sectionItems = document.querySelector('.items');
   cartItemsList = document.querySelector('.cart__items');
   sectionPrice = document.querySelector('.price');
+  buttonEmptyCart = document.querySelector('.empty-cart');
+  buttonEmptyCart.addEventListener('click', clearCart);
   getStorage();
   showTotalPrice(cartItemsList);
   await fetchSearch('computador');
