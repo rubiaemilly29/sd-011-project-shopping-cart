@@ -12,6 +12,40 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
+function cartItemClickListener(event) {
+   // coloque seu código aqui.
+   return event;
+}
+async function findProducts(key = 'computador') {
+  try {
+    const queryCompute = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${key}`);
+    const json = await queryCompute.json();
+    return json.results;
+  } catch (error) {
+    alert(error);
+  }
+}
+
+function createCartItemElement({ id, title, price }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
+  li.addEventListener('click', cartItemClickListener);
+  return li;
+}
+
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
+
+async function addToCar(event) {
+  const idItem = getSkuFromProductItem(event.path[1]);
+  const products = await findProducts();
+  const container = products.find((product) => product.id === idItem);
+  const cartItens = document.querySelector('.cart__items');
+  const itemElement = createCartItemElement(container);
+  cartItens.appendChild(itemElement);
+}
 
 function createProductItemElement({ id, title, thumbnail }) {
   const section = document.createElement('section');
@@ -21,44 +55,21 @@ function createProductItemElement({ id, title, thumbnail }) {
   section.appendChild(createCustomElement('span', 'item__title', title));
   section.appendChild(createProductImageElement(thumbnail));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  section.addEventListener('click', addToCar);
 
   return section;
 }
 
-async function findProducts(key = 'computador') {
-  const queryCompute = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${key}`);
-  const json = await queryCompute.json();
-  return json.results;
-}
-
 function createsProductContainers() {
   // coloque seu código aqui.
-  findProducts('o segredo').then((products) => {
+  findProducts().then((products) => {
     products.forEach((product) => {
-      const div = document.querySelector('.items');
-      div.appendChild(createProductItemElement(product));
+      const itemsSection = document.querySelector('.items');
+      itemsSection.appendChild(createProductItemElement(product));
     });
-  });
+  }).catch((element) => alert(element));
 }
 
 window.onload = function onload() { 
   createsProductContainers();
 };
-
-// 2 - Adicione o produto ao carrinho de compras
-
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
-
-// function createCartItemElement(element) {
-//   const li = document.createElement('li');
-//   li.className = 'cart__item';
-//   li.innerText = `SKU: ${element.id} | NAME: ${element.title} | PRICE: $${element.price}`;
-//   li.addEventListener('click', cartItemClickListener);
-//   return li;
-// }
-
-// function cartItemClickListener(event) {
-//   // coloque seu código aqui.
-// }
