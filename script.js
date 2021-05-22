@@ -32,6 +32,8 @@ function cartItemClickListener(event) {
   // requisito 3
   const cartList = document.querySelector('.cart__items');
   cartList.removeChild(event.target);
+  // requisito 4
+  localStorage.setItem('cartList', cartList.innerHTML);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -70,6 +72,8 @@ const catchItem = async (event) => {
   const prod = await fetchItem(itemID);
   const item = createCartItemElement({ sku: prod.id, name: prod.title, salePrice: prod.price });
   prodList.appendChild(item);
+  // requisito 4
+  localStorage.setItem('cartList', prodList.innerHTML); // salva localmente a lista de produtos selecionados
 };
 
 const addCartItemAndCreateProductList = async () => {
@@ -78,6 +82,16 @@ const addCartItemAndCreateProductList = async () => {
   buttons.forEach((button) => button.addEventListener('click', catchItem));
 }; 
 
+const loadLocalStorage = () => {
+  if(localStorage.getItem('cartList')) {
+    const cartListOL = document.querySelector('ol.cart__items');
+    cartListOL.innerHTML = localStorage.getItem('cartList');
+    const cartListProducts = document.querySelectorAll('.cart__item');
+    cartListProducts.forEach(item => item.addEventListener('click', cartItemClickListener));
+  }
+};
+
 window.onload = function onload() { 
   addCartItemAndCreateProductList();
+  loadLocalStorage();
 };
