@@ -34,6 +34,7 @@ function cartItemClickListener(event) {
   cartList.removeChild(event.target);
   // requisito 4
   localStorage.setItem('cartList', cartList.innerHTML);
+  sumAll();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -74,6 +75,8 @@ const catchItem = async (event) => {
   prodList.appendChild(item);
   // requisito 4
   localStorage.setItem('cartList', prodList.innerHTML); // salva localmente a lista de produtos selecionados
+  // 
+  sumAll();
 };
 
 const addCartItemAndCreateProductList = async () => {
@@ -83,12 +86,23 @@ const addCartItemAndCreateProductList = async () => {
 }; 
 
 const loadLocalStorage = () => {
+  // requisito 4 - se houver lista no stoge, insere na OL e adiciona o addEventListener
   if (localStorage.getItem('cartList')) {
     const cartListOL = document.querySelector('ol.cart__items');
     cartListOL.innerHTML = localStorage.getItem('cartList');
     const cartListProducts = document.querySelectorAll('.cart__item');
     cartListProducts.forEach((item) => item.addEventListener('click', cartItemClickListener));
   }
+  sumAll();
+};
+
+// requisito 5
+const sumAll = () => {
+  const items = document.querySelectorAll('.cart__item');
+  const itemsArr = Array.from(items); //array de elementos html (li)
+  const price = document.querySelector('.total-price');
+  const total = itemsArr.reduce((acc, item) => acc + Number(item.innerText.split('$')[1]), 0);
+  price.innerText = `Preço Total: $${total.toFixed(2)}`;
 };
 
 window.onload = function onload() { 
