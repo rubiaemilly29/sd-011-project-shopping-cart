@@ -19,15 +19,14 @@ function createProductImageElement(imageSource) {
 
 function storage() {
   const cartStorage = document.querySelector(itemsCart);
-  localStorage.setItem('shopCart', cartStorage.innerHTML);
+  localStorage.setItem('shopCart', cartStorage.innerHTML); // A propriedade innerHTML define ou retorna o conteúdo HTML (HTML interno) de um elemento.
 }
 
 // 3 clique de item do carrinho
 function cartItemClickListener(event) {
   // coloque seu código aqui
   const delItem = document.querySelector(itemsCart);
-  delItem.removeChild(event.target);
-  storage();
+  delItem.removeChild(event.target); // A propriedade do evento de destino retorna o elemento que disparou o evento.  
  }
 
  // 2 criar elemento de item do carrinho
@@ -38,7 +37,13 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   const cartItems = document.querySelector(itemsCart);
   cartItems.appendChild(li);
+  storage();
   return li;
+}
+
+// obter sku do item do produto
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;  
 }
 
 // 2 adicionar ao carrinho buscar item do carrinho de API
@@ -53,11 +58,6 @@ const fetchApiCartItem = (id) => {
       cartList.appendChild(createCartItemElement(json));
     });
 };
-
-// obter sku do item do produto
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;  
-}
 
 // criar elemento de item de produto
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
