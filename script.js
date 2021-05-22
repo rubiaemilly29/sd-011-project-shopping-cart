@@ -6,6 +6,7 @@ const myObject = {
 let sectionItems;
 let addItemButtons;
 let cartItemsList;
+let sectionPrice;
 let storageList = [];
 const skuItems = [];
 
@@ -23,7 +24,7 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-const addToStorage = () => {
+const addToStorage = async () => {
   storageList = [];
   if (cartItemsList.childNodes.length > 0) {
     cartItemsList.childNodes.forEach((cartItem) => {
@@ -36,9 +37,42 @@ const addToStorage = () => {
   }
 };
 
+async function updatePrice(cartList) {
+  const itemsPrice = [];
+
+  cartList.childNodes.forEach((cartItem) => {
+    itemsPrice.push(parseFloat(cartItem.textContent.split('$')[1]));
+  });
+  
+  const priceSum = itemsPrice.reduce((acc, curr) => acc + curr, 0);
+
+  return priceSum;
+}
+
+async function showTotalPrice(cartList) {
+  const totalPrice = document.createElement('span');
+
+  if (!sectionPrice.hasChildNodes()) {
+    totalPrice.className = 'total-price';
+    totalPrice.innerText = await updatePrice(cartList);
+    sectionPrice.appendChild(totalPrice);
+  } else {
+    sectionPrice.innerText = '';
+    totalPrice.className = 'total-price';
+    totalPrice.innerText = await updatePrice(cartList);
+    sectionPrice.appendChild(totalPrice);
+  }
+
+  if (!cartList.hasChildNodes()) {
+    sectionPrice.innerText = '';
+  }
+}
+
 function cartItemClickListener(event) {
   event.target.remove();
   addToStorage();
+  updatePrice(cartItemsList);
+  showTotalPrice(cartItemsList);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -82,6 +116,8 @@ const getStorage = () => {
 async function addToCart(sku) {
   await fetchDetails(sku);
   addToStorage();
+  updatePrice(cartItemsList);
+  showTotalPrice(cartItemsList);
 }
 
 function createProductItemElement({ sku, name, image }) {
@@ -96,10 +132,6 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(button);
 
   return section;
-}
-
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
 }
 
 function fetchSearch(keyword) {
@@ -126,6 +158,8 @@ function fetchSearch(keyword) {
 window.onload = async function onload() {
   sectionItems = document.querySelector('.items');
   cartItemsList = document.querySelector('.cart__items');
+  sectionPrice = document.querySelector('.price');
   getStorage();
+  showTotalPrice(cartItemsList);
   await fetchSearch('computador');
 };
