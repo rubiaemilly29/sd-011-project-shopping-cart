@@ -7,6 +7,20 @@ const sumAll = () => {
   price.innerText = `Preço Total: $${total.toFixed(2)}`;
 };
 
+// requisito 6
+const removeAll = () => {
+  const items = document.querySelectorAll('.cart__item');
+  items.forEach((item) => item.parentNode.removeChild(item));
+  localStorage.removeItem('cartList');
+  sumAll();
+};
+
+const removeAllButton = () => {
+  const button = document.querySelector('.empty-cart');
+  button.addEventListener('click', removeAll);
+};
+
+// 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -108,4 +122,5 @@ const loadLocalStorage = () => {
 window.onload = function onload() { 
   addCartItemAndCreateProductList();
   loadLocalStorage();
+  removeAllButton();
 };
