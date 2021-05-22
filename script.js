@@ -13,8 +13,9 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 function cartItemClickListener(event) {
-   // coloque seu código aqui.
-   return event;
+  // coloque seu código aqui.
+  const cartItens = document.querySelector('.cart__items');
+  cartItens.removeChild(event.target);
 }
 async function findProducts(key = 'computador') {
   try {
