@@ -13,18 +13,49 @@ function fetchItem(urlItemId) {
 function cartItemClickListener(event) {
   // coloque seu código aqui
   const item = event.target;
+  const id = item.getAttribute('id');
+  removeCartItemFromLocalStorage(id);
   item.remove();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
+  li.setAttribute('id', sku);
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
-async function addToCart(event) {
+function getStorage() {
+  const savedStorage = localStorage.getItem('shoppingCart');
+  return savedStorage ? JSON.parse(savedStorage) : [];
+}
+
+function saveStorage(cartArray) {
+  localStorage.setItem('shoppingCart', JSON.stringify(cartArray));
+}
+
+function addItemToLocalStorage(item) {
+  const cartArray = getStorage();
+  cartArray.push(item);
+  saveStorage(cartArray);
+}
+
+function removeCartItemFromLocalStorage(id) {
+  const cartArray = getStorage();
+  const newArray = cartArray.filter((item) => item.id !== id);
+  saveStorage(newArray);
+}
+
+function loadStorage() {
+  const cartArray = getStorage();
+  cartArray.forEach(({ id, title, price }) => {
+    cartItems.appendChild(createCartItemElement({ sku: id, name: title, salePrice: price }));
+  });
+}
+
+async function addToCartEvent(event) {
   const button = event.target;
   const itemId = button.parentElement.firstChild.innerText;
   const endpoint = `https://api.mercadolibre.com/items/${itemId}`;
@@ -32,7 +63,7 @@ async function addToCart(event) {
   const { id, title, price } = item;
   const cartItem = createCartItemElement({ sku: id, name: title, salePrice: price });
   cartItems.appendChild(cartItem);
-  cartItem.addEventListener('click', cartItemClickListener);
+  addItemToLocalStorage(item);
 }
 
 function createProductImageElement(imageSource) {
@@ -47,7 +78,7 @@ function createCustomElement(element, className, innerText) {
   e.className = className;
   e.innerText = innerText;
   if (element === 'button') {
-    e.addEventListener('click', addToCart)
+    e.addEventListener('click', addToCartEvent);
   }
   return e;
 }
@@ -88,6 +119,14 @@ async function createList() {
   });
 }
 
+function emptyCart() {
+  while (cartItems.children.length) { cartItems.removeChild(cartItems.lastChild); }
+  localStorage.removeItem('shoppingCart');
+}
+
 window.onload = function onload() {
   createList();
+  const emptyCartButton = document.querySelector('.empty-cart');
+  emptyCartButton.addEventListener('click', emptyCart);
+  loadStorage();
 };
