@@ -1,5 +1,5 @@
 const cartClass = '.cart__items';
-const cartItemStorage = 'cart-items'
+const cartItemStorage = 'cart-items';
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -70,7 +70,7 @@ async function addItem(event) {
     ol.appendChild(createCartItemElement(response));
     const cartobj = { id: response.id, title: response.title, price: response.price };
     cartItems.push(cartobj);
-    localStorage.setItem('cart-items', JSON.stringify(cartItems));
+    localStorage.setItem(cartItemStorage, JSON.stringify(cartItems));
   }
 }
 
@@ -83,7 +83,7 @@ window.onload = async function onload() {
  await getItens();
  const items = document.querySelector('.items');
  items.addEventListener('click', addItem);
- const localItems = JSON.parse(localStorage.getItem('cart-items'));
+ const localItems = JSON.parse(localStorage.getItem(cartItemStorage));
  localItems.forEach((item) => {
    const createItem = createCartItemElement(item);
    const ol = document.querySelector(cartClass);
