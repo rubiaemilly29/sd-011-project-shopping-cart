@@ -1,6 +1,6 @@
 const cartClass = '.cart__items';
 const cartItemStorage = 'cart-items';
-const price = document.querySelector('.total-price')
+const price = document.querySelector('.total-price');
 let cartItems;
 
 if (localStorage.getItem(cartItemStorage)) {
@@ -103,11 +103,11 @@ const removeAll = () => {
   const cart = document.querySelector(cartClass);
   cart.innerHTML = '';
   localStorage.removeItem(cartItemStorage);
-  cartItems = []
+  cartItems = [];
 };
 
 window.onload = async function onload() { 
- load()
+ load();
  await getItens();
  const items = document.querySelector('.items');
  items.addEventListener('click', addItem);
@@ -115,11 +115,11 @@ window.onload = async function onload() {
   const cartItemsWebStorage = JSON.parse(localStorage.getItem(cartItemStorage));
   cartItemsWebStorage.forEach((cartItem) => {
     const item = createCartItemElement(cartItem);
-    const ol = document.querySelector('.cart__items')
+    const ol = document.querySelector('.cart__items');
     ol.appendChild(item);
   });
 }
  const removeButton = document.querySelector('.empty-cart');
  removeButton.addEventListener('click', removeAll);
- endLoad()
+ endLoad();
 };
