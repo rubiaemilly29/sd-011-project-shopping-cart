@@ -83,11 +83,11 @@ const addCartItemAndCreateProductList = async () => {
 }; 
 
 const loadLocalStorage = () => {
-  if(localStorage.getItem('cartList')) {
+  if (localStorage.getItem('cartList')) {
     const cartListOL = document.querySelector('ol.cart__items');
     cartListOL.innerHTML = localStorage.getItem('cartList');
     const cartListProducts = document.querySelectorAll('.cart__item');
-    cartListProducts.forEach(item => item.addEventListener('click', cartItemClickListener));
+    cartListProducts.forEach((item) => item.addEventListener('click', cartItemClickListener));
   }
 };
 
