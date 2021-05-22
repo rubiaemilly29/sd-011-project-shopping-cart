@@ -1,25 +1,3 @@
-// requisito 5
-const sumAll = () => {
-  const items = document.querySelectorAll('.cart__item');
-  const itemsArr = Array.from(items); // array de elementos html (li)
-  const price = document.querySelector('.total-price');
-  const total = itemsArr.reduce((acc, item) => acc + Number(item.innerText.split('$')[1]), 0);
-  price.innerText = `Preço Total: $${total.toFixed(2)}`;
-};
-
-// requisito 6
-const removeAll = () => {
-  const items = document.querySelectorAll('.cart__item');
-  items.forEach((item) => item.parentNode.removeChild(item));
-  localStorage.removeItem('cartList');
-  sumAll();
-};
-
-const removeAllButton = () => {
-  const button = document.querySelector('.empty-cart');
-  button.addEventListener('click', removeAll);
-};
-
 // 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -50,6 +28,15 @@ function createProductItemElement({ sku, name, image }) {
 function getSkuFromProductItem(item) { 
   return item.querySelector('.item__sku').innerText;
 }
+
+// requisito 5
+const sumAll = () => {
+  const items = document.querySelectorAll('.cart__item');
+  const itemsArr = Array.from(items); // array de elementos html (li)
+  const price = document.querySelector('.total-price');
+  const total = itemsArr.reduce((acc, item) => acc + Number(item.innerText.split('$')[1]), 0);
+  price.innerText = `Preço Total: $${total.toFixed(2)}`;
+};
 
 function cartItemClickListener(event) {
   // requisito 3
@@ -117,6 +104,19 @@ const loadLocalStorage = () => {
     cartListProducts.forEach((item) => item.addEventListener('click', cartItemClickListener));
   }
   sumAll();
+};
+
+// requisito 6
+const removeAll = () => {
+  const items = document.querySelectorAll('.cart__item');
+  items.forEach((item) => item.parentNode.removeChild(item));
+  localStorage.removeItem('cartList');
+  sumAll();
+};
+
+const removeAllButton = () => {
+  const button = document.querySelector('.empty-cart');
+  button.addEventListener('click', removeAll);
 };
 
 window.onload = function onload() { 
