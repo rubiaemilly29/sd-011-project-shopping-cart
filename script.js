@@ -25,12 +25,13 @@ function createProductItemElement({ sku, name, image }) {
 }
 
 function getSkuFromProductItem(item) { 
-  return item.querySelector('span.item__sku').innerText;
+  return item.querySelector('.item__sku').innerText;
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
-  console.log(event);
+  // requisito 3
+  const cartList = document.querySelector('.cart__items');
+  cartList.removeChild(event.target);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -65,19 +66,18 @@ const createProductList = async () => {
 
 const catchItem = async (event) => {
   const itemID = getSkuFromProductItem(event.target.parentElement); // catch product id
-  const prodList = document.querySelector('ol.cart__items');
+  const prodList = document.querySelector('.cart__items');
   const prod = await fetchItem(itemID);
   const item = createCartItemElement({ sku: prod.id, name: prod.title, salePrice: prod.price });
   prodList.appendChild(item);
 };
 
-const addCartItem = async () => {
+const addCartItemAndCreateProductList = async () => {
   await createProductList();
-  const buttons = document.querySelectorAll('button.item__add');
+  const buttons = document.querySelectorAll('.item__add');
   buttons.forEach((button) => button.addEventListener('click', catchItem));
 }; 
 
 window.onload = function onload() { 
-  // createProductList();
-  addCartItem();
+  addCartItemAndCreateProductList();
 };
