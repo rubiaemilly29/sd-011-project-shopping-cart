@@ -1,4 +1,5 @@
 const cart = document.querySelector('.cart__items');
+const totalPrice = document.querySelector('.total-price');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -16,8 +17,9 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-const cartItemClickListener = (event) => { 
+const cartItemClickListener = (event, salePrice) => { 
   event.target.remove();
+  totalPrice.innerText = parseFloat(Number(totalPrice.innerText) - salePrice);
   saveCartToPage();
 };
 
@@ -25,7 +27,8 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', (event) => cartItemClickListener(event, salePrice));
+  totalPrice.innerText = parseFloat(Number(totalPrice.innerText) + salePrice);
   return li;
 }
 
