@@ -33,7 +33,7 @@ function getSkuFromProductItem(item) {
 // const getCartList = () => document.querySelectorAll('.cart__item');
 
 // requisito 5
-const sumAll = () => {
+const sumAll = async () => {
   const itemsCart = document.querySelectorAll(cartItem);
   // const itemsArr = Array.from(document.querySelectorAll('.cart__item')); // array de elementos html (li)
   const price = document.querySelector('.total-price');
