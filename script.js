@@ -31,8 +31,7 @@ function createItemLink(id) {
 }
 
 function cartItemClickListener(event) {
-  const myId = event.target.id;
-createItemLink(myId).then(itemData);
+  event.target.remove();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -52,6 +51,7 @@ async function getProductDetails(productId) {
 function addItemToCart(cartElement) {
   document.querySelector('.cart__items').appendChild(cartElement);
 }
+
 async function handleAdd(e) {
   const productId = getSkuFromProductItem(e.target.parentElement);
   const { id, title, price } = await getProductDetails(productId);
