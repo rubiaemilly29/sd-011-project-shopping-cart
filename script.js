@@ -1,3 +1,5 @@
+const ClassCart = '.cart__items';
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -49,16 +51,29 @@ section.appendChild(createCustomElement('span', 'item__sku', sku));
 section.appendChild(createCustomElement('span', 'item__title', name));
 section.appendChild(createProductImageElement(image));
 section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
-// requisito 2
 .addEventListener('click', async (event) => {
   const btnAdd = event.target;
   const getSku = btnAdd.parentNode.firstChild.innerText;
   const returnResolve = await getApiSku(getSku);
-  const saveOl = document.querySelector('.cart__items');
-  saveOl.appendChild(createCartItemElement(returnResolve));
+  document.querySelector(ClassCart).appendChild(createCartItemElement(returnResolve));
+  const cartItem = document.querySelector('.cart__items');
+  localStorage.setItem('getSku', cartItem.innerHTML);
   });
 return section; 
 }
+// Requisito 4
+const loadStorage = () => {
+const getSku = localStorage.getItem('getSku'); // pega tudo que tem dentro do localStorage
+document.querySelector(ClassCart).innerHTML = getSku;
+};
+// requisito 6
+const clearCart = () => {
+  const emptyngCart = document.querySelector('.empty-cart');
+  emptyngCart.addEventListener('click', () => {
+    document.querySelector('ol.cart__items').innerHTML = '';
+    localStorage.removeItem('getSku');
+  });
+};
 
 // requisito 1
 const getApi = async () => {
@@ -74,5 +89,6 @@ const resolve = await request.json();
 
   window.onload = function onload() {
   getApi();
-  console.log();
-}; 
+  loadStorage();
+  clearCart();
+  }; 
