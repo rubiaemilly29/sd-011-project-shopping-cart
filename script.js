@@ -72,6 +72,11 @@ async function getProductDetails(productId) {
 function addItemToCart(cartElement) {
   document.querySelector('.cart__items').appendChild(cartElement);
 }
+const resetCart = () => {
+  const cart = document.querySelector('.cart__items');
+  cart.innerHTML = null;
+  localStorage.setItem('shopping-cart', '');
+};
 
 async function handleAdd(e) {
   const productId = getSkuFromProductItem(e.target.parentElement);
@@ -109,6 +114,8 @@ window.onload = async function onload() {
   const data = await createJason(response);
   const results = getResults(data);
   results.map(addResultToPage);
+  document.querySelector('.empty-cart').addEventListener('click', resetCart);
+
   const lastSave = fetchCartFromStorage();
   lastSave.map((i) => addItemToCart(createCartItemElement(i)));
 };
