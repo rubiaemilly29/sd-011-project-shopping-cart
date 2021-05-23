@@ -36,7 +36,10 @@ const sumAll = async () => {
   const price = document.querySelector('.total-price');
   // const total = itemsArr.reduce((acc, item) => acc + Number(item.innerText.split('$')[1]), 0);
   let sum = 0;
-  const total = itemsCart.forEach((item) => sum += Number(item.innerText.split('$')[1]));
+  itemsCart.forEach((item) => {
+    sum += Number(item.innerText.split('$')[1]);
+    return sum;
+  });
   price.innerText = `Preço Total: $${sum.toFixed(2)}`;
 };
 
