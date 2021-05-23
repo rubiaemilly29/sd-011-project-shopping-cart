@@ -13,28 +13,9 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ id: sku, title: name, thumbnail: image, price }) {
-  const section = document.createElement('section');
-  section.className = 'item';
-  const selectedItems = document.querySelector('.items');
-  section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
-  .addEventListener('click', () => createCartItemElement({ sku, name, price }));
-  selectedItems.appendChild((section));
-  return section;
-}
-
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
 function cartItemClickListener(event, items, count, price) {
   localStorage.removeItem(`items${count}`);
-
   items.removeChild(event.target);
-  
   totalPrice.innerText = parseFloat(Number(totalPrice.innerText) - Number(price));
 }
 
@@ -49,6 +30,19 @@ function createCartItemElement({ sku, name, price }) {
   ol.appendChild(li);
   totalPrice.innerText = parseFloat(Number(totalPrice.innerText) + Number(price));
   return li;
+}
+
+function createProductItemElement({ id: sku, title: name, thumbnail: image, price }) {
+  const section = document.createElement('section');
+  section.className = 'item';
+  const selectedItems = document.querySelector('.items');
+  section.appendChild(createCustomElement('span', 'item__sku', sku));
+  section.appendChild(createCustomElement('span', 'item__title', name));
+  section.appendChild(createProductImageElement(image));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
+  .addEventListener('click', () => createCartItemElement({ sku, name, price }));
+  selectedItems.appendChild((section));
+  return section;
 }
 
 const urlFreeMarket = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
@@ -72,6 +66,16 @@ function itemsForSale() {
   });
 }
 
+const clearCart = () => {
+  const clear = document.querySelector('.empty-cart');
+  clear.addEventListener('click', () => {
+    document.querySelector('.cart__items').innerHTML = '';
+    totalPrice.innerText = '0';
+    localStorage.clear();
+  });
+};
+
 window.onload = function onload() {
   itemsForSale();
+  clearCart();
 };
