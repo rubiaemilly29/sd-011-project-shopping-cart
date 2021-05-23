@@ -12,6 +12,16 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+function addLocalStorage() {
+  const catchCart = document.querySelector('ol').innerHTML;
+  localStorage.setItem('cartItems', catchCart);
+}
+
+function loadLocalStorage() {
+  const catchCart = document.querySelector('ol');
+  catchCart.innerHTML = localStorage.getItem('cartItems');
+}
+
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -74,10 +84,12 @@ function addProduct(event) {
         salePrice: json.price,
       };
       renderCart(product);
-    });
+    })
+    .then(() => addLocalStorage());
 }
 
 window.onload = function onload() { 
   getDataApi();
+  loadLocalStorage();
   document.querySelector('.items').addEventListener('click', addProduct);
 };
