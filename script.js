@@ -39,7 +39,9 @@ function createProductItemElement({ sku, name, image }) {
 
   return section;
 }
-
+function createElementAndAddIt(product) {
+  
+}
 function handleResult(result) {
   const products = result.results;
   console.log(products);
