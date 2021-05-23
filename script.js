@@ -16,7 +16,7 @@ function cartItemClickListener(event) {
   event.target.remove();
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
@@ -26,15 +26,14 @@ function createCartItemElement({ sku, name, salePrice }) {
   cartItems.appendChild(li);
 }
 
-function createProductItemElement({ id: sku, title: name, thumbnail: image, price: salePrice }) {
+function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
 
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
-    .addEventListener('click', () => createCartItemElement({ sku, name, salePrice }));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
   const sectionItems = document.querySelector('.items');
   sectionItems.appendChild(section);
@@ -43,6 +42,22 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image, pric
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
+
+const searchItemId = (idItem) => {
+  fetch(`https://api.mercadolibre.com/items/${idItem}`)
+  .then((response) => response.json())
+  .then((json) => createCartItemElement(json))
+  .catch((error) => error);
+};
+
+const buttonAddCartItemListener = () => {
+  const buttonItemAdd = document.querySelectorAll('.item__add');
+  buttonItemAdd.forEach((button, index) => button.addEventListener('click', () => {
+    const sectionItems = document.querySelectorAll('.item');
+    const item = sectionItems[index];
+    searchItemId(getSkuFromProductItem(item));
+  }));
+};
 
 const createSpanLoading = () => {
   const span = document.createElement('span');
@@ -64,6 +79,7 @@ const createProductList = () => {
     .then((json) => json.results)
     .then((results) => results.forEach((value) => createProductItemElement(value)))
     .then((__) => removeSpanLoading())
+    .then((__) => buttonAddCartItemListener())
     .catch((error) => error);
 };
 
