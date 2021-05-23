@@ -1,5 +1,3 @@
-const cartItem = '.cart__item';
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -47,20 +45,16 @@ function getSkuFromProductItem(item) {
   return item.querySelector('.item__sku').innerText;
 }
 
-// const getCartList = () => document.querySelectorAll('.cart__item');
+const getCartList = () => document.querySelectorAll('.cart__item');
 
 // requisito 5
 const sumAll = async () => {
-  const itemsCart = document.querySelectorAll(cartItem);
-  // const itemsArr = Array.from(document.querySelectorAll('.cart__item')); // array de elementos html (li)
+  const itemsCart = getCartList();
+  // https://gomakethings.com/converting-a-nodelist-to-an-array-with-vanilla-javascript/
+  const itemsArr = Array.from(itemsCart); // array de elementos html (li)
   const price = document.querySelector('.total-price');
-  // const total = itemsArr.reduce((acc, item) => acc + Number(item.innerText.split('$')[1]), 0);
-  let sum = 0;
-  itemsCart.forEach((item) => {
-    sum += Number(item.innerText.split('$')[1]);
-    return sum;
-  });
-  price.innerText = `Preço Total: $${sum.toFixed(2)}`;
+  const total = itemsArr.reduce((acc, item) => acc + Number(item.innerText.split('$')[1]), 0);
+  price.innerText = `Preço Total: $${total.toFixed(2)}`;
 };
 
 function cartItemClickListener(event) {
@@ -133,7 +127,7 @@ const loadLocalStorage = () => {
   if (localStorage.getItem('cartList')) {
     const cartListOL = document.querySelector('ol.cart__items');
     cartListOL.innerHTML = localStorage.getItem('cartList');
-    const cartListProducts = document.querySelectorAll(cartItem);
+    const cartListProducts = getCartList();
     cartListProducts.forEach((item) => item.addEventListener('click', cartItemClickListener));
   }
   // requisito 5
@@ -142,7 +136,7 @@ const loadLocalStorage = () => {
 
 // requisito 6
 const removeAll = () => {
-  const items = document.querySelectorAll(cartItem);
+  const items = getCartList();
   items.forEach((item) => item.parentNode.removeChild(item));
   // requisitos 4 e 5
   localStorage.removeItem('cartList');
