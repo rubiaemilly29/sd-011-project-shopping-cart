@@ -14,17 +14,22 @@ function removeLoading() {
   loadingElement.remove();
 }
 
+function getStorage() {
+  const savedStorage = localStorage.getItem('shoppingCart');
+  return savedStorage ? JSON.parse(savedStorage) : [];
+}
+
+function updatePrice() {
+  const price = document.querySelector('.total-price');
+  price.innerText = getStorage().reduce((acc, curr) => acc + curr.price, 0);
+}
+
 function fetchItem(urlItemId) {
   return new Promise((resolve, reject) => {
     fetch(urlItemId)
       .then((r) => resolve(r.json()))
       .catch((error) => reject(error));
   });
-}
-
-function getStorage() {
-  const savedStorage = localStorage.getItem('shoppingCart');
-  return savedStorage ? JSON.parse(savedStorage) : [];
 }
 
 function saveStorage(cartArray) {
@@ -53,6 +58,7 @@ function cartItemClickListener(event) {
   const id = getSkuFromText(item.innerText);
   removeCartItemFromLocalStorage(id);
   item.remove();
+  updatePrice();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -69,7 +75,7 @@ function addItemToLocalStorage(item) {
   saveStorage(cartArray);
 }
 
-function loadStorage() {
+function createCartListByStorage() {
   const cartArray = getStorage();
   cartArray.forEach(({ id, title, price }) => {
     cartItems.appendChild(createCartItemElement({ sku: id, name: title, salePrice: price }));
@@ -87,6 +93,7 @@ async function addToCartEvent(event) {
   const cartItem = createCartItemElement({ sku: id, name: title, salePrice: price });
   cartItems.appendChild(cartItem);
   addItemToLocalStorage(item);
+  updatePrice();
 }
 
 function createProductImageElement(imageSource) {
@@ -143,11 +150,13 @@ async function createList() {
 function emptyCart() {
   while (cartItems.children.length) { cartItems.removeChild(cartItems.lastChild); }
   localStorage.removeItem('shoppingCart');
+  updatePrice();
 }
 
 window.onload = function onload() {
   createList();
   const emptyCartButton = document.querySelector('.empty-cart');
   emptyCartButton.addEventListener('click', emptyCart);
-  loadStorage();
+  createCartListByStorage();
+  updatePrice();
 };
