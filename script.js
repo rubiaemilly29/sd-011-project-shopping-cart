@@ -16,7 +16,7 @@ function createCustomElement(element, className, innerText) {
 function cartItemClickListener(event, items, count, price) {
   localStorage.removeItem(`items${count}`);
   items.removeChild(event.target);
-  totalPrice.innerText = parseFloat(Number(totalPrice.innerText) - Number(price));
+  totalPrice.innerText = Math.round((Number(totalPrice.innerText) - Number(price))*100)/100;
 }
 
 function createCartItemElement({ sku, name, price }) {
@@ -28,7 +28,7 @@ function createCartItemElement({ sku, name, price }) {
   const count = ol.childElementCount;
   li.addEventListener('click', (event) => cartItemClickListener(event, ol, count, price));
   ol.appendChild(li);
-  totalPrice.innerText = parseFloat(Number(totalPrice.innerText) + Number(price));
+  totalPrice.innerText = Math.round((Number(totalPrice.innerText) + Number(price))*100)/100;
   return li;
 }
 
