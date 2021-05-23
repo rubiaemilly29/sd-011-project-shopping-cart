@@ -77,6 +77,8 @@ const clearCart = () => {
 
 // requisito 1
 const getApi = async () => {
+  const textLoading = document.querySelector('.loading');
+  textLoading.innerText = 'loading...';
 const request = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
 const resolve = await request.json();
     const resolved = await resolve.results;
@@ -85,6 +87,7 @@ const resolve = await request.json();
       const raiseChild = document.querySelector('.items');
       raiseChild.appendChild(returnValue);
     });
+    textLoading.remove();
   };
 
   window.onload = function onload() {
