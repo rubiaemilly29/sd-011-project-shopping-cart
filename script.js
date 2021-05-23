@@ -14,6 +14,9 @@ function removeLoading() {
   loadingElement.remove();
 }
 
+/** Consultei o repositório do Matheus Inacio para resolver o requisito 4 - LocalStorage.
+Link do repositório: https://github.com/tryber/sd-011-project-shopping-cart/pull/15
+*/
 function getStorage() {
   const savedStorage = localStorage.getItem('shoppingCart');
   return savedStorage ? JSON.parse(savedStorage) : [];
@@ -147,6 +150,9 @@ async function createList() {
   });
 }
 
+/** Consultei o repositório do Matheus Inacio para resolver o requisito 6 - Limpar Carrinho.
+Link do repositório: https://github.com/tryber/sd-011-project-shopping-cart/pull/15
+*/
 function emptyCart() {
   while (cartItems.children.length) { cartItems.removeChild(cartItems.lastChild); }
   localStorage.removeItem('shoppingCart');
