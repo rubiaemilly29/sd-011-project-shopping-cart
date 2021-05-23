@@ -12,6 +12,10 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+const removeItemLocalstorage = (id) => {
+  localStorage.removeItem(id);
+};
+
 function cartItemClickListener(event) {
   event.target.remove();
 }
@@ -21,10 +25,22 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
-
+  li.addEventListener('click', () => removeItemLocalstorage(sku));
+  
   const cartItems = document.querySelector('.cart__items');
   cartItems.appendChild(li);
 }
+
+const addItemToLocalStorage = () => {
+  if (localStorage.length > 0) {
+    for (let index = 0; index < localStorage.length; index += 1) {
+      const key = localStorage.key(index);
+      const value = localStorage.getItem(key);
+      const object = JSON.parse(value);
+      createCartItemElement(object);
+    }
+  } // No requisito 4 esse artigo me ajudou bastante (https://warcontent.com/localstorage-javascript/)
+};
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
@@ -46,7 +62,10 @@ function getSkuFromProductItem(item) {
 const searchItemId = (idItem) => {
   fetch(`https://api.mercadolibre.com/items/${idItem}`)
   .then((response) => response.json())
-  .then((json) => createCartItemElement(json))
+  .then((json) => {
+    createCartItemElement(json);
+    localStorage.setItem(json.id, JSON.stringify(json));
+  })
   .catch((error) => error);
 };
 
@@ -88,10 +107,13 @@ const buttonCartListener = () => {
   emptyCart.addEventListener('click', () => {
     const liCartItems = document.querySelectorAll('.cart__item');
     liCartItems.forEach((value) => value.remove());
+    
+    localStorage.clear();
   });
 };
 
 window.onload = function onload() {
+  addItemToLocalStorage();
   createProductList();
   buttonCartListener();
 };
