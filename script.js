@@ -28,9 +28,26 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+// Meu código
+const classCartItems = '.cart__items'; // Usado somento nas funções addToLocalStorage e restoreLocalStorage
+
+const addToLocalStorage = () => {
+  const cartItems = document.querySelectorAll('calssCartItems');
+  const local = localStorage.setItem('item', cartItems);
+  console.log(local);
+};
+
+const restoreLocalStorage = () => {
+  const cartItemsAdded = document.querySelectorAll('classCartItems');
+  const item = localStorage.getItem('item');
+  cartItemsAdded.innerHTML = item;
+  console.log(cartItemsAdded);
+};
+
 function cartItemClickListener(event) {
   // coloque seu código aqui
   event.target.remove();
+  addToLocalStorage();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -85,4 +102,5 @@ async function productList() {
 
 window.onload = function onload() {
   productList();
+  restoreLocalStorage();
 };
