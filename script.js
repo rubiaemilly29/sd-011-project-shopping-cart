@@ -12,18 +12,15 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ id: sku, id: name, thumbnail: image, price }) {
-  const section = document.createElement('section');
+function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
+    const section = document.createElement('section');
   section.className = 'item';
 
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
-  const items = document.querySelector('.items');
-  items.appendChild(section);
-
+  
   return section; 
 }
 
@@ -32,34 +29,29 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
 
-function createCartItemElement({ sku, name, salePrice }) {
+} 
+
+function createCartItemElement({ sku: id, name: title, salePrice: price }) {
   const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  const olCar = document.querySelector('.car_items');
+  li.className = 'cartItem';
+  li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   
   return li;
 }
-
-const promiseProducts = () => new Promise((accept) => {
-  fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
-    .then((myFetch) => myFetch.json())
-    .then((elements) => elements.results.map((element) => createProductItemElement(element)));
-    accept();
-});
-
-const myPromise = async () => {
-  try {
-    await promiseProducts();
-  } catch (error) {
-    console.log('ERROR!!');
-  }
-};
-
+    const getApi = async () => {
+    const request = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
+    const resolve = await request.json();
+    const resolved = await resolve.results;
+    resolved.forEach((item) => {
+      const returnValue = createProductItemElement(item);
+      const raiseChid = document.querySelector('.items');
+      raiseChid.appendChild(returnValue);
+    });
+  };
+  
 window.onload = function onload() {
-  myPromise();
+  getApi();
   console.log();
 }; 
