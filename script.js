@@ -1,4 +1,24 @@
 const cartContainer = document.querySelector('.cart');
+const fetchCartFromStorage = () => {
+  const dataInStorage = localStorage.getItem('shopping-cart') || ''; 
+  console.log('got ', dataInStorage, ' from storage');
+  return dataInStorage.length ? JSON.parse(dataInStorage) : [];
+};
+
+const saveCart = (newCart) => {
+  localStorage.setItem('shopping-cart', JSON.stringify(newCart));
+};
+
+const appendItemToCart = (item) => {
+  const lastSave = fetchCartFromStorage() || [];
+  saveCart([...lastSave, item]);
+};
+
+const removeItemFromCart = (itemID) => {
+  const lastSave = fetchCartFromStorage();
+  const newCart = lastSave.filter((item) => item.id === itemID);
+  saveCart(newCart);
+};
 
 function createJason(element) {
   const newElement = element.json();
@@ -23,7 +43,7 @@ function createCustomElement(element, className, innerText) {
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
-}
+} 
 
 function createItemLink(id) {
   const link = fetch(`https://api.mercadolibre.com/items/${id}`);
@@ -31,6 +51,7 @@ function createItemLink(id) {
 }
 
 function cartItemClickListener(event) {
+  removeItemFromCart(event.target.id);
   event.target.remove();
 }
 
@@ -55,7 +76,9 @@ function addItemToCart(cartElement) {
 async function handleAdd(e) {
   const productId = getSkuFromProductItem(e.target.parentElement);
   const { id, title, price } = await getProductDetails(productId);
-  const cartItemElement = createCartItemElement({ sku: id, name: title, salePrice: price });
+  const prodDetails = { sku: id, name: title, salePrice: price };
+  appendItemToCart(prodDetails);
+  const cartItemElement = createCartItemElement(prodDetails);
   addItemToCart(cartItemElement);
 }
 
@@ -86,4 +109,6 @@ window.onload = async function onload() {
   const data = await createJason(response);
   const results = getResults(data);
   results.map(addResultToPage);
+  const lastSave = fetchCartFromStorage();
+  lastSave.map((i) => addItemToCart(createCartItemElement(i)));
 };
