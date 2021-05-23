@@ -14,14 +14,17 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// requisito 7 
 const insertLoading = () => {
   const parentNode = document.querySelector('.cart');
   const loading = document.createElement('p');
   loading.className = 'loading';
   loading.innerText = 'Loading';
+  loading.style.color = 'rgba(106, 90, 205, 0.5)';
   parentNode.appendChild(loading);
 };
 
+// requisito 7
 const removeLoading = () => {
   const parentNode = document.querySelector('.cart');
   const loading = document.querySelector('.loading');
