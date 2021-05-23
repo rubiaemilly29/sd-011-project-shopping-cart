@@ -44,6 +44,7 @@ function cartItemClickListener(event) {
   cartList.removeChild(event.target);
   // requisito 4
   localStorage.setItem('cartList', cartList.innerHTML);
+  // requisito 5
   sumAll();
 }
 
@@ -55,6 +56,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+//requisito 1
 const fetchProducts = async () => {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const json = await response.json();
@@ -62,12 +64,14 @@ const fetchProducts = async () => {
   return products;
 };
 
+// requisito 2
 const fetchItem = async (id) => {
   const response = await fetch(`https://api.mercadolibre.com/items/${id}`);
   const product = await response.json();
   return product;
 };
 
+// requisito 1
 const createProductList = async () => {
   const prods = await fetchProducts();
   const items = document.querySelector('.items');
@@ -85,7 +89,7 @@ const catchItem = async (event) => {
   prodList.appendChild(item);
   // requisito 4
   localStorage.setItem('cartList', prodList.innerHTML); // salva localmente a lista de produtos selecionados
-  // 
+  // requisito 5
   sumAll();
 };
 
@@ -103,6 +107,7 @@ const loadLocalStorage = () => {
     const cartListProducts = document.querySelectorAll('.cart__item');
     cartListProducts.forEach((item) => item.addEventListener('click', cartItemClickListener));
   }
+  // requisito 5
   sumAll();
 };
 
@@ -110,6 +115,7 @@ const loadLocalStorage = () => {
 const removeAll = () => {
   const items = document.querySelectorAll('.cart__item');
   items.forEach((item) => item.parentNode.removeChild(item));
+  // requisitos 4 e 5
   localStorage.removeItem('cartList');
   sumAll();
 };
