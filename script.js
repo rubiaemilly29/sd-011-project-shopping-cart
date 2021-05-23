@@ -14,6 +14,20 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+const insertLoading = () => {
+  const parentNode = document.querySelector('.cart');
+  const loading = document.createElement('p');
+  loading.className = 'loading';
+  loading.innerText = 'Loading';
+  parentNode.appendChild(loading);
+};
+
+const removeLoading = () => {
+  const parentNode = document.querySelector('.cart');
+  const loading = document.querySelector('.loading');
+  parentNode.removeChild(loading);
+};
+
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -66,7 +80,9 @@ function createCartItemElement({ sku, name, salePrice }) {
 
 // requisito 1
 const fetchProducts = async () => {
+  insertLoading();
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
+  removeLoading();
   const json = await response.json();
   const products = await json.results;
   return products;
@@ -74,7 +90,9 @@ const fetchProducts = async () => {
 
 // requisito 2
 const fetchItem = async (id) => {
+  insertLoading();
   const response = await fetch(`https://api.mercadolibre.com/items/${id}`);
+  removeLoading();
   const product = await response.json();
   return product;
 };
