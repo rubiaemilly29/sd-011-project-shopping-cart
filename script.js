@@ -58,9 +58,12 @@ function emptyCart() {
   });
 }
 
+// Meu código
+const arrayToTotalPrice = [];
+
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
-  li.className = 'cart__item';
+  li.className = `${salePrice}`;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
@@ -77,6 +80,7 @@ async function addToCart(itemId) {
     salePrice: product.price,
   };
   items.appendChild(createCartItemElement(object));
+  addLocalStorage();
 }
 
 // Meu código
