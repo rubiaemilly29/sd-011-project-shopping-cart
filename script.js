@@ -117,10 +117,6 @@ function loadLocalStorage() {
   itemsSelection.forEach((li) => li.addEventListener('click', cartItemClickListener));
   allPrice.innerHTML = localStorage.getItem('TotalPrice');
 }
-
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
 window.onload = function onload() {
   retrieveQuerryFromML('computador');
   loadLocalStorage();
