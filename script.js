@@ -1,4 +1,5 @@
-// 
+const cartItem = '.cart__item';
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -33,7 +34,6 @@ function getSkuFromProductItem(item) {
 
 // requisito 5
 const sumAll = () => {
-  const cartItem = '.cart__item';
   const itemsCart = document.querySelectorAll(cartItem);
   // const itemsArr = Array.from(document.querySelectorAll('.cart__item')); // array de elementos html (li)
   const price = document.querySelector('.total-price');
@@ -112,7 +112,7 @@ const loadLocalStorage = () => {
   if (localStorage.getItem('cartList')) {
     const cartListOL = document.querySelector('ol.cart__items');
     cartListOL.innerHTML = localStorage.getItem('cartList');
-    const cartListProducts = document.querySelectorAll('.cart__item');
+    const cartListProducts = document.querySelectorAll(cartItem);
     cartListProducts.forEach((item) => item.addEventListener('click', cartItemClickListener));
   }
   // requisito 5
@@ -121,7 +121,7 @@ const loadLocalStorage = () => {
 
 // requisito 6
 const removeAll = () => {
-  const items = document.querySelectorAll('.cart__item');
+  const items = document.querySelectorAll(cartItem);
   items.forEach((item) => item.parentNode.removeChild(item));
   // requisitos 4 e 5
   localStorage.removeItem('cartList');
