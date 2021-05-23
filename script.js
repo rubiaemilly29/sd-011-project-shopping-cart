@@ -50,7 +50,7 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }, conta
   return li;
 }
 
-// /* fonte: https://github.com/tryber/sd-011-project-jest/pull/49/files */
+// /* fonte: https://github.com/tryber/sd-011-project-shopping-cart/pull/56/files */
 const addproductToCard = () => {
 const getOl = document.querySelector(substituteOlClass); // chamando o pai
 const buttonAddItems = document.querySelectorAll('.item__add');
@@ -67,7 +67,7 @@ buttonAddItems.forEach((eachCarItem) => { // para cada item a ser add no carrinh
 });
 };
 
-// /* fonte: https://github.com/tryber/sd-011-project-jest/pull/49/files e https://github.com/tryber/sd-011-project-shopping-cart/pull/8/files */
+// /* fonte: https://github.com/tryber/sd-011-project-shopping-cart/pull/56/files e https://github.com/tryber/sd-011-project-shopping-cart/pull/8/files */
 // para recuperar o Local Storage -requisito 4
 const getLocalStorage = () => {
   const getOl = document.querySelector(substituteOlClass); // para limpar o ol
