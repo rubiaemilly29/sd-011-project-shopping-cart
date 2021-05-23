@@ -1,4 +1,5 @@
 const ClassCart = '.cart__items';
+const arrayEmpty = [];
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -28,9 +29,13 @@ function cartItemClickListener(event) {
   const { target } = event;
   const childens = target.parentNode.children;
   const rest = [...childens]; // transformando HTMLCollection em array.
-  rest.forEach((item) => {
+  rest.forEach((item, index) => {
     if (target === item) {
       target.parentNode.removeChild(target);
+      arrayEmpty.splice(index, 1);
+      const sum = arrayEmpty.reduce((prev, curr) => prev + curr, 0);
+      arrayEmpty.push(sum);
+      document.querySelector('.total-price').innerText = sum;
     }
   });
  }
@@ -51,10 +56,12 @@ section.appendChild(createCustomElement('span', 'item__sku', sku));
 section.appendChild(createCustomElement('span', 'item__title', name));
 section.appendChild(createProductImageElement(image));
 section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
-.addEventListener('click', async (event) => {
-  const btnAdd = event.target;
-  const getSku = btnAdd.parentNode.firstChild.innerText;
+.addEventListener('click', async ({ target }) => {
+  const getSku = target.parentNode.firstChild.innerText;
   const returnResolve = await getApiSku(getSku);
+  arrayEmpty.push(returnResolve.price);
+  const ValueTotal = arrayEmpty.reduce((prev, curr) => prev + curr, 0);
+  document.querySelector('.total-price').innerText = ValueTotal;
   document.querySelector(ClassCart).appendChild(createCartItemElement(returnResolve));
   const cartItem = document.querySelector('.cart__items');
   localStorage.setItem('getSku', cartItem.innerHTML);
