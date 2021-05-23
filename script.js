@@ -1,7 +1,7 @@
 const api = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
 const itemsCart = '.cart__items';
 
-// criar elemento personalizado
+// criar elemento personalizado, com uma classe e conteudo conforme os parametros
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
@@ -22,14 +22,26 @@ function storage() {
   localStorage.setItem('shopCart', cartStorage.innerHTML); // A propriedade innerHTML define ou retorna o conteúdo HTML (HTML interno) de um elemento.
 }
 
-// 3 clique de item do carrinho
+// https://forum.scriptbrasil.com.br/topic/120049-somar-valores-carrinho/
+// 5 Adicionar os preços
+function price() {
+  const itemCart = document.querySelectorAll('.cart__item');
+  let priceSum = 0;
+  itemCart.forEach((item) => {
+    priceSum += parseFloat(item.innerHTML.split('$')[1]); // A função parseFloat () analisa uma string e retorna um número de ponto flutuante.
+  });
+  document.querySelector('.total-price').innerText = priceSum;
+}
+
+// 3 clique de item do carrinho, remove item do carrinho
 function cartItemClickListener(event) {
   // coloque seu código aqui
   const delItem = document.querySelector(itemsCart);
-  delItem.removeChild(event.target); // A propriedade do evento de destino retorna o elemento que disparou o evento.  
- }
+  delItem.removeChild(event.target); // A propriedade do evento de destino retorna o elemento que disparou o evento.
+  price();   
+}
 
- // 2 criar elemento de item do carrinho
+// 2 criar elemento de item do carrinho a partir da lista
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -37,6 +49,7 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   const cartItems = document.querySelector(itemsCart);
   cartItems.appendChild(li);
+  price(); 
   storage();
   return li;
 }
@@ -57,15 +70,17 @@ const fetchApiCartItem = (id) => {
       const cartList = document.querySelector(itemsCart);
       cartList.appendChild(createCartItemElement(json));
     });
+  price();
 };
 
 // criar elemento de item de produto
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
-  const button = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
-  button.addEventListener('click', ({ target }) => {
+  const button = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'); // adicionar o carrinho
+  button.addEventListener('click', ({ target }) => { 
     fetchApiCartItem(getSkuFromProductItem(target.parentElement));
+    price();
     storage();
   });
 
@@ -97,9 +112,10 @@ function clearListItens() {
   document.querySelector('.empty-cart').addEventListener('click', () => {
     localStorage.clear();
     const listClear = document.querySelector(itemsCart);
-    while (listClear.firstChild) {
+    while (listClear.firstChild) { // enquanto
       listClear.removeChild(listClear.firstChild);
     }
+    price();
   });
 }
 
@@ -112,7 +128,8 @@ function clearListItens() {
     });
   }
   clearListItens();
+  price();
   setTimeout(() => {
     document.querySelector('.loading').remove();
-  }, 500);
+  }, 3000);
 };
