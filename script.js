@@ -29,9 +29,12 @@ function getSkuFromProductItem(item) {
   return item.querySelector('.item__sku').innerText;
 }
 
+// const getCartList = () => document.querySelectorAll('.cart__item');
+
 // requisito 5
-const sumAll = async () => {
-  const itemsCart = document.querySelectorAll('.cart__item');
+const sumAll = () => {
+  const cartItem = '.cart__item';
+  const itemsCart = document.querySelectorAll(cartItem);
   // const itemsArr = Array.from(document.querySelectorAll('.cart__item')); // array de elementos html (li)
   const price = document.querySelector('.total-price');
   // const total = itemsArr.reduce((acc, item) => acc + Number(item.innerText.split('$')[1]), 0);
