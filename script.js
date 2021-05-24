@@ -1,4 +1,5 @@
 let totalPrice = 0;
+const cartList = document.querySelector('.cart__items');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -20,7 +21,7 @@ const sum = (price) => {
 };
 
 function saveLocal() {
-  const cartList = document.querySelector('.cart__items');
+  
   localStorage.setItem('cart', cartList.innerHTML);
 }
 
@@ -40,6 +41,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
 
 const addToCart = async (event) => {
   const itemId = event.target.parentNode.firstChild.innerText;
