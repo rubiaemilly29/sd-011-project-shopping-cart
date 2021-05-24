@@ -23,16 +23,15 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-
 async function fetchMercadoLivre(term){
   const endpoint = `https://api.mercadolibre.com/sites/MLB/search?q=${term}`;
   const response = await fetch (endpoint);
-  console.log(response);
+  //console.log(response);
   const object = await response.json();
-  console.log(object);
+  //console.log(object);
   const results = object.results;
   const itemsElement = document.querySelector('.items');
-  console.log(results);
+  //console.log(results);
   results.forEach((result) => {
     const { id: sku, title: name, thumbnail: image } = result;
     const element = createProductItemElement({ sku, name, image });
