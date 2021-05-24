@@ -85,7 +85,6 @@ async function fetchMercadoLivre(term) {
   //   return item.querySelector('span.item__sku').innerText;
 // }
 
-
 function clear() {
   const deleteCart = document.querySelector('.empty-cart');
   deleteCart.addEventListener('click', function () {
@@ -95,10 +94,12 @@ function clear() {
     saveLocal();
   });
 }
+
 function loadLoacal() {
   const cartList = document.querySelector('.cart__items');
   cartList.innerHTML = localStorage.getItem('cart') || '';
 }
+
 window.onload = function onload() {
   fetchMercadoLivre('computador');
   clear();
