@@ -1,4 +1,6 @@
-//AQUI ESTÁ CRIANDO E RETORNANDO AS IMAGENS DOS PRODUTOS, E AS CLASSIFICANDO
+// const cart__items = document.querySelector('.cart__items');
+// const items = document.querySelector('.items');
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -6,15 +8,14 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
-//CRIANDO E RETORNANDO OS ELEMENTOS HTML, ADD AS CLASSES E O TEXTO
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
   e.innerText = innerText;
   return e;
 }
-//Questão 1 - CRIANDO E RETORNANDO OS ITEMS DOS ELEMENTOS PRODUTOS
-function createProductItemElement({ sku, name, image }) {
+
+function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -30,31 +31,43 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-const cartItemClickListener = async () => {
-  // coloque seu código aqui
-  const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
-  const json = await response.json();
-  const productItemApi = document.querySelector('.items');
+const cartItemClickListener = (event) => {
+  document.querySelector('.cart__items').removeChild(event.target);
+};
 
-  json.results.forEach((element) => {
-    const elements = { 
-      sku: element.id, 
-      name: element.title, 
-      image: element.thumbnail, 
-    };
-    const computerContainer = createProductItemElement(elements);
-    productItemApi.appendChild(computerContainer);
-  })
-}
-
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
+
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+
   return li;
 }
 
+const createApiFetch = (seach) => {
+  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${seach}`)
+    .then((response) => response.json())
+    .then((product) => {
+      product.results.forEach((el) => {
+        document.querySelector('.items').appendChild(createProductItemElement(el));
+      });
+    });
+};
+
+const addCartItem = (event) => {
+  const target = event.target;
+  if (target.className === 'item__add') {
+    const id = getSkuFromProductItem(target.parentNode);
+    fetch(`https://api.mercadolibre.com/items/${id}`)
+      .then((response) => response.json())
+      .then((cartProduct) => {
+        document.querySelector('.cart__items').appendChild(createCartItemElement(cartProduct));
+      });
+  }
+};
+
 window.onload = function onload() {
-  cartItemClickListener();
+  createApiFetch('computador');
+  document.querySelector('.items').addEventListener('click', addCartItem);
 };
