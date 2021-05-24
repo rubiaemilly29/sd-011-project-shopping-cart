@@ -25,40 +25,39 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) { 
 /* function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 } */
+/* function removeLocalStorageItem(click) {
+  const separateItems = JSON.parse(localStorage.getItem('item no carrinho'));
+  const index = separateItems.indexOf(click.SKU);
+  separateItems.splice(index, 1);
+} */
 
 function cartItemClickListener(event) {
   const clickItem = event.target;
   clickItem.remove();
+  // removeLocalStorageItem(clickItem.id);
 }
 
 // Requisito 2 - Cria os componentes HTML referente a um item do carrinho
 function createCartItemElement({ id: sku, title: name, price: salePrice }) { // Altera parâmetros para receber dados como chegam
-  // const cartList = document.querySelector('.cart_items');
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  // cartList.appendChild(li); // O elemento retornado é filho do elemento ol
   li.addEventListener('click', cartItemClickListener); // Inicia a lógica que remove o item do carrinho ao clicar nele
   return li;
 }
 // Requisito 4 - salvando no local storage
 function addLocalStorage() {
-  const list = document.querySelector('ol.cart__items').innerText;
+  const list = document.querySelector('ol.cart__items').innerHTML;
   const listStorage = JSON.stringify(list); // Plantão do Bernardo, dica para usar: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
-  console.log(listStorage);
   localStorage.setItem('item no carrinho', listStorage);
 }
 
 function loadLocalStorage() {
-  if (localStorage.length === null) {
-    return;
-  }
+  const cartL = document.querySelector('.cart__items');
   const itensSave = localStorage.getItem('item no carrinho');
   const itemSave = JSON.parse(itensSave);
-  for (let index = 0; index <= itemSave.length; index += 1) {
-    const objItem = itemSave[index];
-    createCartItemElement(objItem);
-  }
+  cartL.innerHTML = itemSave;
+  cartL.addEventListener('click', cartItemClickListener);
 }
 
 // Requisito 2 - Requisição da API, captura o elemento span com a id, atribui a todos os botões o evento de capturar o span
@@ -86,7 +85,7 @@ const fetchProduct = () => {
         getItem.appendChild(createProductItemElement(computador));
       }))
     .then(() => addToCart())
-    
+
     .catch((error) => console.log(error));
 };
 
