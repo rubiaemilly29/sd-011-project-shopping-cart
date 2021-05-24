@@ -34,7 +34,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) { 
 function cartItemClickListener(event) {
   const clickItem = event.target;
   clickItem.remove();
-  // removeLocalStorageItem(clickItem.id);
+  // removeLocalStorageItem(clickItem.SKU);
 }
 
 // Requisito 2 - Cria os componentes HTML referente a um item do carrinho
@@ -60,6 +60,18 @@ function loadLocalStorage() {
   cartL.addEventListener('click', cartItemClickListener);
 }
 
+// Requisito 5 - soma do valor total do carrinho
+function calculateTotalPrice(valor) {
+  const getTotalPrice = document.querySelector('.total-price'); // valor total
+  let totalPrice = 0 + valor; // valor inicial
+  const getInfoPrice = document.querySelectorAll('.cart__item'); // lista do carrinho
+  getInfoPrice.forEach((item) => {
+    const itemPrice = Number(item.innerText.split('$')[1]);
+    totalPrice += parseFloat(itemPrice);
+  });
+    getTotalPrice.innerText = `${totalPrice}`;
+}
+
 // Requisito 2 - Requisição da API, captura o elemento span com a id, atribui a todos os botões o evento de capturar o span
 const addToCart = () => { 
   const getButton = document.querySelectorAll('.item__add');
@@ -71,7 +83,8 @@ const addToCart = () => {
     fetch(`https://api.mercadolibre.com/items/${itemID}`) // Busca na API pelos valores do itemID clicado
       .then((response) => response.json())
       .then((data) => listCart.appendChild(createCartItemElement(data)))
-      .then(() => addLocalStorage());
+      .then(() => addLocalStorage())
+      .then(() => calculateTotalPrice(0));
     });
   });
 };
@@ -92,4 +105,5 @@ const fetchProduct = () => {
 window.onload = function onload() {
   fetchProduct(); // Requisito 1
   loadLocalStorage();
+  calculateTotalPrice(0);
 };
