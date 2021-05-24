@@ -67,6 +67,9 @@
   display: flex;
   flex-basis: 30%;
   flex-flow: column wrap;
+  border: 2px solid blue;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .cart .cart__title {
