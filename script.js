@@ -1,3 +1,5 @@
+// Projeto refatorado com ajuda de Tarcisio-Menezes
+// https://github.com/Tarcisio-Menezes
 const cartList = (document.querySelector('.cart__items'));
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
