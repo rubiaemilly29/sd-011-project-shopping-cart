@@ -102,21 +102,18 @@ const ALL_PRODUCTS = async () => {
   section.className = 'item loading';
   section.innerText = 'loading';
   productsContainer.appendChild(section);
-
   const data = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${QUERY}`);
   const allProducts = await data.json();
-
   allProducts.results.forEach((product) => {
     const { id, title, thumbnail } = product;
-    const section = document.createElement('section');
+    document.createElement('section');
     section.className = 'item';
     productsContainer.appendChild(createProductItemElement({ id, title, thumbnail }));
   });
   const addToCartButton = document.querySelectorAll('button.item__add');
   addToCartButton.forEach((button) => button.addEventListener('click', addItemToCart));
 
-  productsContainer.removeChild(productsContainer.children[0])
-
+  productsContainer.removeChild(productsContainer.children[0]);
 };
 
 window.onload = async function onload() {
