@@ -78,3 +78,13 @@
 .cart .cart__item__price {
   display: none;
 }
+
+.loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 4px;
+  background-color: red;
+  text-align: center;
+  width: 100%;
+}
