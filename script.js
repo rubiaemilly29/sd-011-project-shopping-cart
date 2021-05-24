@@ -89,7 +89,15 @@ function addProduct(event) {
     .then(() => addLocalStorage());
 }
 
-window.onload = function onload() { 
+const load = async (computer) => { 
+  const api = await
+  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${computer}`);
+  const data = await api.json();
+  document.querySelector('.loading').remove();
+  data.appendChild('li');
+};
+
+window.onload = function onload() {
   getDataApi();
   loadLocalStorage();
   document.querySelector('.items').addEventListener('click', addProduct);
@@ -101,4 +109,5 @@ window.onload = function onload() {
       products[index].remove();
     }
   });
+  load();
 };
