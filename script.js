@@ -73,7 +73,7 @@ async function fetchMercadoLivre(term) {
   const endpoint = `https://api.mercadolibre.com/sites/MLB/search?q=${term}`;
   const response = await fetch(endpoint);
   const object = await response.json();
-   const {results} = object;
+   const { results } = object;
   const itemsElement = document.querySelector('.items');
   results.forEach((result) => {
     const { id: sku, title: name, thumbnail: image } = result;
