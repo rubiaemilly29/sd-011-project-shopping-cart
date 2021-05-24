@@ -1,5 +1,6 @@
 // const cart__items = document.querySelector('.cart__items');
 // const items = document.querySelector('.items');
+const cartItemsClass = '.cart__items';
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -32,12 +33,12 @@ function getSkuFromProductItem(item) {
 }
 
 const cartItemClickListener = (event) => {
-  document.querySelector('.cart__items').removeChild(event.target);
+  document.querySelector(cartItemsClass).removeChild(event.target);
 };
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
-  const cartItems = document.querySelector('.cart__items');
+  const cartItems = document.querySelector(cartItemsClass);
   localStorage.setItem(`item ${cartItems.childElementCount}`, `${sku}|${name}|${salePrice}`);
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
@@ -59,7 +60,7 @@ const createApiFetch = (seach) => {
       for (let index = 0; index < localStorage.length; index += 1) {
         const [id, title, price] = localStorage.getItem(`item ${index}`).split('|');
         const total = { id, title, price };
-        document.querySelector('.cart__items').appendChild(createCartItemElement(total));
+        document.querySelector(cartItemsClass).appendChild(createCartItemElement(total));
       }
     });
 };
@@ -70,7 +71,7 @@ const addCartItem = (event) => {
     fetch(`https://api.mercadolibre.com/items/${id}`)
       .then((response) => response.json())
       .then((cartProduct) => {
-        document.querySelector('.cart__items').appendChild(createCartItemElement(cartProduct));
+        document.querySelector(cartItemsClass).appendChild(createCartItemElement(cartProduct));
       });
   }
 };
@@ -79,7 +80,7 @@ window.onload = function onload() {
   createApiFetch('computador');
   document.querySelector('.items').addEventListener('click', addCartItem);
   document.querySelector('.empty-cart').addEventListener('click', () => {
-    document.querySelector('.cart__items').innerHTML = '';
+    document.querySelector(cartItemsClass).innerHTML = '';
     localStorage.clear();
   });
 };
