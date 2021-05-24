@@ -1,5 +1,11 @@
 const olclass = 'ol.cart__items';
 
+const prodSum = () => {
+  const items = [...document.querySelectorAll('li.cart__item')];
+  const price = items.reduce((acc, li) => Number(li.innerText.split('$')[1]) + acc, 0);
+  const totalPrice = document.querySelector('span.total-price');
+  totalPrice.innerText = price;
+};
 function createCartItemElement({ id: sku, title: name, price }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -9,12 +15,6 @@ function createCartItemElement({ id: sku, title: name, price }) {
   cartListt.appendChild(li);
   localStorage.setItem('olCart', cartListt.innerHTML);
 }
-const prodSum = () => {
-  const items = [...document.querySelectorAll('li.cart__item')];
-  const price = items.reduce((acc, li) => Number(li.innerText.split('$')[1]) + acc, 0);
-  const totalPrice = document.querySelector('span.total-price');
-  totalPrice.innerText = price;
-};
 
 function cartItemClickListener() {
   this.remove();
@@ -22,7 +22,6 @@ function cartItemClickListener() {
   localStorage.setItem('olCart', cartList.innerHTML);
   prodSum();
 }
-
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
