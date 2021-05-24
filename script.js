@@ -27,7 +27,8 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) { 
 } */
 
 function cartItemClickListener(event) {
-  event.target.remove();
+  const clickItem = event.target;
+  clickItem.remove();
 }
 
 // Requisito 2 - Cria os componentes HTML referente a um item do carrinho
@@ -37,9 +38,27 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) { // 
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   // cartList.appendChild(li); // O elemento retornado é filho do elemento ol
-
   li.addEventListener('click', cartItemClickListener); // Inicia a lógica que remove o item do carrinho ao clicar nele
   return li;
+}
+// Requisito 4 - salvando no local storage
+function addLocalStorage() {
+  const list = document.querySelector('ol.cart__items').innerText;
+  const listStorage = JSON.stringify(list); // Plantão do Bernardo, dica para usar: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
+  console.log(listStorage);
+  localStorage.setItem('item no carrinho', listStorage);
+}
+
+function loadLocalStorage() {
+  if (localStorage.length === null) {
+    return;
+  }
+  const itensSave = localStorage.getItem('item no carrinho');
+  const itemSave = JSON.parse(itensSave);
+  for (let index = 0; index <= itemSave.length; index += 1) {
+    const objItem = itemSave[index];
+    createCartItemElement(objItem);
+  }
 }
 
 // Requisito 2 - Requisição da API, captura o elemento span com a id, atribui a todos os botões o evento de capturar o span
@@ -52,7 +71,8 @@ const addToCart = () => {
     const itemID = button.parentElement.firstChild.innerText; // Referencia: https://developer.mozilla.org/pt-BR/docs/Web/API/Node/parentNode
     fetch(`https://api.mercadolibre.com/items/${itemID}`) // Busca na API pelos valores do itemID clicado
       .then((response) => response.json())
-      .then((data) => listCart.appendChild(createCartItemElement(data)));
+      .then((data) => listCart.appendChild(createCartItemElement(data)))
+      .then(() => addLocalStorage());
     });
   });
 };
@@ -66,9 +86,11 @@ const fetchProduct = () => {
         getItem.appendChild(createProductItemElement(computador));
       }))
     .then(() => addToCart())
+    
     .catch((error) => console.log(error));
 };
 
 window.onload = function onload() {
   fetchProduct(); // Requisito 1
+  loadLocalStorage();
 };
