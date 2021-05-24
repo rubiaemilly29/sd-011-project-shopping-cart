@@ -80,6 +80,12 @@ function cleanButton() {
    calculateTotalPrice(0);
   });
 }
+// Requisito 7 - texto loading
+function loading() {
+  const getLoading = document.querySelector('.loading');
+  // getLoading.style.display = 'none'; // após carregar a Api a tag com o loading fica escondida
+  getLoading.remove(); // HTML DOM method
+}
 // Requisito 2 - Requisição da API, captura o elemento span com a id, atribui a todos os botões o evento de capturar o span
 const addToCart = () => { 
   const getButton = document.querySelectorAll('.item__add');
@@ -106,6 +112,7 @@ const fetchProduct = () => {
       }))
     .then(() => addToCart())
     .then(() => cleanButton())
+    .then(() => loading())
     .catch((error) => console.log(error));
 };
 
