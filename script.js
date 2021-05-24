@@ -1,5 +1,4 @@
 let totalPrice = 0;
-//const cartList = document.querySelector('.cart__items');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -15,15 +14,24 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+function loading() {
+  sectionSpan = document.querySelector('.cart');
+  spanLoading = document.createElement('span');
+  spanLoading.className = 'loading';
+  sectionSpan.appendChild(spanLoading);
+  spanLoading.innerText = 'loading';
+}
+
+function unload() {
+  sectionSpan = document.querySelector('.cart');
+  spanLoading = document.querySelector('.loading');
+  sectionSpan.removeChild(spanLoading);
+}
+
 const sum = (price) => {
   totalPrice += price;
   document.querySelector('.total-price').innerText = totalPrice;
 };
-
-// function saveLocal() {
-//   //const cartList = document.querySelector('.cart__items');
-//   localStorage.setItem('cart', cartList.innerHTML);
-// }
 
 function cartItemClickListener(event) {
   const element = event.target;
@@ -53,7 +61,6 @@ const addToCart = async (event) => {
     const add = createCartItemElement(cartItem);
     cart.appendChild(add);
     sum(price);
-    //saveLocal();
   });
 };
 
@@ -70,6 +77,7 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 async function fetchMercadoLivre(term) {
+  loading();
   const endpoint = `https://api.mercadolibre.com/sites/MLB/search?q=${term}`;
   const response = await fetch(endpoint);
   const object = await response.json();
@@ -80,6 +88,7 @@ async function fetchMercadoLivre(term) {
     const element = createProductItemElement({ sku, name, image });
     itemsElement.appendChild(element);
   });
+  unload();
 }
 
 // function getSkuFromProductItem(item) {
@@ -92,17 +101,10 @@ function clear() {
      const cart = document.querySelector('.cart__items');
     cart.innerHTML = '';
     totalPrice = 0;
-    //saveLocal();
   });
 }
-
-// function loadLoacal() {
-//    //const cartList = document.querySelector('.cart__items');
-//   cartList.innerHTML = localStorage.getItem('cart') || '';
-// }
 
 window.onload = function onload() {
   fetchMercadoLivre('computador');
   clear();
-  //loadLoacal();
 };
