@@ -13,16 +13,15 @@ function createCustomElement(tagName, className, innerText) {
 }
 // _________
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
-
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
 
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  
+  li.addEventListener('click', () => {
+    li.remove();
+  });
 
   li.appendChild(createCustomElement('span', 'cart__price', salePrice));
 
