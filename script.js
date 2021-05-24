@@ -63,6 +63,15 @@ const searchProductsOnApi = () => {
     .catch((e) => alert('Ops! Algo deu errado!'));
 };
 
+function emptyCart() {
+  const emptyBtn = document.querySelector('.empty-cart');
+  emptyBtn.addEventListener('click', () => {
+    const carItems = document.querySelector('.cart__items');
+    carItems.innerHTML = '';
+  });
+}
+
 window.onload = function onload() { 
   searchProductsOnApi();
+  emptyCart();
 };
