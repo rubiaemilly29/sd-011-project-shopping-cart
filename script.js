@@ -5,7 +5,15 @@ const prodSum = () => {
   const price = items.reduce((acc, li) => Number(li.innerText.split('$')[1]) + acc, 0);
   const totalPrice = document.querySelector('span.total-price');
   totalPrice.innerText = price;
-};
+}
+
+function cartItemClickListener() {
+  this.remove();
+  const cartList = document.querySelector(olclass);
+  localStorage.setItem('olCart', cartList.innerHTML);
+  prodSum();
+}
+
 function createCartItemElement({ id: sku, title: name, price }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -14,13 +22,6 @@ function createCartItemElement({ id: sku, title: name, price }) {
   const cartListt = document.querySelector(olclass);
   cartListt.appendChild(li);
   localStorage.setItem('olCart', cartListt.innerHTML);
-}
-
-function cartItemClickListener() {
-  this.remove();
-  const cartList = document.querySelector(olclass);
-  localStorage.setItem('olCart', cartList.innerHTML);
-  prodSum();
 }
 
 function getSkuFromProductItem(item) {
@@ -33,7 +34,7 @@ const Card = async (event) => {
   const itemJson = await addItem.json();
   createCartItemElement(itemJson);
   prodSum();
-};
+}
 
 const emptyCartButton = document.querySelector('.empty-cart');
 emptyCartButton.addEventListener('click', () => {
@@ -41,7 +42,7 @@ emptyCartButton.addEventListener('click', () => {
   olCart.innerText = '';
   prodSum();
   localStorage.clear();
-});
+})
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -78,7 +79,7 @@ const felement = () => {
       json.results.forEach((element) => createProductItemElement(element));
     })
     .catch((err) => window.alert(err));
-};
+}
  
 const loandE = () => {
   const storage = localStorage.getItem('olCart');
@@ -86,10 +87,10 @@ const loandE = () => {
   olList.innerHTML = storage;
   const liItem = document.querySelectorAll('li.cart__item');
   liItem.forEach((li) => li.addEventListener('click', cartItemClickListener));
-};
+}
 
 window.onload = function onload() { 
   prodSum();
   felement();
   loandE();
-};
+}
