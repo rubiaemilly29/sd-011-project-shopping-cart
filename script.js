@@ -1,5 +1,4 @@
 let totalPrice = 0;
-const cartList = document.querySelector('.cart__items');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -21,7 +20,7 @@ const sum = (price) => {
 };
 
 function saveLocal() {
-  
+  const cartList = document.querySelector('.cart__items');
   localStorage.setItem('cart', cartList.innerHTML);
 }
 
@@ -87,6 +86,7 @@ async function fetchMercadoLivre(term) {
   //   return item.querySelector('span.item__sku').innerText;
 // }
 
+
 function clear() {
   const deleteCart = document.querySelector('.empty-cart');
   deleteCart.addEventListener('click', function () {
@@ -97,7 +97,7 @@ function clear() {
   });
 }
 function loadLoacal() {
-  const cartList = document.querySelector('.cart__items');
+  
   cartList.innerHTML = localStorage.getItem('cart') || '';
 }
 window.onload = function onload() {
