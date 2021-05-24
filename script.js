@@ -114,6 +114,15 @@ async function loadStorage() {
 });
 }
 
+function emptyCart() {
+  const cart = document.querySelector('ol.cart__items');
+  while (cart.children.length) {
+    cart.removeChild(cart.lastChild);
+  }
+  const totalPrice = document.querySelector('.total-price');
+  totalPrice.innerText = '0';
+}
+
 window.onload = async () => {
   const items = document.querySelector('.items');
   const list = await fetchComputer();
@@ -121,5 +130,6 @@ window.onload = async () => {
     const listedItens = createProductItemElement({ sku: id, name: title, image: thumbnail, price });
     items.appendChild(listedItens);
   });
+  document.querySelector('.empty-cart').addEventListener('click', emptyCart);
   loadStorage();
 };
