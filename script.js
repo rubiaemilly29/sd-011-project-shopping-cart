@@ -56,7 +56,7 @@ function createCartItemElement({ id, title, price }) {
 }
 
 const addButtonsListener = () => {
-  const elementoPai = document.querySelector('.cart__items');
+  const elementoPai = document.querySelector(classCartOl);
   const buttonsList = document.querySelectorAll('.item__add');
   buttonsList.forEach((button) => {
     button.addEventListener('click', (event) => {
@@ -78,7 +78,15 @@ const itensList = () => {
   .then(() => addButtonsListener());
 };
 
+const clearCart = () => {
+  const botaoLimpar = document.querySelector('.empty-cart');
+  botaoLimpar.addEventListener('click', () => {
+    document.querySelector('.cart__items').innerHTML = '';
+  });
+};
+
 window.onload = function onload() {
   itensList();
   restoreFromLocalStorage();
+  clearCart();
 };
