@@ -27,7 +27,7 @@
   display: flex;
   justify-content: space-around;
   width: 100%;
-  background-color: azure;
+  background-color: rgb(240, 240, 240);
 }
 
 .items {
@@ -65,26 +65,33 @@
 }
 
 .item .item__add {
-  background-color: rgba(138, 235, 138, 0.774);
+  background-color: black;
   cursor: pointer;
   margin: 0;
   padding: 5px;
   border-radius: 5px;
+  color: rgb(255, 102, 0);
+
+}
+
+.item .item__add:hover {
+  background-color: rgb(65, 65, 65);
+  color: red;
 }
 
 .cart {
   display: flex;
   position: sticky;
   flex-basis: 30%;
-  flex-flow: column wrap;
+  flex-flow: column nowrap;
   padding: 25px;
-  background-color: bisque;
-  border: 3px solid rgb(71, 70, 67);
-  border-radius: 2px;
+  background-color: lightgray;
+  border: 2px solid rgb(255, 102, 0);
+  border-radius: 5px;
   margin: 18px 6px;
-  height: fit-content;
-  min-height: 80vh;
+  height: 80vh;
   top: 80px;
+  overflow-y: scroll;
 }
 
 .cart .cart__title {
@@ -114,7 +121,7 @@
   margin-bottom: 8px;
   border: none;
   box-shadow: 3px 3px 2px 0.5px;
-  background-color: rgba(255, 0, 0, 0.459);
+  background-color: rgb(255, 102, 0);
 }
 
 .empty-cart:hover {
@@ -124,12 +131,14 @@
 }
 
 .total-price {
-  background-color: rgb(216, 255, 245);
+  background-color: black;
   text-align: center;
   padding: 5px;
   border-radius: 3px;
   box-shadow: 3px 3px 2px 0.5px black;
   margin-bottom: 20px;
+  color: rgb(255, 102, 0);
+  font-weight: 600;
 }
 
 .header {
@@ -138,10 +147,13 @@
   align-items: center;
   top: 0;
   height: 50px;
-  box-shadow: 1px 2px 10px 0.5px black;
   padding: 5px;
-  background-color: rgb(128, 81, 236);
+  background-color: black;
   color: antiquewhite;
+}
+
+#company-name {
+  color: rgb(255, 102, 0);
 }
 
 #title {
