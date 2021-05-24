@@ -1,5 +1,6 @@
 let totalPrice = 0;
 
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -15,16 +16,16 @@ function createCustomElement(element, className, innerText) {
 }
 
 function loading() {
-  sectionSpan = document.querySelector('.cart');
-  spanLoading = document.createElement('span');
+  const sectionSpan = document.querySelector('.cart');
+  const spanLoading = document.createElement('span');
   spanLoading.className = 'loading';
   sectionSpan.appendChild(spanLoading);
   spanLoading.innerText = 'loading';
 }
 
 function unload() {
-  sectionSpan = document.querySelector('.cart');
-  spanLoading = document.querySelector('.loading');
+  const sectionSpan = document.querySelector('.cart');
+  const spanLoading = document.querySelector('.loading');
   sectionSpan.removeChild(spanLoading);
 }
 
