@@ -36,7 +36,6 @@ function cartItemClickListener(event) {
   clickItem.remove();
   // removeLocalStorageItem(clickItem.SKU);
 }
-
 // Requisito 2 - Cria os componentes HTML referente a um item do carrinho
 function createCartItemElement({ id: sku, title: name, price: salePrice }) { // Altera parâmetros para receber dados como chegam
   const li = document.createElement('li');
@@ -59,7 +58,6 @@ function loadLocalStorage() {
   cartL.innerHTML = itemSave;
   cartL.addEventListener('click', cartItemClickListener);
 }
-
 // Requisito 5 - soma do valor total do carrinho
 function calculateTotalPrice(valor) {
   const getTotalPrice = document.querySelector('.total-price'); // valor total
@@ -71,7 +69,17 @@ function calculateTotalPrice(valor) {
   });
     getTotalPrice.innerText = `${totalPrice}`;
 }
-
+// Requisito 6 - Botão de limpar o carrinho
+function cleanButton() {
+  const getCleanButton = document.querySelector('.empty-cart');
+  
+  getCleanButton.addEventListener('click', () => {
+   const items = document.querySelector('ol');
+   items.innerHTML = '';
+   localStorage.clear();
+   calculateTotalPrice(0);
+  });
+}
 // Requisito 2 - Requisição da API, captura o elemento span com a id, atribui a todos os botões o evento de capturar o span
 const addToCart = () => { 
   const getButton = document.querySelectorAll('.item__add');
@@ -88,7 +96,6 @@ const addToCart = () => {
     });
   });
 };
-
 // Requisito 1 - Requisição da API 
 const fetchProduct = () => { 
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
@@ -98,12 +105,13 @@ const fetchProduct = () => {
         getItem.appendChild(createProductItemElement(computador));
       }))
     .then(() => addToCart())
-
+    .then(() => cleanButton())
     .catch((error) => console.log(error));
 };
 
 window.onload = function onload() {
-  fetchProduct(); // Requisito 1
+  fetchProduct();
   loadLocalStorage();
   calculateTotalPrice(0);
+  cleanButton();
 };
