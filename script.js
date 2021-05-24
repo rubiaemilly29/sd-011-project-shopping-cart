@@ -1,5 +1,3 @@
-const totalPrice = document.querySelector('.total-price');
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -12,6 +10,8 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
+
+const totalPrice = document.querySelector('.total-price');
 
 function cartItemClickListener(event, items, count, price) {
   localStorage.removeItem(`items${count}`);
@@ -66,8 +66,9 @@ function itemsForSale() {
   });
 }
 
+const clear = document.querySelector('.empty-cart');
+
 const clearCart = () => {
-  const clear = document.querySelector('.empty-cart');
   clear.addEventListener('click', () => {
     document.querySelector('.cart__items').innerHTML = '';
     totalPrice.innerText = '0';
