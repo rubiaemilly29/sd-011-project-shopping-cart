@@ -50,7 +50,9 @@ function createCartItemElement({ sku, name, salePrice }) {
 function generatePageItems(API_URL, itemsContainer) {
   fetch(API_URL) // Baixando dados da api
   .then((response) => response.json()) // Fazendo o parsing
+
   .then(({ results }) => { // Passando a chave results do objeto json recebido como parametro para a arrow function
+    document.querySelector('.loading').remove();
     results.forEach((result) => {
       const item = createProductItemElement( // Passando para a constante item o objeto retornado da funcao createProductItemElement
         { sku: result.id, name: result.title, image: result.thumbnail }, // Passando os valores que a funcão recebe como argumento, não entendi pq nomes tão confusos
