@@ -17,6 +17,7 @@ function eraseCart() {
     while (cartItems.hasChildNodes()) {
       cartItems.removeChild(cartItems.firstChild);
     }
+    totalPrice.innerText = 0;
   });
 }
 
