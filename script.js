@@ -14,7 +14,6 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-
 const sum = (price) => {
   totalPrice += price;
   document.querySelector('.total-price').innerText = totalPrice;
@@ -41,7 +40,6 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
-
 
 const addToCart = async (event) => {
   const itemId = event.target.parentNode.firstChild.innerText;
@@ -86,7 +84,6 @@ async function fetchMercadoLivre(term) {
 // function getSkuFromProductItem(item) {
   //   return item.querySelector('span.item__sku').innerText;
 // }
-
 
 function clear() {
   const deleteCart = document.querySelector('.empty-cart');
