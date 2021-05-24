@@ -1,11 +1,39 @@
 const SHOPPING_CART_STORAGE_KEY = 'shopping-cart';
+
+const addLoadingToPage = () => {
+  if (!(document.getElementsByClassName('loading').length)) {
+ const loadingElement = document.createElement('div');
+  loadingElement.className = 'loading';
+  loadingElement.innerText = 'loading...';
+  document.body.appendChild(loadingElement);
+ }
+};
+
+const removeLoadingFromPage = () => {
+try {
+ const loadingElement = document.getElementsByClassName('loading')[0];
+  loadingElement.remove();
+ } catch (err) {
+    console.log('Oopsi');
+  }
+};
+
+const setLoading = (loadingState) => { 
+  console.log('setting loading ', loadingState);
+  if (loadingState) {
+    addLoadingToPage();
+  } else {
+    removeLoadingFromPage();
+  }
+ };
+
 const fetchCartFromStorage = () => {
   const dataInStorage = localStorage.getItem(SHOPPING_CART_STORAGE_KEY) || ''; 
-  console.log('got ', dataInStorage, ' from storage');
   return dataInStorage.length ? JSON.parse(dataInStorage) : [];
 };
 
 const saveCart = (newCart) => {
+  console.log('saving ', newCart);
   localStorage.setItem(SHOPPING_CART_STORAGE_KEY, JSON.stringify(newCart));
 };
 
@@ -60,7 +88,9 @@ function createCartItemElement({ sku, name, salePrice }) {
 
 async function getProductDetails(productId) {
   const url = `https://api.mercadolibre.com/items/${productId}`;
+  setLoading(true);
   const response = await fetch(url);
+  setLoading(false);
   return response.json();
 }
 
@@ -75,8 +105,11 @@ const resetCart = () => {
 
 async function handleAdd(e) {
   const productId = getSkuFromProductItem(e.target.parentElement);
+  setLoading(true);
   const { id, title, price } = await getProductDetails(productId);
+  setLoading(false);
   const prodDetails = { sku: id, name: title, salePrice: price };
+
   appendItemToCart(prodDetails);
   const cartItemElement = createCartItemElement(prodDetails);
   addItemToCart(cartItemElement);
@@ -105,8 +138,10 @@ function addResultToPage(result) {
 }
 
 window.onload = async function onload() {
+  setLoading(true);
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const data = await createJason(response);
+  setLoading(false);
   const results = getResults(data);
   results.map(addResultToPage);
   document.querySelector('.empty-cart').addEventListener('click', resetCart);
