@@ -20,14 +20,14 @@ function createCustomElement(tagName, className, innerText) {
 }
 
 function updateTotalPrice() {
-  const elements = document.querySelectorAll('.cart__item__price');
+  const elements = document.querySelectorAll('.cart__item');
 
   const totalPrice = Array.from(elements).reduce((acc, element) => {
-    const price = Number(element.innerText);
+    const price = Number(element.dataset.price);
     return acc + price;
   }, 0);
 
-  document.querySelector('.total-price').innerText = `Preço total: $${totalPrice}`;
+  document.querySelector('.total-price').innerText = totalPrice;
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -35,14 +35,13 @@ function createCartItemElement({ sku, name, salePrice }) {
 
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.dataset.price = salePrice;
 
   li.addEventListener('click', () => {
     li.remove();
     updateTotalPrice();
     saveLocalStorage();
   });
-
-  li.appendChild(createCustomElement('span', 'cart__item__price', salePrice));
 
   return li;
 }
