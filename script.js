@@ -85,7 +85,14 @@ const clearCart = () => {
   });
 };
 
+const load = async (computador) => {
+  const api = await (await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${computador}`));
+  await api.json();
+  document.querySelector('.loading').remove();
+};
+
 window.onload = function onload() {
+  load();
   itensList();
   restoreFromLocalStorage();
   clearCart();
