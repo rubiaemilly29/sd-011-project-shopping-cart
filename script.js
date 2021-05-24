@@ -1,3 +1,5 @@
+const cartListElement = '.cart__items';
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -29,9 +31,11 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+  const cartList = document.querySelector(cartListElement);
   const node = event.target;
   node.remove();
+
+  localStorage.setItem('savedList', cartList.innerHTML);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -59,7 +63,7 @@ function generatePageItems(API_URL, itemsContainer) {
 function addOnCart(itemsContainer) {
   itemsContainer.addEventListener('click', (event) => {
     const itemID = event.target.parentNode.firstChild.innerText;
-    const cartList = document.querySelector('.cart__items');
+    const cartList = document.querySelector(cartListElement);
     fetch(`https://api.mercadolibre.com/items/${itemID}`)
       .then((response) => response.json())
       .then((product) => {
@@ -77,10 +81,21 @@ function addOnCart(itemsContainer) {
 
 function loadCart() {
   const save = localStorage.getItem('savedList');
-  const cartItems = document.querySelector('.cart__items');
+  const cartItems = document.querySelector(cartListElement);
   cartItems.innerHTML = save;
   
   cartItems.addEventListener('click', cartItemClickListener);
+}
+
+function clearCart() {
+  const clearButton = document.getElementsByClassName('empty-cart')[0];
+  clearButton.addEventListener('click', () => {
+    const cartList = document.querySelector(cartListElement);
+    const totalPrice = document.querySelector('.total-cart');
+    cartList.innerHTML = '';
+    totalPrice.innerHTML = '0';
+    localStorage.clear();
+  });
 }
 
 window.onload = function onload() { 
@@ -88,8 +103,10 @@ window.onload = function onload() {
   const API_URL = 'https://api.mercadolibre.com/sites/MLA/search?q=Computador';
   
   generatePageItems(API_URL, itemsContainer);
-
+  
   addOnCart(itemsContainer);
+
+  clearCart();
 
   loadCart();
 };
