@@ -44,7 +44,7 @@ function calculateTotal() {
 
 function cartItemClickListener(event) {
   const object = event.target;
-  localStorage.removeItem(object.id);
+  localStorage.removeItem(object.key);
   cartItens.removeChild(object);
   calculateTotal();
 }
@@ -65,9 +65,9 @@ async function addToCart(event) {
   const products = await findProducts();
   const container = products.find((product) => product.id === idItem);
   const itemElement = createCartItemElement(container);
-  itemElement.id = `${itemElement.price} ${cartItens.childNodes.length}`;
+  itemElement.key = `${itemElement.price} ${cartItens.childNodes.length}`;
   cartItens.appendChild(itemElement);
-  localStorage.setItem(itemElement.id, itemElement.innerText);
+  localStorage.setItem(itemElement.key, itemElement.innerText);
   calculateTotal();
 }
 function createProductItemElement({ id, title, thumbnail }) {
@@ -100,7 +100,7 @@ function reloadCart() {
   for (let index = 0; index < localStorage.length; index += 1) {
   const element = localStorage.key(index);
   const li = document.createElement('li');
-  li.id = element;
+  li.key = element;
   const priceId = element.split(' ')[0];
   li.price = parseInt(priceId, 10);
   li.className = 'cart__item';
