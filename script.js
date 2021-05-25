@@ -14,9 +14,9 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function getSkuFromProductItem(item) {
+/* function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
-}
+} */
 
 const showSumPrice = () => {
   const totalPrice = document.querySelector('.total-price');
@@ -61,23 +61,13 @@ function createProductItemElement({ sku, name, image, price }) {
   return section;
 }
 
-const fetchProduct = () => {
-  const selecItem = document.querySelector('.items');
-  fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
-    .then((response) => response.json())
-    .then((data) => data.results.forEach(({ id, title, thumbnail, price }) => {
-      const listProduct = createProductItemElement({ 
-        sku: id, name: title, image: thumbnail, price });
-      selecItem.appendChild(listProduct);
-      /* console.log(selecItem); */
-    }))
-    .then(setTimeout(() => document.querySelector('.loading').remove(), 1000))
-    .then(() => {
-      for (let index = 0; index < localStorage.length; index += 1) {
-        const [sku, name, price] = localStorage.getItem(`Item${index}`).split('|');
-        createCartItemElement({ sku, name, price });
-      }
-    });
+const keepStorageCart = () => {
+  if (localStorage.length !== []) {
+    for (let index = 0; index < localStorage.length; index += 1) {
+      const [sku, name, price] = localStorage.getItem(`Item${index}`).split('|');
+      createCartItemElement({ sku, name, price });
+    }
+  }     
 };
 
 const clearCart = () => {
@@ -92,6 +82,15 @@ const clearCart = () => {
 };
 
 window.onload = () => {
-  fetchProduct();
-  clearCart();
+  const selecItem = document.querySelector('.items');
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+    .then((response) => response.json())
+    .then((data) => data.results.forEach(({ id, title, thumbnail, price }) => {
+      const listProduct = createProductItemElement({ 
+        sku: id, name: title, image: thumbnail, price });
+      selecItem.appendChild(listProduct);     
+    }))
+    .then(setTimeout(() => document.querySelector('.loading').remove(), 1000))
+    .then(() => keepStorageCart());
+    clearCart();
 };
