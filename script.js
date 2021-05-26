@@ -21,19 +21,32 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) { 
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!')); // Criação do botão
   return section;
 }
-// Requisito 2 - retorna o valor do itemID
+// Requisito 2 - retorna o valor do itemID // função original do projeto não utilizada
 /* function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 } */
-/* function removeLocalStorageItem(click) {
+/* function removeLocalStorageItem(click) { // Inicia a lógica de remoção no local storage
   const separateItems = JSON.parse(localStorage.getItem('item no carrinho'));
   const index = separateItems.indexOf(click.SKU);
   separateItems.splice(index, 1);
 } */
 
+// Requisito 5 - soma do valor total do carrinho
+function calculateTotalPrice(valor) {
+  const getTotalPrice = document.querySelector('.total-price'); // valor total
+  let totalPrice = valor; // valor inicial foi passado como 0 para aparecer na pagina quando não há itens
+  const getInfoPrice = document.querySelectorAll('.cart__item'); // lista do carrinho
+  getInfoPrice.forEach((item) => {
+    const itemPrice = Number(item.innerText.split('$')[1]);
+    totalPrice += itemPrice;
+  });
+    getTotalPrice.innerText = `${totalPrice}`;
+}
+
 function cartItemClickListener(event) {
   const clickItem = event.target;
   clickItem.remove();
+  calculateTotalPrice(0);
   // removeLocalStorageItem(clickItem.SKU);
 }
 // Requisito 2 - Cria os componentes HTML referente a um item do carrinho
@@ -58,17 +71,7 @@ function loadLocalStorage() {
   cartL.innerHTML = itemSave;
   cartL.addEventListener('click', cartItemClickListener);
 }
-// Requisito 5 - soma do valor total do carrinho
-function calculateTotalPrice(valor) {
-  const getTotalPrice = document.querySelector('.total-price'); // valor total
-  let totalPrice = 0 + valor; // valor inicial
-  const getInfoPrice = document.querySelectorAll('.cart__item'); // lista do carrinho
-  getInfoPrice.forEach((item) => {
-    const itemPrice = Number(item.innerText.split('$')[1]);
-    totalPrice += parseFloat(itemPrice);
-  });
-    getTotalPrice.innerText = `${totalPrice}`;
-}
+
 // Requisito 6 - Botão de limpar o carrinho
 function cleanButton() {
   const getCleanButton = document.querySelector('.empty-cart');
