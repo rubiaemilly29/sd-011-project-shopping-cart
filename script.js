@@ -31,6 +31,7 @@ function addButtonEventListner(sku) {
       const receivedLi = createCartItemElement(product);
       const olFromDocument = document.querySelector('ol');
       olFromDocument.appendChild(receivedLi);
+      localStorage.setItem('cartContent', olFromDocument.innerHTML);
     });
 }
 
@@ -64,6 +65,15 @@ async function apiloading() {
   });
 }
 
+function loadStorage() {
+  const items = document.querySelector('ol');
+  items.innerHTML = localStorage.getItem('cartContent');
+  document.querySelectorAll('li').forEach((element) => {
+    element.addEventListener('click', cartItemClickListener)
+  })
+}
+
 window.onload = function onload() {
   apiloading();
+  loadStorage();
 };
