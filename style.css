@@ -90,3 +90,12 @@ header {
   font-size: 15px;
   margin-top: 10px;
 }
+
+.footer {
+  background-color: silver;
+  margin-top: 20px;
+  padding: 10px;
+  text-align: center;
+  color: palegreen;
+  text-shadow: 2px 2px black;
+}
