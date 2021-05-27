@@ -1,9 +1,5 @@
 const itemList = '.cart__items';
 
-window.onload = function onload() {
-  apiloading();
-};
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -55,3 +51,7 @@ async function apiloading() {
     products.appendChild(product);
   });
 }
+
+window.onload = function onload() {
+  apiloading();
+};
