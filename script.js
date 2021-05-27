@@ -38,7 +38,6 @@ function addButtonEventListner(sku) {
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
@@ -47,7 +46,6 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
     addButtonEventListner(sku);
   });
   section.appendChild(button);
-
   return section;
 }
 
@@ -65,12 +63,16 @@ async function apiloading() {
   });
 }
 
+function priceCalculator() {
+
+}
+
 function loadStorage() {
   const items = document.querySelector('ol');
   items.innerHTML = localStorage.getItem('cartContent');
   document.querySelectorAll('li').forEach((element) => {
-    element.addEventListener('click', cartItemClickListener)
-  })
+    element.addEventListener('click', cartItemClickListener);
+  });
 }
 
 window.onload = function onload() {
