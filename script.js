@@ -78,21 +78,20 @@ async function fetchAddProduct(itemId) {
     .then((product) => product);
 }
 
+// Adiciona o produto ao carrinho e ao storage
 async function chooseProductAddToCart() {
   await addProducts();
-  const buttonsAdd = document.getElementsByClassName('item__add');
-  for (let i = 0; i < buttonsAdd.length; i += 1) {
-    const element = buttonsAdd[i];
-    element.addEventListener('click', async (e) => {
-      const productID = getSkuFromProductItem(e.target.parentElement);
-      const productData = await fetchAddProduct(productID); // busca na API o produto que recebeu o clique
-      const cartList = document.querySelector(cartListClass);
-      cartList.appendChild(createCartItemElement(productData)); // adiciona o produto ao carrinho
-      localStorage.setItem('cart', cartList.innerHTML);
-    });
-  }
+  const buttonsAdd = document.querySelectorAll('.item__add');
+  buttonsAdd.forEach((button) => button.addEventListener('click', async (e) => {
+    const productID = getSkuFromProductItem(e.target.parentElement);
+    const productData = await fetchAddProduct(productID); // busca na API o produto que recebeu o clique
+    const cartList = document.querySelector(cartListClass);
+    cartList.appendChild(createCartItemElement(productData)); // adiciona o produto ao carrinho
+    localStorage.setItem('cart', cartList.innerHTML);
+  }));
 }
 
+// A função resgata os produtos anteriormente adicionados ao carrinho
 function loadCurrentCart() {
   const currentCart = localStorage.getItem('cart');
   const cartList = document.querySelector(cartListClass);
