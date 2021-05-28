@@ -14,8 +14,19 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
+function sumTotalPrices() {
+  const rememberCartItems = document.querySelector(cartItemsClass);
+  const rememberTotalSum = document.querySelector('.total-price');
+  const listCartItems = rememberCartItems.childNodes;
+  const arrayPrices = [];
+  listCartItems.forEach((item) => arrayPrices.push(Number(item.innerHTML.split('$')[1])));
+  const sumPrices = arrayPrices.reduce((acc, curr) => acc + curr, 0);
+  rememberTotalSum.innerText = Math.round(sumPrices * 100) / 100;
+}
+
 function cartItemClickListener(event) {
   event.target.remove();
+  sumTotalPrices();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -38,6 +49,7 @@ function fetchItem(id) {
     const itemList = createCartItemElement(objectCart);
     const elementCart = document.querySelector(cartItemsClass);
     elementCart.appendChild(itemList);
+    sumTotalPrices();
   });
 }
 
@@ -82,16 +94,6 @@ function createProductList() {
     });
 }
 
-function sumTotalPrices() {
-  const rememberCartItems = document.querySelector();
-  const rememberTotalSum = document.querySelector('.total-price');
-  const listCartItems = rememberCartItems().childNodes;
-  const arrayPrices = [];
-  listCartItems.forEach((item) => arrayPrices.push(Number(item.innerHTML.split('$')[1])));
-  const sumPrices = arrayPrices.reduce((acc, curr) => acc + curr, 0);
-  rememberTotalSum.innerText = Math.round(sumPrices * 100) / 100;
-}
-
 function clearCartAll() {
   const rememberCartItems = document.querySelector(cartItemsClass);
   localStorage.clear();
@@ -118,21 +120,8 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-async function addItemToCart(event) {
-  const rememberCartItems = document.querySelector(cartItemsClass);
-  const idProduct = getSkuFromProductItem(event.path[1]);
-  const products = await createProductList();
-  const contains = products.find((product) => product.id === idProduct);
-  const itemProduct = createCartItemElement(contains);
-  itemProduct.key = `${itemProduct.price} ${rememberCartItems.childNodes.length}`;
-  rememberCartItems.appendChild(itemProduct);
-  localStorage.setItem(itemProduct.key, itemProduct.innerText);
-  sumTotalPrices();
-}
-
 window.onload = function onload() {
   createProductList();
   // reloadStorage();
   buttonClearCartAll();
-  addItemToCart();
 };
