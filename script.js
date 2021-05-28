@@ -159,6 +159,6 @@ const asyncStart = async () => {
 };
 
 // start window.onload
-window.onload = function onload() {
+window.onload = () => {
   asyncStart();
 };
