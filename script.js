@@ -1,3 +1,10 @@
+/*
+Para o desenvolvimento da parte que aborda web storage, consultei o código do Lima, Lima, Turma 11 da Trybe, o qual tornou
+menos abstrato que eu queria fazer.
+Link para o cod do Lima, Lima:
+https://github.com/tryber/sd-011-project-shopping-cart/pull/79/commits/d264abdbb76f382a8a91e60643bf745bbc2a5393
+*/
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -12,13 +19,13 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ id, title, thumbnail }) {
+function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
 
-  section.appendChild(createCustomElement('span', 'item__sku', id));
-  section.appendChild(createCustomElement('span', 'item__title', title));
-  section.appendChild(createProductImageElement(thumbnail));
+  section.appendChild(createCustomElement('span', 'item__sku', sku));
+  section.appendChild(createCustomElement('span', 'item__title', name));
+  section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
   return section;
@@ -28,15 +35,19 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+const cartListClass = '.cart__items';
+
 function cartItemClickListener(event) {
   // coloque seu código aqui
-  document.querySelector('.cart__items').removeChild(event.target);
+  const cartList = document.querySelector(cartListClass);
+  cartList.removeChild(event.target);
+  localStorage.setItem('cart', cartList.innerHTML);
 }
 
-function createCartItemElement({ id, title, price }) {
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
-  li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
@@ -73,13 +84,25 @@ async function chooseProductAddToCart() {
   for (let i = 0; i < buttonsAdd.length; i += 1) {
     const element = buttonsAdd[i];
     element.addEventListener('click', async (e) => {
-      const productData = await fetchAddProduct(e.target.parentNode.firstChild.innerText); // busca na API o produto que recebeu o clique
-      document.querySelector('.cart__items').appendChild(createCartItemElement(productData)); // adiciona o produto ao carrinho
+      const productID = getSkuFromProductItem(e.target.parentElement);
+      const productData = await fetchAddProduct(productID); // busca na API o produto que recebeu o clique
+      const cartList = document.querySelector(cartListClass);
+      cartList.appendChild(createCartItemElement(productData)); // adiciona o produto ao carrinho
+      localStorage.setItem('cart', cartList.innerHTML);
     });
   }
+}
+
+function loadCurrentCart() {
+  const currentCart = localStorage.getItem('cart');
+  const cartList = document.querySelector(cartListClass);
+  cartList.innerHTML = currentCart;
+  const cartItems = document.querySelectorAll('.cart__item');
+  cartItems.forEach((cartItem) => cartItem.addEventListener('click', cartItemClickListener));
 }
 
 window.onload = function onload() {
   fetchProducts();
   chooseProductAddToCart();
+  loadCurrentCart();
 };
