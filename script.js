@@ -90,23 +90,25 @@ const endLoading = () => {
 // The Coding Train - Fetch(): https://youtu.be/tc8DU14qX6I
 
 // fetch mercado livre API plus Loading functions
-const mercadoLivreAPI = () => {
-  nowLoading(); // calls nowLoading function
-
-  // get Mercado Livre API url
-  const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
-
-  // API Header: https://stackoverflow.com/questions/43209924/rest-api-use-the-accept-application-json-http-header
+const sendToCart = () => {
+  // get alls items from createProductItemElement in line 25
+  const addItemToCart = document.querySelectorAll('.item__add');
+  // API Header
   const method = { method: 'GET', headers: { Accept: 'application/json' } };
 
-  return fetch(url, method) // fetch API's url and method/accept
-    .then((response) => response.json()) // gets and converts the response to json
-    .then((json) => { // then uses json for each items on the list
-      json.results.forEach((items) => list.appendChild(createProductItemElement(
-        { sku: items.id, name: items.title, image: items.thumbnail },
-      )));
-    })
-    .then(endLoading); // calls endLoading function
+  // for each items in addItemToCart add an EventListener to add the specific item fetched to the cart on the page and LocalStorage
+  addItemToCart.forEach((items) =>
+    items.addEventListener('click', () => // thanks to https://stackoverflow.com/questions/40710922/how-can-i-add-item-to-cart-by-using-event-listener
+      fetch(`https://api.mercadolibre.com/items/${items.parentNode.children[0].innerText}`, method)
+        .then((response) => response.json())
+        .then((json) => {
+          itemsCart.appendChild(createCartItemElement(
+            { sku: json.id, name: json.title, salePrice: json.price },
+          ));
+          totalPrice(json.price);
+        })
+        .then(() => localStorage.setItem('cart', itemsCart.innerHTML))
+        .then(() => localStorage.setItem('price', total.innerText))));
 };
 
 // Task 2
@@ -128,7 +130,7 @@ const sendToCart = () => {
           totalPrice(json.price);
         })
         .then(() => localStorage.setItem('cart', itemsCart.innerHTML))
-        .then(() => localStorage.setItem('price', total.innerText)))
+        .then(() => localStorage.setItem('price', total.innerText))));
 };
 
 // Task 4
