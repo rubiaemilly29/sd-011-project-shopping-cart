@@ -12,9 +12,19 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+const priceCalculator = () => {
+  const cartItem = '.cart__item';
+  const cartItemFromDocument = document.querySelectorAll(cartItem);
+  let sum = 0;
+  cartItemFromDocument.forEach((item) => {
+    sum += parseFloat(item.textContent.split('$')[1]);
+  });
+  document.querySelector('.total-price').innerHTML = parseFloat(sum.toFixed(2));
+};
+
 function cartItemClickListener(event) {
   event.target.remove();
-  priceCalculator()
+  priceCalculator();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -33,7 +43,7 @@ function addButtonEventListner(sku) {
       const olFromDocument = document.querySelector('ol');
       olFromDocument.appendChild(receivedLi);
       localStorage.setItem('cartContent', olFromDocument.innerHTML);
-      priceCalculator()
+      priceCalculator();
     });
 }
 
@@ -51,9 +61,9 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 async function apiloading() {
   const API = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
@@ -65,22 +75,12 @@ async function apiloading() {
   });
 }
 
-const priceCalculator = () => {
-  const cartItem = '.cart__item';
-  const cartItemFromDocument = document.querySelectorAll(cartItem);
-  let sum = 0;
-  cartItemFromDocument.forEach((item) => {
-    sum += parseFloat(item.textContent.split('$')[1]);
-  });
-  document.querySelector('.total-price').innerHTML = parseFloat(sum.toFixed(2));
-};
-
 function loadStorage() {
   const items = document.querySelector('ol');
   items.innerHTML = localStorage.getItem('cartContent');
   document.querySelectorAll('li').forEach((element) => {
     element.addEventListener('click', cartItemClickListener);
-    priceCalculator()
+    priceCalculator();
   });
 }
 
