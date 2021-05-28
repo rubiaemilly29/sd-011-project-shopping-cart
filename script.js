@@ -30,6 +30,7 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
+  document.querySelector('.cart__items').removeChild(event.target);
 }
 
 function createCartItemElement({ id, title, price }) {
