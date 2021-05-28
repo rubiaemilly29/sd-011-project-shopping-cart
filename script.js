@@ -1,3 +1,25 @@
+const rememberCartItems = document.querySelector('.cart__items');
+const rememberTotalSum = document.querySelector('.total-price');
+
+function sumTotalPrices() {
+  const listCartItems = rememberCartItems().childNodes;
+  const arrayPrices = [];
+  listCartItems.forEach((item) => arrayPrices.push(Number(item.innerHTML.split('$')[1])));
+  const sumPrices = arrayPrices.reduce((acc, curr) => acc + curr, 0);
+  rememberTotalSum().innerText = Math.round(sumPrices * 100) / 100;
+}
+
+function clearCartAll() {
+  localStorage.clear();
+  rememberCartItems.innerHTML = '';
+  sumTotalPrices();
+}
+
+function buttonClearCartAll() {
+  const buttonClear = document.querySelector('.empty-cart');
+  buttonClear.addEventListener('click', clearCartAll);
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -11,9 +33,19 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
+const cartStorage = document.querySelectorAll('.cart__items');
+const addCartToStorage = () => {
+  localStorage.setItem('nome', cartStorage);
+};
+
+const reloadStorage = () => {
+  const itemCart = localStorage.getItem('nome');
+  cartStorage.innerHTML = itemCart;
+};
 
 function cartItemClickListener(event) {
-  
+  event.target.remove();
+  addCartToStorage();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -71,6 +103,29 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-window.onload = function () {
+async function addItemToCart(event) {
+  const idProduct = getSkuFromProductItem(event.path[1]);
+  const products = await createProductList();
+  const contains = products.find((product) => product.id === idProduct);
+  const itemProduct = createCartItemElement(contains);
+  itemProduct.key = `${itemProduct.price} ${rememberCartItems.childNodes.length}`;
+  rememberCartItems.appendChild(itemProduct);
+  localStorage.setItem(itemProduct.key, itemProduct.innerText);
+  sumTotalPrices();
+}
+
+function addText() {
+  const itemsClass = document.querySelector('.items');
+  const loadText = document.createElement('span');
+  loadText.innerText = 'loading...';
+  loadText.className = 'loading';
+  itemsClass.appendChild(loadText);
+}
+
+window.onload = function onload() {
   createProductList();
+  reloadStorage();
+  buttonClearCartAll();
+  addText();
+  addItemToCart();
 };
