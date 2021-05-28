@@ -128,7 +128,7 @@ const sendToCart = () => {
           totalPrice(json.price);
         })
         .then(() => localStorage.setItem('cart', itemsCart.innerHTML))
-        .then(() => localStorage.setItem('price', total.innerText))));
+        .then(() => localStorage.setItem('price', total.innerText)))
 };
 
 // Task 4
