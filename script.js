@@ -32,22 +32,24 @@ function cartItemClickListener(event) {
   // coloque seu código aqui
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ id, title, price }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
 const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
 
+// A função abaixo solicita da API a lista de produtos do tipo computador
 async function fetchProducts() {
   return fetch(API_URL)
     .then((product) => product.json())
     .then((product) => product.results);
 }
 
+// A função abaixo adiciona a lista de produtos do tipo computador numa seção da estrutura HTML
 async function addProducts() {
   const arrayOfProducts = await fetchProducts();
   arrayOfProducts.forEach((product) => {
@@ -55,7 +57,28 @@ async function addProducts() {
   });
 }
 
+const PRODUCT_URL = 'https://api.mercadolibre.com/items/$ItemID';
+
+// A função abaixo solicita da API o item passado como parâmetro
+async function fetchAddProduct(itemId) {
+  return fetch(PRODUCT_URL.replace('$ItemID', itemId))
+    .then((product) => product.json())
+    .then((product) => product);
+}
+
+async function chooseProductAddToCart() {
+  await addProducts();
+  const buttonsAdd = document.getElementsByClassName('item__add');
+  for (let i = 0; i < buttonsAdd.length; i += 1) {
+    const element = buttonsAdd[i];
+    element.addEventListener('click', async (e) => {
+      const productData = await fetchAddProduct(e.target.parentNode.firstChild.innerText); // busca na API o produto que recebeu o clique
+      document.querySelector('.cart__items').appendChild(createCartItemElement(productData)); // adiciona o produto ao carrinho
+    });
+  }
+}
+
 window.onload = function onload() {
   fetchProducts();
-  addProducts();
+  chooseProductAddToCart();
 };
