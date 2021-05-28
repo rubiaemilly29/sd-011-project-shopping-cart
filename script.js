@@ -107,7 +107,6 @@ const mercadoLivreAPI = () => {
       )));
     })
     .then(endLoading) // calls endLoading function
-    .catch((error) => console.error('rejected'));
 };
 
 // Task 2
@@ -115,7 +114,6 @@ const mercadoLivreAPI = () => {
 const sendToCart = () => {
   // get alls items from createProductItemElement in line 25
   const addItemToCart = document.querySelectorAll('.item__add');
-  // API Header
   const method = { method: 'GET', headers: { Accept: 'application/json' } };
 
   // for each items in addItemToCart add an EventListener to add the specific item fetched to the cart on the page and LocalStorage
@@ -130,8 +128,7 @@ const sendToCart = () => {
           totalPrice(json.price);
         })
         .then(() => localStorage.setItem('cart', itemsCart.innerHTML))
-        .then(() => localStorage.setItem('price', total.innerText)))
-        .catch((error) => console.error('rejected')))
+        .then(() => localStorage.setItem('price', total.innerText))))
 };
 
 // Task 4
