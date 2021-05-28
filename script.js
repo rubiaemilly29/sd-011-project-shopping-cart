@@ -14,6 +14,7 @@ function createCustomElement(element, className, innerText) {
 
 function cartItemClickListener(event) {
   event.target.remove();
+  priceCalculator()
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -32,6 +33,7 @@ function addButtonEventListner(sku) {
       const olFromDocument = document.querySelector('ol');
       olFromDocument.appendChild(receivedLi);
       localStorage.setItem('cartContent', olFromDocument.innerHTML);
+      priceCalculator()
     });
 }
 
@@ -63,15 +65,22 @@ async function apiloading() {
   });
 }
 
-function priceCalculator() {
-
-}
+const priceCalculator = () => {
+  const cartItem = '.cart__item';
+  const cartItemFromDocument = document.querySelectorAll(cartItem);
+  let sum = 0;
+  cartItemFromDocument.forEach((item) => {
+    sum += parseFloat(item.textContent.split('$')[1]);
+  });
+  document.querySelector('.total-price').innerHTML = parseFloat(sum.toFixed(2));
+};
 
 function loadStorage() {
   const items = document.querySelector('ol');
   items.innerHTML = localStorage.getItem('cartContent');
   document.querySelectorAll('li').forEach((element) => {
     element.addEventListener('click', cartItemClickListener);
+    priceCalculator()
   });
 }
 
