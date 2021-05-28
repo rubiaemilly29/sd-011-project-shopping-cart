@@ -103,8 +103,7 @@ const mercadoLivreAPI = () => {
       json.results.forEach((items) => list.appendChild(createProductItemElement(
         { sku: items.id, name: items.title, image: items.thumbnail },
       )));
-    })
-    .then(endLoading); // calls endLoading function
+    }).then(endLoading); // calls endLoading function
 };
 
 // Task 2
