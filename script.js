@@ -84,7 +84,30 @@ function loadStorage() {
   });
 }
 
-window.onload = function onload() {
-  apiloading();
+const clear = () => {
+  const clearButton = document.querySelector('.empty-cart');
+  clearButton.addEventListener('click', () => {
+    document.querySelector('.cart__items').innerHTML = '';
+    priceCalculator();
+  });
+};
+
+const loadingAlert = () => {
+  const load = document.createElement('span');
+  load.className = 'loading';
+  load.textContent = 'Loading...';
+  const loadIv = document.querySelector('.loading');
+  loadIv.appendChild(load);
+};
+
+const loadRemove = () => {
+  document.querySelector('.loading').remove();
+};
+
+window.onload = async function onload() {
+  loadingAlert();
+  await apiloading();
+  loadRemove();
   loadStorage();
+  clear();
 };
