@@ -31,9 +31,9 @@ function createProductItemElement({ sku, name, image }) {
 // Sum of all items in the cart
 const total = document.querySelector('.total-price');
 
+// total-price recieves by innerText all values summed converted to float type
 const totalPrice = (prices) => {
-  // total-price recieves by innerText all values summed converted to float type
-  total.innerText = parseFloat(total) + parseFloat(prices);
+  total.innerText = (parseFloat(total) + parseFloat(prices));
 };
 
 /* function getSkuFromProductItem(item) {
@@ -68,7 +68,6 @@ function createCartItemElement({ sku, name, salePrice }) {
 
 // Task 7
 // Loadings
-
 const list = document.querySelector('.items');
 
 const nowLoading = () => {
