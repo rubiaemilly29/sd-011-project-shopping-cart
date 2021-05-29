@@ -36,12 +36,20 @@ function getSkuFromProductItem(item) {
 }
 
 const cartListClass = '.cart__items';
+const totalPriceClass = '.total-price';
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
   const cartList = document.querySelector(cartListClass);
   cartList.removeChild(event.target);
   localStorage.setItem('cart', cartList.innerHTML);
+  let actualPrice = Math.fround((localStorage.getItem('payment'))).toFixed(1);
+  console.log('valor atual', actualPrice);
+  const productPrice = parseFloat((event.target.innerText.split('$')[1])).toFixed(1);
+  console.log('valor do produto', productPrice);
+  actualPrice -= productPrice;
+  localStorage.setItem('payment', actualPrice);
+  document.querySelector(totalPriceClass).innerText = Math.fround(actualPrice).toFixed(1);
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -77,9 +85,8 @@ async function fetchAddProduct(itemId) {
     .then((product) => product.json())
     .then((product) => product);
 }
-
 // Adiciona o produto ao carrinho e ao storage
-async function chooseProductAddToCart() {
+async function addProductToCart() {
   await addProducts();
   const buttonsAdd = document.querySelectorAll('.item__add');
   buttonsAdd.forEach((button) => button.addEventListener('click', async (e) => {
@@ -88,6 +95,9 @@ async function chooseProductAddToCart() {
     const cartList = document.querySelector(cartListClass);
     cartList.appendChild(createCartItemElement(productData)); // adiciona o produto ao carrinho
     localStorage.setItem('cart', cartList.innerHTML);
+    const ttPrice = document.querySelector(totalPriceClass);
+    localStorage.setItem('payment', Number(ttPrice.innerText) + productData.price);
+    ttPrice.innerText = localStorage.getItem('payment');
   }));
 }
 
@@ -98,10 +108,12 @@ function loadCurrentCart() {
   cartList.innerHTML = currentCart;
   const cartItems = document.querySelectorAll('.cart__item');
   cartItems.forEach((cartItem) => cartItem.addEventListener('click', cartItemClickListener));
+  const ttPrice = document.querySelector(totalPriceClass);
+  ttPrice.innerText = localStorage.getItem('payment');
 }
 
 window.onload = function onload() {
   fetchProducts();
-  chooseProductAddToCart();
   loadCurrentCart();
+  addProductToCart();
 };
