@@ -112,8 +112,21 @@ function loadCurrentCart() {
   ttPrice.innerText = localStorage.getItem('payment');
 }
 
+function btnClearCart() {
+  const btnClear = document.querySelector('.empty-cart');
+  btnClear.addEventListener('click', () => {
+    const cartList = document.querySelector('.cart__items');
+    while (cartList.firstChild) {
+      cartList.removeChild(cartList.firstChild);
+    }
+    localStorage.setItem('payment', 0);
+    document.querySelector('.total-price').innerText = 0;
+  });
+}
+
 window.onload = function onload() {
   fetchProducts();
   loadCurrentCart();
   addProductToCart();
+  btnClearCart();
 };
