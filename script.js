@@ -81,7 +81,7 @@ fetchItems('computador');
 
 const addCartFromLocalStorage = () => {
   const productsInLocalStorage = Object.keys(localStorage);
-  productsInLocalStorage.forEach( async (product) => {
+  productsInLocalStorage.forEach(async (product) => {
     fetch(`https://api.mercadolibre.com/items/${product}`)
     .then((response) => response.json())
     .then((data) => {
