@@ -122,9 +122,9 @@ function clearCart() {
   window.onload = async function onload() {
     loadCartFromLocalStorage();
     await loadProducts('computador');
+    document.querySelector('.empty-cart').addEventListener('click', clearCart);
   };
 
-  document.querySelector('.empty-cart').addEventListener('click', clearCart);
 
   // Source: consulta ao repositório do Matheus Gaspar = https://github.com/tryber/sd-011-project-shopping-cart/pull/101/
 
