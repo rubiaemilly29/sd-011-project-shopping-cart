@@ -72,6 +72,7 @@ async function fetchProducts() {
 // A função abaixo adiciona a lista de produtos do tipo computador numa seção da estrutura HTML
 async function addProducts() {
   const arrayOfProducts = await fetchProducts();
+  document.querySelector('.loading').remove();
   arrayOfProducts.forEach((product) => {
     document.querySelector('.items').appendChild(createProductItemElement(product));
   });
@@ -85,13 +86,28 @@ async function fetchAddProduct(itemId) {
     .then((product) => product.json())
     .then((product) => product);
 }
+
+const addLoading = () => {
+  const container = document.querySelector('.container');
+  const divLoading = createCustomElement('div', 'loading', 'loading...');
+  container.appendChild(divLoading);
+};
+
+const removeLoading = () => {
+  const container = document.querySelector('.container');
+  const divLoading = document.querySelector('.loading');
+  container.removeChild(divLoading);
+};
+
 // Adiciona o produto ao carrinho e ao storage
 async function addProductToCart() {
   await addProducts();
   const buttonsAdd = document.querySelectorAll('.item__add');
   buttonsAdd.forEach((button) => button.addEventListener('click', async (e) => {
     const productID = getSkuFromProductItem(e.target.parentElement);
+    addLoading();
     const productData = await fetchAddProduct(productID); // busca na API o produto que recebeu o clique
+    removeLoading();
     const cartList = document.querySelector(cartListClass);
     cartList.appendChild(createCartItemElement(productData)); // adiciona o produto ao carrinho
     localStorage.setItem('cart', cartList.innerHTML);
