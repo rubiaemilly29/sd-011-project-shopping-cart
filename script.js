@@ -99,17 +99,22 @@ function removeLoadingMessage() {
 
   async function addItemToCart(e) {
     const sku = getSkuFromProductItem(e.target.parentElement);
+    loadingMessage();
     const response = await fetch(`https://api.mercadolibre.com/items/${sku}`);
     const { title, price } = await response.json();
+    removeLoadingMessage();
     cartData.push({ sku, name: title, salePrice: price });
     renderCart();
+    updateCartPrice();
     saveCartToLocalStorage();
   }
   async function loadProducts(queryName) {
     const itemsSection = document.querySelector('section .items'); // referenciando a class items no HTML
     // const queryName = 'computador'; // termo de busca
+    loadingMessage();
     const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${queryName}`); // acessando a API assincronamente através do await e do fetch
     const { results } = await response.json(); // do obj results, espera-se uma resposta no formato json
+    removeLoadingMessage();
     results.forEach((product) => { // para cada item obtido do results, execute
       const component = createProductItemElement({ // a constante renomeia os parâmetros do obj de acordo com o requisitado
         sku: product.id, // sendo assim, sku = id
@@ -123,6 +128,7 @@ function removeLoadingMessage() {
 
 function clearCart() {
   cartData = [];
+  updateCartPrice();
   saveCartToLocalStorage();
   renderCart();
 }
