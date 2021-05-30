@@ -14,15 +14,25 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-// function createCartItemElement({ id, title, price }) {
-//   const li = document.createElement('li');
-//   li.className = 'cart__item';
-//   li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
-//   li.addEventListener('click', cartItemClickListener);
-//   return li;
-// }
+function cartItemClickListener(event) {
+  // coloque seu código aqui
+}
 
-const testFunction = (event) => console.log(event.target.parentNode.firstChild.innerText);
+function createCartItemElement({ id, title, price }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
+  li.addEventListener('click', cartItemClickListener);
+  return li;
+}
+
+const testFunction = (event) => {
+  const cartContainer = document.querySelector('.cart');
+  const itemSKU = (event.target.parentNode.firstChild.innerText);
+  fetch(`https://api.mercadolibre.com/items/${itemSKU}`)
+  .then((response) => response.json())
+  .then((data) => cartContainer.appendChild(createCartItemElement(data)));
+};
 
 function createProductItemElement({ id, title, thumbnail }) {
   const section = document.createElement('section');
@@ -38,24 +48,19 @@ function createProductItemElement({ id, title, thumbnail }) {
   return section;
 }
 
-// Essa função vai servir para fazer a requisição ao endpoint do termo pesquisado e em seguida acessar todos os termos retornados colocando como filhos do container para os Itens.
+// Essa função vai servir para fazer a requisição ao endpoint do termo pesquisado e em seguida acessar todos os termos retornados colocando como filhos do container feito para os Itens.
 
-const fetchItem = async (searchTerm) => {
+const fetchItems = async (searchTerm) => {
   const itemsContainer = document.querySelector('.items');
-  const searchResult = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${searchTerm}`)
+  await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${searchTerm}`)
   .then((response) => response.json())
-  .then((data) => data.results)
+  .then((data) => data.results
+  .forEach((product) => itemsContainer.appendChild(createProductItemElement(product))))
   .catch((error) => alert(`Erro na requisição: ${error}`));
-
-  searchResult.forEach((product) => itemsContainer.appendChild(createProductItemElement(product)));
 };
 
-fetchItem('computador');
+fetchItems('computador');
 
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
-// }
-
-// function cartItemClickListener(event) {
-//   // coloque seu código aqui
 // }
