@@ -41,7 +41,7 @@ function updateCartPrice() {
     const itemPrice = current.salePrice || 0;
     return acc + itemPrice;
   }, 0);
-  document.querySelector('.total-price').textContent = totalPrice;
+  document.querySelector('.total-price').textContent = Math.round(totalPrice * 100) / 100;
 }
 
 function cartItemClickListener(e) { // remover item do carrinho
@@ -112,11 +112,19 @@ function loadCartFromLocalStorage() {
       itemsSection.appendChild(component); // component torna-se filho de itemsSection, o qual referencia a class items
     });
   }
+
+function clearCart() {
+  cartData = [];
+  saveCartToLocalStorage();
+  renderCart();
+}
   
   window.onload = async function onload() {
     loadCartFromLocalStorage();
     await loadProducts('computador');
   };
+
+  document.querySelector('.empty-cart').addEventListener('click', clearCart);
 
   // Source: consulta ao repositório do Matheus Gaspar = https://github.com/tryber/sd-011-project-shopping-cart/pull/101/
 
