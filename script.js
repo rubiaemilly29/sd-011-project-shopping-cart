@@ -125,7 +125,6 @@ function clearCart() {
     document.querySelector('.empty-cart').addEventListener('click', clearCart);
   };
 
-
   // Source: consulta ao repositório do Matheus Gaspar = https://github.com/tryber/sd-011-project-shopping-cart/pull/101/
 
 //   fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${queryName}`) // requisição a API do ML
