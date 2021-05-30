@@ -111,14 +111,13 @@ const mercadoLivreAPI = () => {
 
 // Task 2
 // Add items to the cart and localStorage
+// get alls items from createProductItemElement in line 25
+// for each items in addItemToCart add an EventListener to add the specific item fetched to the cart on the page and LocalStorage
+// thanks to https://stackoverflow.com/questions/40710922/how-can-i-add-item-to-cart-by-using-event-listener
 const sendToCart = () => {
-  // get alls items from createProductItemElement in line 25
   const addItemToCart = document.querySelectorAll('.item__add');
   const method = { method: 'GET', headers: { Accept: 'application/json' } };
   const cartItems = document.querySelector('.cart__items');
-
-  // for each items in addItemToCart add an EventListener to add the specific item fetched to the cart on the page and LocalStorage
-  // thanks to https://stackoverflow.com/questions/40710922/how-can-i-add-item-to-cart-by-using-event-listener
   addItemToCart.forEach((items) =>
     items.addEventListener('click', () =>
       fetch(`https://api.mercadolibre.com/items/${items.parentNode.children[0].innerText}`, method)
