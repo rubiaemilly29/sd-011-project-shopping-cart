@@ -6,7 +6,7 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
-// create custom elements
+// create custom element
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
@@ -29,11 +29,12 @@ function createProductItemElement({ sku, name, image }) {
 
 // Task 5
 // Sum of all items in the cart
+
 const total = document.querySelector('.total-price');
 
 // total-price recieves by innerText all values summed converted to float type
 const totalPrice = (prices) => {
-  total.innerText = (parseFloat(total) + parseFloat(prices));
+  total.innerText = (parseFloat(total.innerText) + parseFloat(prices));
 };
 
 /* function getSkuFromProductItem(item) {
@@ -48,8 +49,8 @@ const totalPrice = (prices) => {
 const itemsCart = document.querySelector('.cart__items');
 
 // remove cart's items
+// thanks to Cesar Bhering's explanation and help
 function cartItemClickListener(event) {
-  // thanks to Cesar Bhering's explanation and help
   totalPrice(-event.target.innerText.split('$')[1]); // the subtraction symbol here are negating all values inside *string.split(separator, limit)
   event.target.remove(); // remove event on click (on this case, the EventListener in line 150)
   localStorage.setItem('cart', itemsCart.innerHTML); // innerHTML cause cart contains objects, images and so far, html elements.
@@ -68,22 +69,25 @@ function createCartItemElement({ sku, name, salePrice }) {
 
 // Task 7
 // Loadings
+
 const list = document.querySelector('.items');
 
 const nowLoading = () => {
-  const loading = document.createElement('p'); // create paragraph element
-  loading.className = 'loading'; // add loading to class loading
+  const loading = document.createElement('p');
+  loading.className = 'loading';
   loading.innerText = 'Now loading...'; // add text to loading
   list.appendChild(loading); // append loading to section with list class
 };
 
+// get loading paragraph and remove it
 const endLoading = () => {
-  const loading = document.querySelector('.loading'); // get loading paragraph
-  loading.remove(); // remove it
+  const loading = document.querySelector('.loading');
+  loading.remove();
 };
 
 // Task 1
 // References:
+// API Header: https://stackoverflow.com/questions/43209924/rest-api-use-the-accept-application-json-http-header
 // Fetch: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
 // Introduction to Fetch: https://developers.google.com/web/updates/2015/03/introduction-to-fetch
 // The Coding Train - Fetch(): https://youtu.be/tc8DU14qX6I
@@ -91,19 +95,18 @@ const endLoading = () => {
 // fetch mercado livre API plus Loading functions
 const mercadoLivreAPI = () => {
   nowLoading(); // calls nowLoading function
-
-  // get Mercado Livre API url
   const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
-  // API Header: https://stackoverflow.com/questions/43209924/rest-api-use-the-accept-application-json-http-header
   const method = { method: 'GET', headers: { Accept: 'application/json' } };
+  const itemsClass = document.querySelector('.items');
 
   return fetch(url, method) // fetch API's url and method/accept
     .then((response) => response.json()) // gets and converts the response to json
     .then((json) => { // then uses json for each items on the list
-      json.results.forEach((items) => list.appendChild(createProductItemElement(
-        { sku: items.id, name: items.title, image: items.thumbnail },
-      )));
-    }).then(endLoading); // calls endLoading function
+      json.results.forEach((items) => itemsClass.appendChild(
+          createProductItemElement({ sku: items.id, name: items.title, image: items.thumbnail }),
+        ));
+      })
+      .then(endLoading); // calls endLoading function
 };
 
 // Task 2
@@ -112,16 +115,18 @@ const sendToCart = () => {
   // get alls items from createProductItemElement in line 25
   const addItemToCart = document.querySelectorAll('.item__add');
   const method = { method: 'GET', headers: { Accept: 'application/json' } };
+  const cartItems = document.querySelector('.cart__items');
 
   // for each items in addItemToCart add an EventListener to add the specific item fetched to the cart on the page and LocalStorage
+  // thanks to https://stackoverflow.com/questions/40710922/how-can-i-add-item-to-cart-by-using-event-listener
   addItemToCart.forEach((items) =>
-    items.addEventListener('click', () => // thanks to https://stackoverflow.com/questions/40710922/how-can-i-add-item-to-cart-by-using-event-listener
+    items.addEventListener('click', () =>
       fetch(`https://api.mercadolibre.com/items/${items.parentNode.children[0].innerText}`, method)
         .then((response) => response.json())
         .then((json) => {
-          itemsCart.appendChild(createCartItemElement(
-            { sku: json.id, name: json.title, salePrice: json.price },
-          ));
+          cartItems.appendChild(
+            createCartItemElement({ sku: json.id, name: json.title, salePrice: json.price }),
+          );
           totalPrice(json.price);
         })
         .then(() => localStorage.setItem('cart', itemsCart.innerHTML))
@@ -131,7 +136,7 @@ const sendToCart = () => {
 // Task 4
 // get cart's items on localStorage
 const getCart = () => {
-  if (localStorage.cart) { // if there's a key called cart on localStorage, then...
+  if (localStorage.cart) {
     itemsCart.innerHTML = localStorage.getItem('cart'); // localStorage gets itemsCart
     itemsCart.addEventListener('click', cartItemClickListener); // add the click event to get cart's items
     total.innerText = localStorage.getItem('price'); // gets the item's price
@@ -146,8 +151,8 @@ const emptyCart = () => {
 };
 
 // clear button EventListener
-const empty = document.querySelector('.empty-cart'); // gets the button by empty-cart class
-empty.addEventListener('click', emptyCart); // add the event click to it
+const empty = document.querySelector('.empty-cart');
+empty.addEventListener('click', emptyCart);
 
 // async functions
 const asyncStart = async () => {
@@ -157,6 +162,6 @@ const asyncStart = async () => {
 };
 
 // start window.onload
-window.onload = () => {
+window.onload = function onload() {
   asyncStart();
 };
