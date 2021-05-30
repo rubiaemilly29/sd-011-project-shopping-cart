@@ -19,15 +19,15 @@ function cartItemClickListener() {
 }
 
 function createCartItemElement({ id, title, price }) {
-  const li = document.createElement('ol');
-  li.className = 'cart__items';
+  const li = document.createElement('li');
+  li.className = 'cart__item';
   li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
 const testFunction = (event) => {
-  const cartContainer = document.querySelector('.cart');
+  const cartContainer = document.querySelector('.cart__items');
   const itemSKU = (event.target.parentNode.firstChild.innerText);
   fetch(`https://api.mercadolibre.com/items/${itemSKU}`)
   .then((response) => response.json())
