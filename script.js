@@ -14,8 +14,9 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function cartItemClickListener() {
-  // coloque seu código aqui
+function cartItemClickListener(event) {
+  const parentOfItem = (event.target.parentNode);
+  parentOfItem.removeChild(event.target);
 }
 
 function createCartItemElement({ id, title, price }) {
@@ -26,7 +27,7 @@ function createCartItemElement({ id, title, price }) {
   return li;
 }
 
-const testFunction = (event) => {
+const addCartItemElement = (event) => {
   const cartContainer = document.querySelector('.cart__items');
   const itemSKU = (event.target.parentNode.firstChild.innerText);
   fetch(`https://api.mercadolibre.com/items/${itemSKU}`)
@@ -42,7 +43,7 @@ function createProductItemElement({ id, title, thumbnail }) {
   section.appendChild(createCustomElement('span', 'item__title', title));
   section.appendChild(createProductImageElement(thumbnail));
   const newButton = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
-  newButton.addEventListener('click', testFunction);
+  newButton.addEventListener('click', addCartItemElement);
   section.appendChild(newButton);
 
   return section;
