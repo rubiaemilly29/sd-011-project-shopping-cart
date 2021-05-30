@@ -45,10 +45,6 @@
   display: none;
 }
 
-.item__sku {
-  display: none;
-}
-
 .item .item__title {
   flex-grow: 1;
   padding: 10px;

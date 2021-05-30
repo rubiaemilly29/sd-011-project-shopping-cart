@@ -48,7 +48,6 @@ const addCartItemElement = (event) => {
   .then((data) => {
     const cartItemCreated = createCartItemElement(data);
     cartContainer.appendChild(cartItemCreated);
-    cartContainer.appendChild(createCustomElement('span', 'item__sku', data.id));
     addToLocalStorage(itemSKU);
   });
 };
