@@ -92,7 +92,8 @@ const addCartFromLocalStorage = () => {
     .then((data) => {
       const cartItemCreated = createCartItemElement(data);
       cartContainer.appendChild(cartItemCreated);
-    });
+    })
+    .catch((error) => alert(`Erro na requisição: ${error}`));
   });
 };
 

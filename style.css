@@ -51,6 +51,7 @@
 
 .item .item__title {
   flex-grow: 1;
+  font-weight: bold;
   padding: 10px;
   text-align: center;
 }
