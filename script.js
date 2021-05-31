@@ -55,7 +55,7 @@ async function addProducts() {
     document.querySelector('.items').appendChild(createProductItemElement(product));
   });
 }
-// A função abaixo solicita da API o item passado como parâmetro
+//A função abaixo solicita da API o item passado como parâmetro
 async function fetchAddProduct(itemId) {
   return fetch(PRODUCT_URL.replace('$ItemID', itemId))
     .then((product) => product.json())
