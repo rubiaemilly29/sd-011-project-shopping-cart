@@ -48,14 +48,14 @@ async function fetchProducts() {
     .then((product) => product.json())
     .then((product) => product.results);
 }
-//cria um section com o retorno da API
+// cria um section com o retorno da API
 async function addProducts() {
   const arrayOfProducts = await fetchProducts();
   arrayOfProducts.forEach((product) => {
     document.querySelector('.items').appendChild(createProductItemElement(product));
   });
 }
-//A função abaixo solicita da API o item passado como parâmetro
+// A função abaixo solicita da API o item passado como parâmetro
 async function fetchAddProduct(itemId) {
   return fetch(PRODUCT_URL.replace('$ItemID', itemId))
     .then((product) => product.json())
