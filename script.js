@@ -14,6 +14,8 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// função que remove um determinado item do localStorage sempre que este for removido do carrinho de compras.
+
 function removeFromLocalStorage(key) {
   localStorage.removeItem(key);
 }
@@ -28,6 +30,8 @@ function cartItemClickListener(event) {
   removeFromLocalStorage(event.target.id);
 }
 
+// função que seta os itens no localStorage toda vez que for adicionado ao carrinho.
+
 function addToLocalStorage(key, value) {
   localStorage.setItem(key, value);
 }
@@ -35,7 +39,7 @@ function addToLocalStorage(key, value) {
 function createCartItemElement({ id, title, price }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
-  li.id = id;
+  li.id = id; // modificação realizada para poder passar o SKU do produto para o HTML de forma que possamos consultar depois para ter acesso ao mesmo.
   li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
@@ -67,9 +71,9 @@ function createProductItemElement({ id, title, thumbnail }) {
 
 // Essa função vai servir para fazer a requisição ao endpoint do termo pesquisado e em seguida acessar todos os termos retornados colocando como filhos do container feito para os Itens.
 
-const fetchItems = async (searchTerm) => {
+const fetchItems = (searchTerm) => {
   const itemsContainer = document.querySelector('.items');
-  await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${searchTerm}`)
+  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${searchTerm}`)
   .then((response) => response.json())
   .then((data) => data.results
   .forEach((product) => itemsContainer.appendChild(createProductItemElement(product))))
@@ -77,6 +81,8 @@ const fetchItems = async (searchTerm) => {
 };
 
 fetchItems('computador');
+
+// addCartFromLocalStorage captura as chaves do Objeto localStorage e as itera, fazendo uma requisição à API por cada chave usando o SKU do produto, fazendo assim a criação do carrinho de compras usando o armazenamento do browser.
 
 const addCartFromLocalStorage = () => {
   const productsInLocalStorage = Object.keys(localStorage);
