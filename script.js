@@ -82,8 +82,16 @@ async function chooseProductAddToCart() {
   }
 }
 
+function loadCurrentCart() {
+  const currentCart = localStorage.getItem('cart');
+  const cartList = document.querySelector(cartListClass);
+  cartList.innerHTML = currentCart;
+  const cartItems = document.querySelectorAll('.cart__item');
+  cartItems.forEach((cartItem) => cartItem.addEventListener('click', cartItemClickListener));
+}
+
 window.onload = function onload() {
   fetchProducts();
-  addProducts();
   chooseProductAddToCart();
+  loadCurrentCart();
 }; 
