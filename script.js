@@ -71,8 +71,6 @@ async function chooseProductAddToCart() {
   for (let i = 0; i < buttonsAdd.length; i += 1) {
     const element = buttonsAdd[i];
     element.addEventListener('click', async (e) => {
-      const productData = await fetchAddProduct(e.target.parentNode.firstChild.innerText); // busca na API o produto que recebeu o clique
-      document.querySelector('.cart__items').appendChild(createCartItemElement(productData)); // adiciona o produto ao carrinho
       const productID = getSkuFromProductItem(e.target.parentElement);
       const productData = await fetchAddProduct(productID); // busca na API o produto que recebeu o clique
       const cartList = document.querySelector(cartListClass);
