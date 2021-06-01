@@ -12,7 +12,6 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
@@ -24,20 +23,20 @@ const sumProducts = () => {
   totalPrice.innerText = price;
 };
 
-function saveItems(){
+function saveItems() {
   const cart = document.getElementsByClassName('cart__items')[0].innerHTML;
-  localStorage.setItem('myListItems',cart);
+  localStorage.setItem('myListItems', cart);
   sumProducts();
 }
 
 function cartItemClickListener(event) {
   // coloque seu código aqui!
-  const text = liSaver.innerText;
+  const text = event.target.innerText;
   const price = parseFloat(text.split('$')[1]);
   const priceClass = document.querySelector('.total-price');
   priceClass.innerText = parseFloat(priceClass.innerText) - price;
   event.target.remove();
-  //sumProducts();
+  // sumProducts();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -57,7 +56,7 @@ const addCarItem = (id) => {
       const selectCarItem = document.querySelector('.cart__items');
       selectCarItem.appendChild(createCartItemElement(json));
       saveItems();
-    })
+    });
   sumProducts();  
 };
 
@@ -84,7 +83,7 @@ window.onload = function onload() {
   const enableLoading = document.querySelector('#loader');
   enableLoading.classList.add('display');
   setTimeout(() => {
-      loader.classList.remove('display');
+    enableLoading.classList.remove('display');
   }, 5000);
 
   // Atribuição da variável param que será usada como segundo parametro do fetch
