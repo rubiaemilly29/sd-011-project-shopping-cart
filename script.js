@@ -46,7 +46,6 @@ function saveCart() {
   localStorage.setItem('savedCart', cartItems);
 }
 
-
 function cartItemClickListener(event) {
   event.target.remove();
   getTotalPrice();
