@@ -17,11 +17,11 @@ function cartItemClickListener() {
 function createCartItemElement({ id: sku, title: name, price }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${Price}`;
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
   const cartListt = document.querySelector(olclass);
   cartListt.appendChild(li);
-  localStorage.setItem(`olCart`, cartListt.innerHTML);
+  localStorage.setItem('olCart', cartListt.innerHTML);
 }
 
 function createProductImageElement(imageSource) {
