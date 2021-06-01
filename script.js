@@ -113,3 +113,9 @@ window.onload = () => {
   getProduct(); // chama a função, assim que ela é criada ao iniciar o site
   deleteButton();
 };
+
+/*
+  Esperiência extremamente desafiadora, graças a ajuda de vários colegas e exemplos de códigos, aprendi muito com toda
+  essa dificuldade que me fez repensar e dar um passo atrás no meu aprendizado, sou grato por estar aqui e tenho aprendido
+  muito com todos esses obstáculos.
+*/
