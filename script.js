@@ -1,4 +1,6 @@
-window.onload = function onload() { };
+window.onload = function onload() {
+  fetchApiData()
+ };
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -17,12 +19,12 @@ function createCustomElement(element, className, innerText) {
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
+  
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
+  
   return section;
 }
 
@@ -41,5 +43,31 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
-const test = 0
-console.log(test)
+
+function simplifyMercadoLivre(dataApi) {
+  const data = dataApi.data
+  return {
+    sku: responseJson.results[0].id,
+    name: responseJson.results[0].title,
+    image: responseJson.results[0].thumbnail
+  }
+}
+
+const fetchApiData = () => {
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=$QUERY')
+  .then((response) => {
+    return response.json()
+  })
+
+  .then((responseJson) => {
+    console.log(responseJson)
+  })
+
+  .then((final) => {
+    console.log(final)
+  })
+}
+
+// const test = ['re', 'ra', 'ri']
+
+// console.log(test[test.lenght])
