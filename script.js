@@ -77,16 +77,17 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
-// A função a seguir e disparada depois do carregamento da página
-window.onload = function onload() {
-  // Habiltar visualização do loading
+// Habiltar visualização do loading
+const function1 = () => {
   const enableLoading = document.querySelector('#loader');
   enableLoading.classList.add('display');
   setTimeout(() => {
     enableLoading.classList.remove('display');
   }, 5000);
+};
 
-  // Atribuição da variável param que será usada como segundo parametro do fetch
+// Atribuição da variável param que será usada como segundo parametro do fetch
+const function2 = () => {
   const param = { headers: { Accept: 'application/json' } };
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador', param)
     // Caso tenha-se uma resposta ela pegara essa informação e transformará em um objeto (son)
@@ -105,16 +106,28 @@ window.onload = function onload() {
         objSection.appendChild(createProductItemElement(value));
       });
     });
-  const savedItems = window.localStorage.getItem('myListItems');
-  document.querySelector('.cart__items').innerHTML = savedItems;
-  const liItemsSaved = document.getElementsByClassName('cart__item');
-  for (let i = 0; i < liItemsSaved.length; i += 1) {
+} 
+  const function3 = () => {
+    const savedItems = window.localStorage.getItem('myListItems');
+    document.querySelector('.cart__items').innerHTML = savedItems;
+    const liItemsSaved = document.getElementsByClassName('cart__item');
+    for (let i = 0; i < liItemsSaved.length; i += 1) {
     liItemsSaved[i].addEventListener('click', cartItemClickListener);
+  }}
+
+  const function4 = () => {
+    const emptyBttn = document.querySelector('.empty-cart');
+    emptyBttn.addEventListener('click', () => {
+      const cartOl = document.querySelector('.cart__items');
+      cartOl.innerHTML = '';
+    });
   }
-  const emptyBttn = document.querySelector('.empty-cart');
-  emptyBttn.addEventListener('click', () => {
-    const cartOl = document.querySelector('.cart__items');
-    cartOl.innerHTML = '';
-  });
+
+// A função a seguir e disparada depois do carregamento da página
+window.onload = function onload() {
+  function1();
+  function2();
+  function3();
+  function4();
   sumProducts();
 };
