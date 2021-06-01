@@ -1,3 +1,6 @@
+const totalPrice = '.total-price';
+const cartItem = '.cart__items';
+
 const createProductImageElement = (imageSource) => {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -15,23 +18,19 @@ const createCustomElement = (element, className, innerText) => {
 const createProductItemElement = ({ sku, name, image }) => {
   const section = document.createElement('section');
   section.className = 'item';
-
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
   return section;
 };
-
-const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
 // Requisito 5
 const payment = () => {
   const list = [...document.querySelectorAll('.cart__item')];
-  document.querySelector('.total-price').innerText = 0;
+  document.querySelector(totalPrice).innerText = 0;
   const sum = list.reduce((acc, cv) => acc + Number(cv.innerText.split('PRICE: $')[1]), 0);
-  document.querySelector('.total-price').innerText = sum;
+  document.querySelector(totalPrice).innerText = sum;
 };
 
 // Requisito 3
@@ -54,29 +53,39 @@ const addProductToCart = () => {
     fetch(`https://api.mercadolibre.com/items/${elem.parentElement.firstChild.innerText}`)
     .then((resp) => resp.json())
     .then((data) => {
-      const ol = document.querySelector('ol');
-      const count = ol.childElementCount;
-      localStorage.setItem('TotalItems', `${count}`);
-      localStorage.setItem(`Item${count}`, 
+      localStorage.setItem('TotalItems', `${document.querySelector('ol').childElementCount}`);
+      localStorage.setItem(`Item${document.querySelector('ol').childElementCount}`, 
       `SKU: ${data.id} | NAME: ${data.title} | PRICE: $${data.price}`);
-      document.querySelector('.cart__items').appendChild(createCartItemElement(data));
+      document.querySelector(cartItem).appendChild(createCartItemElement(data));
     })
     .then(() => payment());
   }));
 };
 
 // Requisito 1
-const apiUrl = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
-
 const listItems = () => {
-  fetch(apiUrl)
-  .then((response) => response.json())
-  .then((response) => response.results.forEach((item) => {
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+  .then((resp) => resp.json())
+  .then((resp) => resp.results.forEach((item) => {
       const itemToFind = { sku: item.id, name: item.title, image: item.thumbnail };
       document.querySelectorAll('.items')[0].appendChild(createProductItemElement(itemToFind));
-    })).then(() => addProductToCart())
-  .catch((err) => console.log(err));
+    }))
+    .then(() => addProductToCart())
+    .then(() => {
+      document.querySelector('.loading').remove();
+      console.log(document.querySelector('.loading'));
+    })
+    .catch((err) => console.log(err));
 };
+
+// Requisito 6
+const clearCart = () => 
+  document.querySelector('.empty-cart').addEventListener('click', () => {
+    document.querySelector(cartItem).innerHTML = '';
+    document.querySelector(totalPrice).innerHTML = 0;
+    document.querySelector(totalPrice).innerText = '';
+    localStorage.clear();
+});
 
 // Requisito 4
 const backupListItem = () => {
@@ -84,7 +93,7 @@ const backupListItem = () => {
     for (let i = 0; i <= localStorage.getItem('TotalItems'); i += 1) {
       const li = document.createElement('li');
       li.className = 'cart__item';
-      document.querySelector('.cart__items').appendChild(li);
+      document.querySelector(cartItem).appendChild(li);
       li.innerText = localStorage.getItem(`Item${i}`);
     }
   }
@@ -94,4 +103,5 @@ window.onload = function onload() {
   backupListItem();
   listItems();
   payment();
+  clearCart();
 };
