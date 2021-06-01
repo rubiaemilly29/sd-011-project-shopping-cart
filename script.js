@@ -1,5 +1,5 @@
 window.onload = function onload() {
-  fetchApiData()
+  // fetchApiData()
  };
 
 function createProductImageElement(imageSource) {
@@ -53,20 +53,20 @@ function simplifyMercadoLivre(dataApi) {
   }
 }
 
-const fetchApiData = () => {
-  fetch('https://api.mercadolibre.com/sites/MLB/search?q=$QUERY')
-  .then((response) => {
-    return response.json()
-  })
+// const fetchApiData = () => {
+//   fetch('https://api.mercadolibre.com/sites/MLB/search?q=$QUERY')
+//   .then((response) => {
+//     return response.json()
+//   })
 
-  .then((responseJson) => {
-    console.log(responseJson)
-  })
+//   .then((responseJson) => {
+//     console.log(responseJson)
+//   })
 
-  .then((final) => {
-    console.log(final)
-  })
-}
+//   .then((final) => {
+//     console.log(final)
+//   })
+// }
 
 // const test = ['re', 'ra', 'ri']
 
