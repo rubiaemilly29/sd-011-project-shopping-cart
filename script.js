@@ -1,5 +1,5 @@
-//Para o desenvolvimento do projeto usei partes do codigo do Luan Alexandre como base
-//https://github.com/tryber/sd-011-project-shopping-cart/tree/luan-alexandre-projeto-shopping-cart
+// Para o desenvolvimento do projeto usei partes do codigo do Luan Alexandre como base
+// https://github.com/tryber/sd-011-project-shopping-cart/tree/luan-alexandre-projeto-shopping-cart
 const apiUrl = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
 const PRODUCT_URL = 'https://api.mercadolibre.com/items/$ItemID';
 const cartListClass = '.cart__items';
