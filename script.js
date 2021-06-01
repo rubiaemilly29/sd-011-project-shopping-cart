@@ -1,4 +1,10 @@
-window.onload = function onload() { };
+async function getProdutos() {
+  const query = 'computador';
+ const apiUrl = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${query}`);
+ const data = await apiUrl.json();
+ const responseJson = await data.results;
+ return responseJson;
+
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -6,6 +12,44 @@ function createProductImageElement(imageSource) {
   img.src = imageSource;
   return img;
 }
+
+async function getID(id) {
+  const apiUrl = await fetch(`https://api.mercadolibre.com/items/${id}`);
+  const data = await apiUrl.json();
+  return data;
+
+  async function renderProdutos() {
+    addloading();
+    const itemProds = await getProdutos();
+    const itemList = document.querySelector('.items');
+    itemProds.forEach((item) => { 
+    itemList.appendChild(createProductItemElement({ 
+      sku: item.id, name: item.title, image: item.thumbnail,
+    }));
+    });
+    removeLoading();
+
+    function addCart() {
+      const buttons = document.querySelectorAll('.item__add');
+     buttons.forEach((btn) => {
+       btn.addEventListener('click', async () => {
+        const id = getSkuFromProductItem(btn.parentElement);
+        const produto = await getID(id);
+        const li = createCartItemElement(
+          { sku: produto.id, name: produto.title, salePrice: produto.price },
+          );
+          const getOl = document.querySelector('ol');
+          getOl.appendChild(li);
+          totalPrice();
+          addLocalStorage();
+        });
+     });
+
+     function cartItemClickListener(event) {
+      // coloque seu código aqui
+       event.target.remove('');
+       totalPrice();
+       addLocalStorage();  
 
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
@@ -41,3 +85,6 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+
+window.onload = function onload() { };
