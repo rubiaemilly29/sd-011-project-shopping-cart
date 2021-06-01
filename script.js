@@ -4,7 +4,7 @@ const addToCart = async (event) => {
   const itemToAdd = await fetch(`https://api.mercadolibre.com/items/${itemID}`);
   const itemJson = await itemToAdd.json();
   createCartItemElement(itemJson);
-  sumProducts();
+  somaProd();
 }
 
 function createProductImageElement(imageSource) {
