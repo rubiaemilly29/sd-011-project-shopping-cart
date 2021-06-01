@@ -53,8 +53,8 @@ const addCarItem = (id) => {
   fetch(`https://api.mercadolibre.com/items/${id}`, param)
     .then((response) => response.json())
     .then((json) => {
-      const selectCarItem = document.querySelector('.cart__items');
-      selectCarItem.appendChild(createCartItemElement(json));
+      const test = document.querySelector('.cart__items');
+      test.appendChild(createCartItemElement(json));
       saveItems();
     });
   sumProducts();  
