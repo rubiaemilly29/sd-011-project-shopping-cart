@@ -101,5 +101,4 @@ window.onload = function onload() {
   addToCart();
   getApi();
   tookElements();
-  getSkuFromProductItem();
 };
