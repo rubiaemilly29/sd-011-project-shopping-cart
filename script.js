@@ -1,6 +1,4 @@
-window.onload = function onload() {
-  // fetchApiData()
- };
+window.onload = function onload() { };
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -52,22 +50,3 @@ function simplifyMercadoLivre(dataApi) {
     image: responseJson.results[0].thumbnail
   }
 }
-
-// const fetchApiData = () => {
-//   fetch('https://api.mercadolibre.com/sites/MLB/search?q=$QUERY')
-//   .then((response) => {
-//     return response.json()
-//   })
-
-//   .then((responseJson) => {
-//     console.log(responseJson)
-//   })
-
-//   .then((final) => {
-//     console.log(final)
-//   })
-// }
-
-// const test = ['re', 'ra', 'ri']
-
-// console.log(test[test.lenght])
