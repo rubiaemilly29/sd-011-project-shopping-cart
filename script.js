@@ -1,3 +1,12 @@
+
+const addToCart = async (event) => {
+  const itemID = getSkuFromProductItem(event.target.parentElement);
+  const itemToAdd = await fetch(`https://api.mercadolibre.com/items/${itemID}`);
+  const itemJson = await itemToAdd.json();
+  createCartItemElement(itemJson);
+  sumProducts();
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -57,14 +66,6 @@ const somaProd = () => {
   const totalPrice = Document.querySelector('span.total-price');
   totalPrice.innerText =  price;
 };
-
-const addToCart = async (event) => {
-  const itemID = getSkuFromProductItem(event.target.parentElement);
-  const itemToAdd = await fetch(`https://api.mercadolibre.com/items/${itemID}`);
-  const itemJson = await itemToAdd.json();
-  createCartItemElement(itemJson);
-  sumProducts();
-}
 
 window.onload = function onload() { 
   dataApi();
