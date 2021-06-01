@@ -28,8 +28,11 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
+function cartItemClickListener() {
+  const cartRmv = document.getElementsByClassName('cart__items')[0];
+  cartRmv.addEventListener('click', function (event) {
+    event.target.remove();
+  });
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -41,9 +44,22 @@ function createCartItemElement({ sku, name, salePrice }) {
 }
 
 async function getApi() {
-  const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=computador`);
+  const urlApi = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+  return new Promise((resolve) => {
+    fetch(urlApi)
+    .then((response) => { 
+      response.json().then((data) => {
+        const result = data.results;
+        resolve(result);
+      });
+    });
+  });
+}
+
+async function getApiId(id) {
+  const response = await fetch(`https://api.mercadolibre.com/items/${id}`);
   const responseJson = await response.json();
-  return responseJson.results;
+  return responseJson;
 }
 
 function tookElements() {
@@ -58,7 +74,32 @@ function tookElements() {
   });
 }
 
+function fetchElementId(item) {
+  getApiId(item)
+    .then((result) => {
+      const { id: sku, title: name, base_price: salePrice } = result;
+      const cartElementFrame = createCartItemElement({ sku, name, salePrice });
+      const cart = document.querySelector('.cart__items');
+      cart.appendChild(cartElementFrame);
+    });
+}
+
+function addToCart() {
+  const items = document.querySelectorAll('.items');
+  console.log(items);
+  items.forEach((button) => {
+    button.addEventListener('click', function (event) {
+      const itemId = getSkuFromProductItem(event.target.parentNode);
+      if (event.target.className === 'item__add') {
+        fetchElementId(itemId);
+      }
+    });
+  });
+}
+
 window.onload = function onload() { 
+  addToCart();
   getApi();
   tookElements();
+  getSkuFromProductItem();
 };
