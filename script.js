@@ -1,3 +1,17 @@
+const somaProd = () => {
+  const liItems = [...document.querySelectorAll('li.cart__item')];
+  const price = liItems.reduce((acc, li) => Number(li.innerText.split('$')[1]) + acc, 0);
+  const totalPrice = Document.querySelector('span.total-price');
+  totalPrice.innerText = price;
+};
+
+function cartItemClickListener(event) {
+  this.remove();
+  const cartList = document.querySelector(olclass);
+  localStorage.setItem('olCart', cartList.innetHTML);
+  somaProd();
+};
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -16,20 +30,20 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 };
 
-const addToCart = async (event) => {
-  const itemID = getSkuFromProductItem(event.target.parentElement);
-  const itemToAdd = await fetch(`https://api.mercadolibre.com/items/${itemID}`);
-  const itemJson = await itemToAdd.json();
-  createCartItemElement(itemJson);
-  somaProd();
-};
-
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
+};
+
+const addToCart = async (event) => {
+  const itemID = getSkuFromProductItem(event.target.parentElement);
+  const itemToAdd = await fetch(`https://api.mercadolibre.com/items/${itemID}`);
+  const itemJson = await itemToAdd.json();
+  createCartItemElement(itemJson);
+  somaProd();
 };
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
@@ -45,9 +59,6 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   sectionItems.appendChild(section);
 };
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-};
 
 const dataApi = () => {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
@@ -57,13 +68,6 @@ const dataApi = () => {
     json.results.forEach((element) => createProductItemElement(element));
   })
   .catch((err) => window.alert(err));
-};
-
-const somaProd = () => {
-  const liItems = [...document.querySelectorAll('li.cart__item')];
-  const price = liItems.reduce((acc, li) => Number(li.innerText.split('$')[1]) + acc, 0);
-  const totalPrice = Document.querySelector('span.total-price');
-  totalPrice.innerText = price;
 };
 
 window.onload = function onload() { 
