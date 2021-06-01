@@ -50,10 +50,11 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
 
 const addCarItem = (id) => {
   const param = { headers: { Accept: 'application/json' } };
+  const carItems = '.cart__items';
   fetch(`https://api.mercadolibre.com/items/${id}`, param)
     .then((response) => response.json())
     .then((json) => {
-      const test = document.querySelector('.cart__items');
+      const test = document.querySelector(carItems);
       test.appendChild(createCartItemElement(json));
       saveItems();
     });
@@ -106,14 +107,15 @@ const function2 = () => {
         objSection.appendChild(createProductItemElement(value));
       });
     });
-} 
+};
   const function3 = () => {
     const savedItems = window.localStorage.getItem('myListItems');
     document.querySelector('.cart__items').innerHTML = savedItems;
     const liItemsSaved = document.getElementsByClassName('cart__item');
     for (let i = 0; i < liItemsSaved.length; i += 1) {
     liItemsSaved[i].addEventListener('click', cartItemClickListener);
-  }}
+  } 
+};
 
   const function4 = () => {
     const emptyBttn = document.querySelector('.empty-cart');
@@ -121,7 +123,7 @@ const function2 = () => {
       const cartOl = document.querySelector('.cart__items');
       cartOl.innerHTML = '';
     });
-  }
+  };
 
 // A função a seguir e disparada depois do carregamento da página
 window.onload = function onload() {
