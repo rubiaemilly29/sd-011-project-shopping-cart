@@ -1,6 +1,6 @@
 const constCartItems = document.querySelector('.cart__items');
 const constCart = document.querySelector('.cart');
-const totalPrice = document.querySelector('.total_price');
+const totalPrice = document.querySelector('.total-price');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
