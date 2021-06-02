@@ -1,5 +1,3 @@
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -26,18 +24,55 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
+const listItems = () => {
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+  .then((resp) => resp.json())
+  .then((resp) => resp.results.forEach((item) => {
+      const itemToFind = { sku: item.id, name: item.title, image: item.thumbnail };
+      document.querySelectorAll('.items')[0].appendChild(createProductItemElement(itemToFind));
+    }))
+    .then(() => addProductToCart())
+    .then(() => {
+      document.querySelector('.loading').remove();
+      console.log(document.querySelector('.loading'));
+    })
+    .catch((err) => console.log(err));
+};
+
+const cartItem = '.cart__items';
+
+const addProductToCart = () => {
+  document.querySelectorAll('.item__add').forEach((elem) => elem.addEventListener('click', () => {
+    fetch(`https://api.mercadolibre.com/items/${elem.parentElement.firstChild.innerText}`)
+    .then((resp) => resp.json())
+    .then((data) => {
+      localStorage.setItem('TotalItems', `${document.querySelector('ol').childElementCount}`);
+      localStorage.setItem(`Item${document.querySelector('ol').childElementCount}`, 
+      `SKU: ${data.id} | NAME: ${data.title} | PRICE: $${data.price}`);
+      document.querySelector(cartItem).appendChild(createCartItemElement(data));
+    })
+    .then(() => payment());
+  }));
+};
+
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+  event.target.remove();
+  payment();
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+window.onload = function onload() { 
+  listItems();
+  payment();
+};
