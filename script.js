@@ -22,27 +22,18 @@ function sumCartItems(price) {
 
 // função que remove um determinado item do localStorage sempre que este for removido do carrinho de compras.
 
-function removeFromLocalStorage(key) {
-  localStorage.removeItem(key);
-}
-
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
 function cartItemClickListener(event) {
-  sumCartItems(-(event.target.innerText.split('$')[1]));
-  const parentOfItem = (event.target.parentNode);
-  parentOfItem.removeChild(event.target);
-  removeFromLocalStorage(event.target.id);
-  sumCartItems(parseFloat(event.target.innerText.split('$')[1]));
+  sumCartItems(-event.target.innerText.split('$')[1]);
+  event.target.remove();
+  localStorage.setItem('cart', cartContainer.innerHTML);
+  localStorage.setItem('actualPrice', actualPrice.innerText);
 }
 
 // função que seta os itens no localStorage toda vez que for adicionado ao carrinho.
-
-function addToLocalStorage(key, value) {
-  localStorage.setItem(key, value);
-}
 
 function createCartItemElement({ id, title, price }) {
   const li = document.createElement('li');
@@ -61,7 +52,8 @@ const addCartItemElement = (event) => {
     const cartItemCreated = createCartItemElement(data);
     cartContainer.appendChild(cartItemCreated);
     sumCartItems(data.price);
-    addToLocalStorage(itemSKU);
+    localStorage.setItem('cart', cartContainer.innerHTML);
+    localStorage.setItem('actualPrice', actualPrice.innerText);
   });
 };
 
@@ -107,16 +99,8 @@ fetchItems('computador');
 // addCartFromLocalStorage captura as chaves do Objeto localStorage e as itera, fazendo uma requisição à API por cada chave usando o SKU do produto, fazendo assim a criação do carrinho de compras usando o armazenamento do browser.
 
 const addCartFromLocalStorage = () => {
-  const productsInLocalStorage = Object.keys(localStorage);
-  productsInLocalStorage.forEach(async (product) => {
-    fetch(`https://api.mercadolibre.com/items/${product}`)
-    .then((response) => response.json())
-    .then((data) => {
-      const cartItemCreated = createCartItemElement(data);
-      cartContainer.appendChild(cartItemCreated);
-    })
-    .catch((error) => alert(`Erro na requisição: ${error}`));
-  });
+  cartContainer.innerHTML = localStorage.getItem('cart');
+  actualPrice.innerText = localStorage.getItem('actualPrice');
 };
 
 const eraseCart = () => {
