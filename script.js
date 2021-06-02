@@ -1,4 +1,5 @@
 const cartContainer = document.querySelector('.cart__items');
+const itemsContainer = document.querySelector('.items');
 let actualPrice = 0;
 
 function createProductImageElement(imageSource) {
@@ -83,14 +84,27 @@ function createProductItemElement({ id, title, thumbnail }) {
   return section;
 }
 
+const createLoading = () => {
+  const loading = document.createElement('p');
+  loading.className = 'loading';
+  loading.innerText = 'Processando Requisição';
+  itemsContainer.appendChild(loading);
+};
+
+const removeLoading = () => {
+  const loading = document.querySelector('.loading');
+  loading.remove();
+};
+
 // Essa função vai servir para fazer a requisição ao endpoint do termo pesquisado e em seguida acessar todos os termos retornados colocando como filhos do container feito para os Itens.
 
 const fetchItems = (searchTerm) => {
-  const itemsContainer = document.querySelector('.items');
+  createLoading();
   fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${searchTerm}`)
   .then((response) => response.json())
   .then((data) => data.results
   .forEach((product) => itemsContainer.appendChild(createProductItemElement(product))))
+  .then(() => removeLoading())
   .catch((error) => alert(`Erro na requisição: ${error}`));
 };
 
