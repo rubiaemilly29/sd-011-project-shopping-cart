@@ -40,6 +40,7 @@ function cartItemClickListener(event) {
   const parentOfItem = (event.target.parentNode);
   parentOfItem.removeChild(event.target);
   removeFromLocalStorage(event.target.id);
+  sumCartItems(parseFloat(event.target.innerText.split('$')[1]));
 }
 
 // função que seta os itens no localStorage toda vez que for adicionado ao carrinho.
@@ -109,6 +110,13 @@ const addCartFromLocalStorage = () => {
     .catch((error) => alert(`Erro na requisição: ${error}`));
   });
 };
+
+const eraseCart = () => {
+  localStorage.clear();
+  cartContainer.innerHTML = '';
+};
+
+document.querySelector('.empty-cart').addEventListener('click', eraseCart);
 
 window.onload = function onload() {
   addCartFromLocalStorage();
