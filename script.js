@@ -1,5 +1,5 @@
-const cartItems = document.querySelector('.cart__items');
-const cart = document.querySelector('.cart');
+const constCartItems = document.querySelector('.cart__items');
+const constCart = document.querySelector('.cart');
 const totalPrice = document.querySelector('.total_price');
 
 function createProductImageElement(imageSource) {
@@ -29,7 +29,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 }
 
 function cartItemClickListener(event, price) {
-  cartItems.removeChild(event.target);
+  constCartItems.removeChild(event.target);
   totalPrice.innerText = parseFloat(Number(totalPrice.innerText) - price);
 }
 
@@ -37,7 +37,7 @@ function createCartItemElement({ id: sku, title: name, price }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
-  localStorage.setItem(`Produto${cartItems.childElementCount}`, `${sku}|${name}|${price}`);
+  localStorage.setItem(`Produto${constCartItems.childElementCount}`, `${sku}|${name}|${price}`);
   li.addEventListener('click', (event) => cartItemClickListener(event, price));
   totalPrice.innerText = parseFloat(Number(totalPrice.innerText) + price);
   console.log(totalPrice);
@@ -54,11 +54,11 @@ function getProductList() {
       });
     })
     .then(() => {
-      cart.removeChild(document.querySelector('.loading'));
+      constCart.removeChild(document.querySelector('.loading'));
       for (let index = 0; index < localStorage.length; index += 1) {
         const [id, title, price] = localStorage.getItem(`Produto${index}`).split('|');
         const resultado = { id, title, price };
-        cartItems.appendChild(createCartItemElement(resultado));
+        constCartItems.appendChild(createCartItemElement(resultado));
       }
   });
 }
@@ -85,7 +85,7 @@ window.onload = function onload() {
   items.addEventListener('click', addItem);
   const botao = document.querySelector('.empty-cart');
   botao.addEventListener('click', () => {
-    cartItems.innerHTML = '';
+    constCartItems.innerHTML = '';
     totalPrice.innerText = '0';
     localStorage.clear();
   });
