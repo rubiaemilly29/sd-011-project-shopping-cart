@@ -1,3 +1,7 @@
+const cartItems = document.querySelector('.cart__items');
+const cart = document.querySelector('.cart');
+const totalPrice = document.querySelector('.total_price');
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -12,46 +16,77 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ id: sku, title: name, thumbnail: image, price }) {
+function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
-  const items = document.querySelector('.items');
   section.className = 'item';
-
-  items.appendChild(section);
+  
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
-  .addEventListener('click', () => createCartItemElement({ sku, name, price }));
-    
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  
   return section;
 }
 
-const fetchItem = () => {
+function cartItemClickListener(event, price) {
+  cartItems.removeChild(event.target);
+  totalPrice.innerText = parseFloat(Number(totalPrice.innerText) - price);
+}
+
+function createCartItemElement({ id: sku, title: name, price }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${price}`;
+  localStorage.setItem(`Produto${cartItems.childElementCount}`, `${sku}|${name}|${price}`);
+  li.addEventListener('click', (event) => cartItemClickListener(event, price));
+  totalPrice.innerText = parseFloat(Number(totalPrice.innerText) + price);
+  console.log(totalPrice);
+  return li;
+}
+
+function getProductList() {
+  const sectionItems = document.querySelector('.items');
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
-  .then((response) => response.json())
-  .then((data) => data.results.forEach((item) => createProductItemElement(item)));
-};
-  
+    .then((response) => response.json())
+    .then((json) => {
+      json.results.forEach((result) => {
+        sectionItems.appendChild(createProductItemElement(result));
+      });
+    })
+    .then(() => {
+      cart.removeChild(document.querySelector('.loading'));
+      for (let index = 0; index < localStorage.length; index += 1) {
+        const [id, title, price] = localStorage.getItem(`Produto${index}`).split('|');
+        const resultado = { id, title, price };
+        cartItems.appendChild(createCartItemElement(resultado));
+      }
+  });
+}
+
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function cartItemClickListener(event) {
-  const cartItems = document.querySelector('.cart__items');
-  cartItems.removeChild(event.target);
-}
-
-function createCartItemElement({ sku, name, price: salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  const cartItem = document.querySelector('.cart__items');
-  cartItem.appendChild(li);
-  li.addEventListener('click', cartItemClickListener);
-  return li;
+function addItem(event) {
+  if (event.target.className === 'item__add') {
+    const itemID = getSkuFromProductItem(event.target.parentNode);
+    fetch(`https://api.mercadolibre.com/items/${itemID}`)
+      .then((response) => response.json())
+      .then((json) => {
+      const itemsList = document.querySelector('.cart__items');
+      itemsList.appendChild(createCartItemElement(json));
+      });
+  }
 }
 
 window.onload = function onload() {
-  fetchItem();
- };
+  getProductList();
+  const items = document.querySelector('.items');
+  items.addEventListener('click', addItem);
+  const botao = document.querySelector('.empty-cart');
+  botao.addEventListener('click', () => {
+    cartItems.innerHTML = '';
+    totalPrice.innerText = '0';
+    localStorage.clear();
+  });
+};
