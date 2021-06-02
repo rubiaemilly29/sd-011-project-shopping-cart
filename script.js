@@ -72,9 +72,7 @@ const listItems = () => {
     .then(() => addProductToCart())
     .then(() => {
       document.querySelector('.loading').remove();
-      console.log(document.querySelector('.loading'));
-    })
-    .catch((err) => console.log(err));
+    });
 };
 
 const backupListItem = () => {
