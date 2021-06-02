@@ -8,7 +8,7 @@ function createProductImageElement(imageSource) {
 function cartItemClickListener(event, salePrice) {
   // coloque seu código aqui  
   event.target.remove();
-  const getClassTotalPrice = document.querySelector('.total-price')
+  const getClassTotalPrice = document.querySelector('.total-price');
   getClassTotalPrice.innerText = +getClassTotalPrice.innerText - salePrice;
 }
 
@@ -43,10 +43,8 @@ function searchItem(id) {
       const li = createCartItemElement(object);
       document.querySelector(linterChorao).appendChild(li);
   saveItemOnStorage();
-  const getClassTotalPrice = document.querySelector('.total-price')
+  const getClassTotalPrice = document.querySelector('.total-price');
   getClassTotalPrice.innerText = object.salePrice + +getClassTotalPrice.innerText; 
-
- console.log(object.salePrice)
   });
 }
 
