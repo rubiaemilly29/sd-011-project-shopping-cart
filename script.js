@@ -121,4 +121,3 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
     items.addEventListener('click', addItemToCart);
     sumPrice();
   }; 
-  
