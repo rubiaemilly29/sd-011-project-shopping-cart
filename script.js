@@ -17,6 +17,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
 const linterChorao = '.cart__items';
 function saveItemOnStorage() {
   const saveItem = document.querySelector(linterChorao);
@@ -43,7 +44,6 @@ function searchItem(id) {
   });
 }
 
-// console.log(getPrice())
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
@@ -81,10 +81,11 @@ function searchProducts() {
         });
         document.querySelector('.items').appendChild(protctItem);
       });
-    });
+    })
+    .then(() => document.querySelector('.loading').remove());
 }
 
-window.onload = function onload() { 
+window.onload = async function onload() { 
   searchProducts();
   getItemSaved();
 };
