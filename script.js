@@ -86,6 +86,7 @@ const createPromisse = () => {
           createProductItemElement(product);
         });
       });
+      message.remove();
     });
 };
 
