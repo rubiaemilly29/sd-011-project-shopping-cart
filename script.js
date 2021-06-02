@@ -72,7 +72,7 @@ function addLocalStorage() {
  }
  
 // Requisito 5
-async function totalPrice() {}
+async function totalPrice() {
  const priceCart = document.querySelectorAll('.cart__item');
  let priceInic = 0;
  await priceCart.forEach((item) => {
