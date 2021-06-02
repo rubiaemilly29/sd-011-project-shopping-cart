@@ -105,6 +105,7 @@ const addCartFromLocalStorage = () => {
 
 const eraseCart = () => {
   localStorage.clear();
+  localStorage.setItem('actualPrice', 0);
   cartContainer.innerHTML = '';
 };
 
