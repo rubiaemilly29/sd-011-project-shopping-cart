@@ -25,22 +25,34 @@ function createProductItemElement({ id, title, thumbnail }) {
   return section;
 }
 
-/* function getSkuFromProductItem(item) {
+function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
+  const getShopItem = document.querySelector('.cart__items');
+  getShopItem.removeChild(event.target);
+  }
 
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ id, title, price }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
-*/
+
+const addProductToCart = (event) => {
+  if (event.target.className === 'item__add') {
+    const getID = getSkuFromProductItem(event.target.parentNode);
+    fetch(`https://api.mercadolibre.com/items/${getID}`)
+      .then((resposta) => resposta.json())
+      .then((json) => {
+        const itemsList = document.querySelector('.cart__items');
+        itemsList.appendChild(createCartItemElement(json));
+      });
+  }
+}
 const createPromisse = () => {
   let products;
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
@@ -65,4 +77,6 @@ const callProduct = async () => {
 
 window.onload = function onload() { 
   callProduct();
+  const getOl = document.querySelector('.items');
+  getOl.addEventListener('click', addProductToCart);
 };
