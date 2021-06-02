@@ -1,4 +1,5 @@
 const cartContainer = document.querySelector('.cart__items');
+let actualPrice = 0;
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -12,6 +13,12 @@ function createCustomElement(element, className, innerText) {
   e.className = className;
   e.innerText = innerText;
   return e;
+}
+
+function sumCartItems({ price }) {
+  actualPrice += price;
+  const totalValueCart = document.querySelector('.total-price');
+  totalValueCart.innerText = `Total = ${actualPrice}`;
 }
 
 // função que remove um determinado item do localStorage sempre que este for removido do carrinho de compras.
@@ -52,6 +59,7 @@ const addCartItemElement = (event) => {
   .then((data) => {
     const cartItemCreated = createCartItemElement(data);
     cartContainer.appendChild(cartItemCreated);
+    sumCartItems(data);
     addToLocalStorage(itemSKU);
   });
 };
