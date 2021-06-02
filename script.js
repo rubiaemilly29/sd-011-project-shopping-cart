@@ -17,8 +17,13 @@ function createCustomElement(element, className, innerText) {
 
 function sumCartItems({ price }) {
   actualPrice += price;
+  if (actualPrice.length - 1 && actualPrice.length - 2 === 0) {
+    Math.round(actualPrice);
+  } else {
+    actualPrice.toFixed(2);
+  }
   const totalValueCart = document.querySelector('.total-price');
-  totalValueCart.innerText = actualPrice.toFixed(2);
+  totalValueCart.innerText = actualPrice;
 }
 
 // função que remove um determinado item do localStorage sempre que este for removido do carrinho de compras.
