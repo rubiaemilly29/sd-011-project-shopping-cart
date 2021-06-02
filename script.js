@@ -88,8 +88,17 @@ const backupListItem = () => {
   }
 };
 
+const clearCart = () => 
+  document.querySelector('.empty-cart').addEventListener('click', () => {
+    document.querySelector(cartItem).innerHTML = '';
+    document.querySelector(totalPrice).innerHTML = 0;
+    document.querySelector(totalPrice).innerText = '';
+    localStorage.clear();
+});
+
 window.onload = function onload() { 
   listItems();
   backupListItem();
   payment();
+  clearCart();
 };
