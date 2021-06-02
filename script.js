@@ -41,12 +41,3 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
-
-function simplifyMercadoLivre(dataApi) {
-  const data = dataApi.data
-  return {
-    sku: responseJson.results[0].id,
-    name: responseJson.results[0].title,
-    image: responseJson.results[0].thumbnail
-  }
-}
