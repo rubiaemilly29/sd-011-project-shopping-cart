@@ -1,6 +1,6 @@
 const cartContainer = document.querySelector('.cart__items');
 const itemsContainer = document.querySelector('.items');
-let actualPrice = 0;
+const actualPrice = document.querySelector('.total-price');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -16,15 +16,8 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function sumCartItems({ price }) {
-  actualPrice += price;
-  if (actualPrice.length - 1 && actualPrice.length - 2 === 0) {
-    Math.round(actualPrice);
-  } else {
-    actualPrice.toFixed(2);
-  }
-  const totalValueCart = document.querySelector('.total-price');
-  totalValueCart.innerText = actualPrice;
+function sumCartItems(price) {
+  actualPrice.innerText = (parseFloat(actualPrice.innerText) + parseFloat(price));
 }
 
 // função que remove um determinado item do localStorage sempre que este for removido do carrinho de compras.
@@ -38,6 +31,7 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
+  sumCartItems(-(event.target.innerText.split('$')[1]));
   const parentOfItem = (event.target.parentNode);
   parentOfItem.removeChild(event.target);
   removeFromLocalStorage(event.target.id);
@@ -66,7 +60,7 @@ const addCartItemElement = (event) => {
   .then((data) => {
     const cartItemCreated = createCartItemElement(data);
     cartContainer.appendChild(cartItemCreated);
-    sumCartItems(data);
+    sumCartItems(data.price);
     addToLocalStorage(itemSKU);
   });
 };
