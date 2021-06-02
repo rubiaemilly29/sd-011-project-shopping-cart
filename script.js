@@ -111,6 +111,14 @@ function deleteShopCart() {
   li.forEach((item) => item.addEventListener('click', cartItemClickListener));
 }
 
+function deleteItens() {
+  const deleteButton = document.querySelector('.empty-cart');
+  deleteButton.addEventListener('click', () => {
+    shopList.innerHTML = '';
+    localStorage.clear();
+  });
+}
+
 window.onload = function onload() { 
   callProduct();
   const getOl = document.querySelector('.items');
@@ -119,4 +127,5 @@ window.onload = function onload() {
   deleteShopCart();
   currentShopList();
   total();
+  deleteItens();
 };
