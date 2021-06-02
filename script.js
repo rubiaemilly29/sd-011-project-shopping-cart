@@ -18,7 +18,7 @@ function createCustomElement(element, className, innerText) {
 function sumCartItems({ price }) {
   actualPrice += price;
   const totalValueCart = document.querySelector('.total-price');
-  totalValueCart.innerText = actualPrice;
+  totalValueCart.innerText = Math.round(actualPrice);
 }
 
 // função que remove um determinado item do localStorage sempre que este for removido do carrinho de compras.
@@ -45,8 +45,8 @@ function addToLocalStorage(key, value) {
 
 function createCartItemElement({ id, title, price }) {
   const li = document.createElement('li');
-  li.classList.add = 'cart__item';
-  li.id = id; // modificação realizada para poder passar o SKU do produto para o HTML de forma que possamos consultar depois para ter acesso ao mesmo.
+  li.className = 'cart__item';
+  li.id = id; // modificação realizada para poder passar o SKU do produto para o HTML de forma que possamos consultar depois para ter acesso ao mesmo e removê-lo do localStorage.
   li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
