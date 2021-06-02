@@ -52,7 +52,7 @@ const addProductToCart = (event) => {
         itemsList.appendChild(createCartItemElement(json));
       });
   }
-}
+};
 const createPromisse = () => {
   let products;
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
